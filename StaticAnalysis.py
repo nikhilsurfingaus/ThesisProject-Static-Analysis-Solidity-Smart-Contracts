@@ -431,21 +431,21 @@ def check_effects_interactions_pattern(file):
 
 
 def main():
-    file = "compilerissue.txt"
-    file2 = "overflowunderflowissue.txt"
-    file3 = "overflowunderflowissue2.txt"
-    file4 = "exceptionissue1.txt"
-    file5 = "authenticationissue1.txt"
-    file6 = "visibilityissue.txt"
-    file7 = "equalityissue1.txt"
-    file8 = "timestampissue.txt"
-    file9 = "delegatecallissue.txt"
-    file10 = "loopfunctiondos.txt"
-    file11 = "bytesissue.txt"
-    file12 = "blockvar.txt"
-    file13 = "blocknum.txt"
-    file14 = "blockgas.txt"
-    file15 = "fallbackpay.txt"
+    file = "Tests/compilerissue.txt"
+    file2 = "Tests/overflowunderflowissue.txt"
+    file3 = "Tests/overflowunderflowissue2.txt"
+    file4 = "Tests/exceptionissue1.txt"
+    file5 = "Tests/authenticationissue1.txt"
+    file6 = "Tests/visibilityissue.txt"
+    file7 = "Tests/equalityissue1.txt"
+    file8 = "Tests/timestampissue.txt"
+    file9 = "Tests/delegatecallissue.txt"
+    file10 = "Tests/loopfunctiondos.txt"
+    file11 = "Tests/bytesissue.txt"
+    file12 = "Tests/blockvar.txt"
+    file13 = "Tests/blocknum.txt"
+    file14 = "Tests/blockgas.txt"
+    file15 = "Tests/fallbackpay.txt"
     #Simple Checks
     compiler_issue(file)
     check_safe_math(file2) 
@@ -468,21 +468,21 @@ def main():
     withdraw_function = "withdraw"
     balance_state_variable = "balances"
     withdraw_amount = "_amount"
-    comp_file = "reentracyissue.txt"
+    comp_file = "Tests/reentracyissue.txt"
 
     #Reentracy Check 2
     check_withdraw_a(comp_file, withdraw_function, balance_state_variable, withdraw_amount)
     
     #Reentracy Check 1
-    check_withdraw_b("testret.txt", withdraw_function, balance_state_variable, withdraw_amount)
-    check_withdraw_b("testret1.txt", withdraw_function, balance_state_variable, withdraw_amount)
+    check_withdraw_b("Tests/testret.txt", withdraw_function, balance_state_variable, withdraw_amount)
+    check_withdraw_b("Tests/testret1.txt", withdraw_function, balance_state_variable, withdraw_amount)
 
     #Reentracy Check 3
-    externalfile = "externalissue.txt"
+    externalfile = "Tests/externalissue.txt"
     check_external_call(externalfile)
     
     # #Reentracy Check 3
-    CEIfile = "checkeffectinteractissue.txt"
+    CEIfile = "Tests/checkeffectinteractissue.txt"
     check_effects_interactions_pattern(CEIfile)
 
     #print("\n----------------------------------------")
