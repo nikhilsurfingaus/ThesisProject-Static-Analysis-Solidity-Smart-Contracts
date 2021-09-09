@@ -51,11 +51,45 @@ def check_integer_operations(file):
                 print("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
                 print("Risk: High\n")
-    
-#Underflow/Overflow Check 3 Check before Transfer
-#Underflow/Overflow Check 4 Check x
-#Underflow/Overflow Check 5 Check y
-#Underflow/Overflow Check 6 Check z
+
+#Division before multiply
+def check_div_multiply(file):
+    code = enumerate(open(file))
+    div_op = "/"
+    div_op_safe = "div"
+    mul_op = "*"
+    mul_op_safe = "mul"
+    outer = ")"
+    inner = "("
+    for i, line in code:
+        if (((div_op in line) or (div_op_safe in line)) and ((mul_op in line) or (mul_op_safe in line))):
+            if ((outer in line) and (inner in line)):
+                content = line[line.find(inner)+len(inner):line.rfind(outer)]
+                if ((div_op in content) or (div_op_safe in content)):
+                    print("\nDivsion before multiply Bug Detected at Line: " + str(i + 1))
+                    print("Solution: Re-Order expression with multiplication first as integer truncation \
+                        \nwith loss of precision to minimise vulnerbaility")
+                    print("Risk: Medium\n")              
+                    
+#Dangerous Unary Expression Warning 
+def check_unary(file):
+    code = enumerate(open(file))
+    bug_plus = "=+"
+    bug_minus = "=-"
+    bug_times = "=*"
+    for i, line in code:
+        if ((bug_plus in line) or (bug_minus in line) or (bug_times in line)):
+            print("\nDangerous Unary Expression Bug Detected at Line: " + str(i + 1))
+            print("Solution: Check correct use could have meant += or -= or *=")
+            print("Risk: Low\n")  
+#Boolean Constance Bug
+#Dangerous enum conversion
+#Array Length Assignemnt 
+#uninitialised storage var check not already coded this bro
+#suicidel
+#multiple constructors
+#incorrect shift in assembely
+
 
 #Checks for Unhadled Exceptions bug
 #Unhadled Exceptions Check 1
@@ -73,10 +107,7 @@ def check_transfer(file):
             print("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
             print("Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility")
             print("Risk: High\n")            
-#Unhadled Exceptions Check 1
-#Unhadled Exceptions Check 1
-#Unhadled Exceptions Check 1
-
+            
 #Storage Issue
 #Check 1 Byte Storage
 def check_bytes(file):
@@ -89,9 +120,6 @@ def check_bytes(file):
             print("\nStorage Bug Detected at Line: " + str(i + 1))
             print("Solution: Use bytes instead of bytes[] array to minimise vulnerbaility")
             print("Risk: Low\n")       
-
-
-
 
 #Checks for Authentication bug
 #Authentication Check 1
@@ -446,6 +474,8 @@ def main():
     file13 = "Tests/blocknum.txt"
     file14 = "Tests/blockgas.txt"
     file15 = "Tests/fallbackpay.txt"
+    file16 = "Tests/unarytest.txt"
+    file17 = "Tests/dividemultiply.txt"
     #Simple Checks
     compiler_issue(file)
     check_safe_math(file2) 
@@ -462,6 +492,8 @@ def main():
     check_block_number(file13)
     check_block_gas(file14)
     check_fallback(file15)
+    check_unary(file16)
+    check_div_multiply(file17)
     #Complex Checks
   
     # #Ask for User Input On These
