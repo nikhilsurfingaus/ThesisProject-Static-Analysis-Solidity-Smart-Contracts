@@ -82,7 +82,39 @@ def check_unary(file):
             print("\nDangerous Unary Expression Bug Detected at Line: " + str(i + 1))
             print("Solution: Check correct use could have meant += or -= or *=")
             print("Risk: Low\n")  
+
 #Boolean Constance Bug
+def check_bool_const(file):
+    code = enumerate(open(file))
+    bug_one = "(false)"
+    bug_two = "(true)"
+    bug_three = "|| true"
+    bug_four = "|| false"
+    bug_five = "true ||"
+    bug_six = "false ||"
+    bug_seven = "&& true"
+    bug_eight = "&& false"
+    bug_nine = "true &&"
+    bug_ten = "false &&"
+    key = "if"
+    var_one = " = true"
+    var_two = " = false"
+    for i, line in code:
+        if ((bug_one in line) or (bug_two in line) or (bug_three in line) or (bug_four in line) or (bug_five in line)):
+            print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
+            print("Solution: Simplify condition or verify code is not a mistake in boolen const")
+            print("Risk: Low\n")   
+                   
+        if ((bug_six in line) or (bug_seven in line) or (bug_eight in line) or (bug_nine in line) or (bug_ten in line)):
+            print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
+            print("Solution: Simplify condition or verify code is not a mistake in boolen const")
+            print("Risk: Low\n")   
+
+        if((key in line) and ((var_one in line) or (var_two in line))):
+            print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
+            print("Solution: Verify whether mistake of tautology")
+            print("Risk: Low\n")   
+            
 #Dangerous enum conversion
 #Array Length Assignemnt 
 #uninitialised storage var check not already coded this bro
@@ -476,6 +508,7 @@ def main():
     file15 = "Tests/fallbackpay.txt"
     file16 = "Tests/unarytest.txt"
     file17 = "Tests/dividemultiply.txt"
+    file18 = "Tests/boolconst.txt"
     #Simple Checks
     compiler_issue(file)
     check_safe_math(file2) 
@@ -494,6 +527,7 @@ def main():
     check_fallback(file15)
     check_unary(file16)
     check_div_multiply(file17)
+    check_bool_const(file18)
     #Complex Checks
   
     # #Ask for User Input On These
