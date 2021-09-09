@@ -1,3 +1,5 @@
+import numpy as np
+
 #Checks for compiler version bug
 def compiler_issue(file):
     code = enumerate(open(file))
@@ -115,8 +117,34 @@ def check_bool_const(file):
             print("Solution: Verify whether mistake of tautology")
             print("Risk: Low\n")   
             
-#Dangerous enum conversion
 #Array Length Assignemnt 
+def check_arr_length(file):
+    code_first = enumerate(open(file))
+    code_second = enumerate(open(file))
+    inner = "[] "
+    outer = ";"
+    key = ".length"
+    operator = "="
+    names = np.array([])
+    concat_names = np.array([])
+    for i, line in code_first:
+        if ((inner in line)):
+            arrayname = line[line.find(inner)+len(inner):line.rfind(outer)]
+            exists = False
+            for value in names:
+                if (value == arrayname):
+                    exists = True      
+            if (exists == False):
+                names = np.append(names, arrayname)
+                concat_names = np.append(concat_names, (arrayname + key))
+
+    #Now we have the arrays check if length is set
+    for i, line in code_second:
+        for x in concat_names:
+            if ((x in line)): #and (operator in line)):
+                print("\nArray Length Assignement Bug Detected at Line: " + str(i + 1))
+                print("Solution: Don't set array length directly, add values as needed storage could be vulnerble")
+                print("Risk: Medium\n")  
 #uninitialised storage var check not already coded this bro
 #suicidel
 #multiple constructors
@@ -509,6 +537,7 @@ def main():
     file16 = "Tests/unarytest.txt"
     file17 = "Tests/dividemultiply.txt"
     file18 = "Tests/boolconst.txt"
+    file19 = "Tests/arraylength.txt"
     #Simple Checks
     compiler_issue(file)
     check_safe_math(file2) 
@@ -528,6 +557,7 @@ def main():
     check_unary(file16)
     check_div_multiply(file17)
     check_bool_const(file18)
+    check_arr_length(file19)
     #Complex Checks
   
     # #Ask for User Input On These
