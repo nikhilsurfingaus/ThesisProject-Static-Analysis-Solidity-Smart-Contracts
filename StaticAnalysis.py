@@ -140,15 +140,74 @@ def check_arr_length(file):
 
     #Now we have the arrays check if length is set
     for i, line in code_second:
-        for x in concat_names:
-            if ((x in line)): #and (operator in line)):
+        for arr in concat_names:
+            if ((arr in line) and (operator in line)): 
                 print("\nArray Length Assignement Bug Detected at Line: " + str(i + 1))
                 print("Solution: Don't set array length directly, add values as needed storage could be vulnerble")
                 print("Risk: Medium\n")  
 #uninitialised storage var check not already coded this bro
-#suicidel
-#multiple constructors
+def check_init_storage_var(file):
+    code_first = enumerate(open(file))
+    code_second = enumerate(open(file))
+    inner = "struct"
+    outer = " {" 
+    req = "="
+    req_end = ";"
+    names = np.array([])
+    var_one = "uint"
+    var_two = "address"
+
+    #Get all struct names
+    for i, line in code_first:
+        if (inner in line):
+            struct_name = line[line.find(inner)+len(inner):line.rfind(outer)]
+            exists = False
+            for value in names:
+                if (value == struct_name):
+                    exists = True      
+            if (exists == False):
+                names = np.append(names, struct_name)
+    #Look for uninitialised variables 
+    for i, line in code_second:
+        #Look for struct varibales 
+        for var in names:
+            if((var in line) and (req_end in line) and (req not in line)):
+                print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                print("Solution: Immediatly initalise storage variables could be ovveridded")
+                print("Risk: High\n") 
+        if((var_one in line) and (req_end in line) and (req not in line)):
+                print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                print("Solution: Immediatly initalise storage variables could be ovveridded")
+                print("Risk: High\n") 
+        if((var_two in line) and (req_end in line) and (req not in line)):
+                print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                print("Solution: Immediatly initalise storage variables could be ovveridded")
+                print("Risk: High\n") 
 #incorrect shift in assembely
+def check_assemble_shift(file):
+    code = enumerate(open(file))
+    key = "assembly"
+    end = "}"
+    start = False
+    shift = "shr"
+    inner_one = "shr("
+    outer_one = ","
+    inner_two = ", "
+    outer_two = ")"
+    for i, line in code:
+        if((start == True) and (end in line)):
+            start = False
+        if (key in line):
+            start = True
+        #If inside assemble call  
+        if ((shift in line) and (start == True)): 
+            char_one = line[line.find(inner_one)+len(inner_one):line.rfind(outer_one)]
+            char_two = line[line.find(inner_two)+len(inner_two):line.rfind(outer_two)]
+            if ((char_two.isnumeric() == True) and (char_one.isnumeric() is False )):
+                print("\nIncorrect Shit In Assembly Bug Detected at Line: " + str(i + 1))
+                print("Solution: Swap order of parametres in shift")
+                print("Risk: High\n") 
+#suicidel
 
 
 #Checks for Unhadled Exceptions bug
@@ -538,6 +597,8 @@ def main():
     file17 = "Tests/dividemultiply.txt"
     file18 = "Tests/boolconst.txt"
     file19 = "Tests/arraylength.txt"
+    file20 = "Tests/storageissue.txt"
+    file21 = "Tests/shiftassemble.txt"
     #Simple Checks
     compiler_issue(file)
     check_safe_math(file2) 
@@ -558,6 +619,8 @@ def main():
     check_div_multiply(file17)
     check_bool_const(file18)
     check_arr_length(file19)
+    check_init_storage_var(file20)
+    check_assemble_shift(file21)
     #Complex Checks
   
     # #Ask for User Input On These
