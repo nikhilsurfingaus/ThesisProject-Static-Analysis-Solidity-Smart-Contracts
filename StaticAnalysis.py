@@ -208,6 +208,37 @@ def check_assemble_shift(file):
                 print("Solution: Swap order of parametres in shift")
                 print("Risk: High\n") 
 #suicidel
+#     NEED TO CHECK THAT FUNCTION IS PROTECTED BEFORE WE CAN SELF DESTRUCT
+def check_self_destruct(file):
+    code = enumerate(open(file))
+    code_second = enumerate(open(file))
+
+    key_func = "function"
+    key_visibility = "public"
+    bug = "selfdestruct"
+    end = "}"
+    length = 2
+    current = False
+    
+    #Case 1 Address to another contract
+    for i, line in code:
+        if ((bug in line)):
+            print("\nSelf Destruct Vulnerability Detected at Line: " + str(i + 1))
+            print("Solution: Check that address is not used as could send ether to an attacker contract")
+            print("Risk: Medium\n")          
+    
+    #Case 2 public function with selfdestruct
+    for i, line in code_second:
+        if ((current == True) and (len(line) <= length) and (end in line)):
+            current = False
+        if ((key_func in line) and (key_visibility in line)):
+            current = True
+        if ((current == True) and (bug in line)):
+            print("\nSelf Destruct Vulnerability Detected at Line: " + str(i + 1))
+            print("Solution: If using self detruct restrict access to function as not public")
+            print("Risk: High\n") 
+                
+    #Case 3 revert
 
 
 #Checks for Unhadled Exceptions bug
@@ -599,6 +630,7 @@ def main():
     file19 = "Tests/arraylength.txt"
     file20 = "Tests/storageissue.txt"
     file21 = "Tests/shiftassemble.txt"
+    file22 = "Tests/selfdestruct.txt"
     #Simple Checks
     compiler_issue(file)
     check_safe_math(file2) 
@@ -621,6 +653,7 @@ def main():
     check_arr_length(file19)
     check_init_storage_var(file20)
     check_assemble_shift(file21)
+    check_self_destruct(file22)
     #Complex Checks
   
     # #Ask for User Input On These
