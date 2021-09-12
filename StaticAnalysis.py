@@ -411,9 +411,45 @@ def check_fallback(file):
 # function of the contract is being executed, so only a single function in the contract can be executed at a time.
 def check_contract_lock(file):
     code = enumerate(open(file))
-    #Name either blockreeracy or reentracy guard locks the contract
+    key = "modifier"
+    end = "}"
+    length = 2;
+    start = False
+    first = "require"
+    second = "= true"
+    third = "_;"
+    fourth = "= false"
+    pass_one = False;
+    pass_two = False;
+    pass_three = False;
+    pass_four = False;
+    safe = False
 
+    for i, line in code:
+        if((start == True) and (end in line) and (len(line) <= length)):
+            start = False
+            if ((pass_one == True) and (pass_two == True) and (pass_three == True) and (pass_four == True)):
+                safe = True
+            pass_one = False;
+            pass_two = False;
+            pass_three = False;
+            pass_four = False;
+        if(key in line):
+            start = True
+        if ((first in line) and (pass_two == False) and (pass_three == False) and (pass_four == False)):
+            pass_one = True
+        if ((second in line) and (pass_one == True) and (pass_three == False) and (pass_four == False)):
+            pass_two = True
+        if ((third in line) and (pass_one == True) and (pass_two == True) and (pass_four == False)):
+            pass_three = True
+        if ((fourth in line) and (pass_one == True) and (pass_two == True) and (pass_three == True)):
+            pass_four = True
+    if (safe == False):            
+        print("\nReentracy Bug Detected in contract")
+        print("Solution: Use a blockreentracy contract lock mechanism so only a single contract function is executed")
+        print("Risk: Medium\n")  
 
+        
 #Reentracy Check 2a
 #Check require condtion is met
 def check_withdraw_a(file, func_name, state_var, with_amount_var):
@@ -604,10 +640,6 @@ def check_effects_interactions_pattern(file):
 #Reentracy Check 4
 #Cross Function reentracy
 
-#Reentracy Check 5
-#Interleaving Hazards
-
-
 def main():
     file = "Tests/compilerissue.txt"
     file2 = "Tests/overflowunderflowissue.txt"
@@ -631,6 +663,8 @@ def main():
     file20 = "Tests/storageissue.txt"
     file21 = "Tests/shiftassemble.txt"
     file22 = "Tests/selfdestruct.txt"
+    file23 = "Tests/lockcontract.txt"
+    file24 = "Tests/lockcontractgood.txt"
     #Simple Checks
     compiler_issue(file)
     check_safe_math(file2) 
@@ -654,6 +688,8 @@ def main():
     check_init_storage_var(file20)
     check_assemble_shift(file21)
     check_self_destruct(file22)
+    check_contract_lock(file23)
+    check_contract_lock(file24)
     #Complex Checks
   
     # #Ask for User Input On These
@@ -662,6 +698,8 @@ def main():
     withdraw_amount = "_amount"
     comp_file = "Tests/reentracyissue.txt"
 
+
+    #CHANGE THIS TO ADD INSTRUCTIONOS FOR FUNCTION AND VARIABLE NAMES
     #Reentracy Check 2
     check_withdraw_a(comp_file, withdraw_function, balance_state_variable, withdraw_amount)
     
