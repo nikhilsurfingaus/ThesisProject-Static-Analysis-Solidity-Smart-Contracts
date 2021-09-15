@@ -1,2 +1,2 @@
 # ThesisProject
-tets
+tests
