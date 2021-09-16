@@ -284,7 +284,6 @@ def check_self_destruct(file):
             print("Confidence: High\n")
             score += 9
                 
-    #Case 3 revert
     return score
 
 
@@ -482,7 +481,7 @@ def check_block_gas(file):
 #Pyable Fallback
 def check_fallback(file):
     code = enumerate(open(file))
-    key = "function"
+    key = "function "
     mark = "payable"
     left = 'function '
     right = '('
@@ -589,9 +588,9 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
     found = False
     call_made = False
     subtract = "-"
-    call = "msg.sender.call"
-    send = "msg.sender.send"
-    transfer = "msg.sender.transfer"
+    call = "call"
+    send = "send"
+    transfer = "transfer"
     score = 0
     for i, line in code:
         if(((call in line) or (send in line) or (transfer in line)) and (with_amount_var in line) and (found == False)):
@@ -785,6 +784,34 @@ def calc_score(score):
     if (score > 260):
         return 49
 
+#This will be used later
+def call_simple_checks(file, score):
+    score += compiler_issue(file)
+    score += check_safe_math(file) 
+    score +=check_integer_operations(file)   
+    score +=check_transfer(file)
+    score +=check_tx_origin(file)
+    score +=check_function_visibility(file)
+    score +=check_balance_equality(file)
+    score +=check_block_timestamp(file)
+    score +=check_delegate_call(file)
+    score +=check_loop_function(file)
+    score +=check_bytes(file)
+    score +=check_block_variable(file)
+    score +=check_block_number(file)
+    score +=check_block_gas(file)
+    score +=check_fallback(file)
+    score +=check_unary(file)
+    score +=check_div_multiply(file)
+    score +=check_bool_const(file)
+    score +=check_arr_length(file)
+    score +=check_init_storage_var(file)
+    score +=check_assemble_shift(file)
+    score +=check_self_destruct(file)
+    score +=check_contract_lock(file)
+    score +=check_contract_lock(file)
+    return score
+
 def main():
     file = "Tests/compilerissue.txt"
     file2 = "Tests/overflowunderflowissue.txt"
@@ -812,8 +839,10 @@ def main():
     file24 = "Tests/lockcontractgood.txt"
     #Simple Checks
     #MAKE A FUNCTION WHICH TAKES A SINGLE FILE AND RUNS ALL THESE FUNCTIONS
-    score = 0; 
-    score += compiler_issue(file)
+    score = 0;
+    bigfile = "Tests/mixbugs.txt"
+    score = call_simple_checks(bigfile, score)
+    """     score += compiler_issue(file)
     score += check_safe_math(file2) 
     score +=check_integer_operations(file3)   
     score +=check_transfer(file4)
@@ -836,7 +865,7 @@ def main():
     score +=check_assemble_shift(file21)
     score +=check_self_destruct(file22)
     score +=check_contract_lock(file23)
-    score +=check_contract_lock(file24)
+    score +=check_contract_lock(file24) """
     #Complex Checks
   
     # #Ask for User Input On These
@@ -860,7 +889,7 @@ def main():
     
     # #Reentracy Check 3
     CEIfile = "Tests/checkeffectinteractissue.txt"
-    score+=check_effects_interactions_pattern(CEIfile) 
+    score+=check_effects_interactions_pattern(CEIfile)
 
     #Score Overall
     print(score)
