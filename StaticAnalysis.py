@@ -812,6 +812,13 @@ def call_simple_checks(file, score):
     score +=check_contract_lock(file)
     return score
 
+def check_complex_checks(file, score, func_name, state_var, with_amount_var):
+    score+=check_withdraw_a(file, func_name, state_var, with_amount_var)
+    score+=check_withdraw_b(file, func_name, state_var, with_amount_var)
+    score+=check_external_call(file)
+    score+=check_effects_interactions_pattern(file)
+    return score
+
 def main():
     file = "Tests/compilerissue.txt"
     file2 = "Tests/overflowunderflowissue.txt"
@@ -868,7 +875,7 @@ def main():
     score +=check_contract_lock(file24) """
     #Complex Checks
   
-    # #Ask for User Input On These
+    """# #Ask for User Input On These
     withdraw_function = "withdraw"
     balance_state_variable = "balances"
     withdraw_amount = "_amount"
@@ -889,15 +896,24 @@ def main():
     
     # #Reentracy Check 3
     CEIfile = "Tests/checkeffectinteractissue.txt"
-    score+=check_effects_interactions_pattern(CEIfile)
-
-    #Score Overall
+    score+=check_effects_interactions_pattern(CEIfile)"""
+    
+    bigcomplex = "Tests/testret.txt"
+    withdraw_function = "withdraw"
+    balance_state_variable = "balances"
+    withdraw_amount = "_amount"
+    score+= check_complex_checks(bigcomplex, score, withdraw_function, balance_state_variable, withdraw_amount)
+    
+    #Simple Score Overall
     print(score)
     score = calc_score(score)
     if (score < 50):
         print("Smart Contract Score: <50%")
     else:
         print("Smart Contract Score: " + str(score) +"%" )
+        
+    #Reentracy Score Overall
+
     
 if __name__ == "__main__":
     main()
