@@ -1,4 +1,8 @@
 import numpy as np
+from tkinter import*
+import time
+test = False
+root = Tk()
 
 #Checks for compiler version bug
 def compiler_issue(file):
@@ -819,7 +823,50 @@ def check_complex_checks(file, score, func_name, state_var, with_amount_var):
     score+=check_effects_interactions_pattern(file)
     return score
 
+test2 = False
+var = IntVar()
+
+def handlephase2():
+    global test2
+    test2 = True
+    sc = 0
+    filename = "Tests/" + var.get()
+    sc = call_simple_checks(filename, sc)
+    print(sc)
+    sc = calc_score(sc)
+    if (sc < 50):
+        print("Smart Contract Score: <50%")
+    else:
+        print("Smart Contract Score: " + str(sc) +"%" )
+        
+    print("lol" + str(var.get()))
+
+def phase2():
+    root2 = Tk()
+    root2.geometry('500x400')
+    root2.title("Static Analysis")
+    label_0 = Label(root2, text="Static Analysis",width=20,font=("bold", 20))
+    label_0.place(x=80,y=53)
+    label_1 = Label(root2, text="Solidity File Name",width=30,font=("bold", 10))
+    label_1.place(x=50,y=130)
+    entry_1 = Entry(root2)
+    global var
+    var = entry_1
+    entry_1.place(x=260,y=130)
+    Button(root2, text='Start Static Analysis',width=30,bg='brown',fg='white', command=handlephase2).place(x=140,y=280)
+    # it is use for display the registration form on the window
+    root2.mainloop()
+    print("UMMMMM")
+
+def inter():
+    #global test
+    #test = True
+    time.sleep(1)
+    root.destroy()
+    phase2()
+
 def main():
+
     file = "Tests/compilerissue.txt"
     file2 = "Tests/overflowunderflowissue.txt"
     file3 = "Tests/overflowunderflowissue2.txt"
@@ -848,7 +895,19 @@ def main():
     #MAKE A FUNCTION WHICH TAKES A SINGLE FILE AND RUNS ALL THESE FUNCTIONS
     score = 0;
     bigfile = "Tests/mixbugs.txt"
-    score = call_simple_checks(bigfile, score)
+    #score = call_simple_checks(bigfile, score)
+    root.geometry('500x400')
+    root.title("Static Analayis")
+    label_0 = Label(root, text="Static Analayis",width=20,font=("bold", 20))
+    label_0.place(x=90,y=53)
+    Button(root, text='Standard Analysis',width=20,bg='brown',fg='white', command=inter).place(x=180,y=150)
+    Button(root, text='Reetrancy DAO Analysis',width=20,bg='brown',fg='white').place(x=180,y=250)
+    # it is use for display the registration form on the window
+
+    root.mainloop()
+    if (test2 == True):
+        score = call_simple_checks(bigfile, score)
+    print("WINDOW CLOSED")
     """     score += compiler_issue(file)
     score += check_safe_math(file2) 
     score +=check_integer_operations(file3)   
@@ -898,22 +957,24 @@ def main():
     CEIfile = "Tests/checkeffectinteractissue.txt"
     score+=check_effects_interactions_pattern(CEIfile)"""
     
-    bigcomplex = "Tests/testret.txt"
-    withdraw_function = "withdraw"
-    balance_state_variable = "balances"
-    withdraw_amount = "_amount"
-    score+= check_complex_checks(bigcomplex, score, withdraw_function, balance_state_variable, withdraw_amount)
+    #bigcomplex = "Tests/testret.txt"
+    #withdraw_function = "withdraw"
+    #balance_state_variable = "balances"
+    #withdraw_amount = "_amount"
+    #score+= check_complex_checks(bigcomplex, score, withdraw_function, balance_state_variable, withdraw_amount)
     
     #Simple Score Overall
-    print(score)
-    score = calc_score(score)
-    if (score < 50):
-        print("Smart Contract Score: <50%")
-    else:
-        print("Smart Contract Score: " + str(score) +"%" )
+    #print(score)
+    #score = calc_score(score)
+    #if (score < 50):
+    #    print("Smart Contract Score: <50%")
+    #else:
+    #    print("Smart Contract Score: " + str(score) +"%" )
         
     #Reentracy Score Overall
-
+    while(True):
+        x = 1
+        
     
 if __name__ == "__main__":
     main()
