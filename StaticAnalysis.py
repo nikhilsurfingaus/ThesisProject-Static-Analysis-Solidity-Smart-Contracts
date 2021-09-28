@@ -3,6 +3,12 @@ from tkinter import*
 import time
 test = False
 root = Tk()
+test2 = False
+var = IntVar()
+fname = IntVar()
+withname = IntVar()
+balname = IntVar()
+amountname = IntVar()
 
 #Checks for compiler version bug
 def compiler_issue(file):
@@ -823,9 +829,21 @@ def check_complex_checks(file, score, func_name, state_var, with_amount_var):
     score+=check_effects_interactions_pattern(file)
     return score
 
-test2 = False
-var = IntVar()
 
+def handlephase3():
+    print("filename " + fname.get())
+    print("Withdraw Function " + withname.get())
+    print("Balance Name " + balname.get())
+    print("Amount Name " + amountname.get())
+    score = 0
+    filename = "Tests/" + fname.get()
+    score = check_complex_checks(filename, score, withname.get(), balname.get(), amountname.get())
+    score = calc_score(score)
+    if (score < 50):
+        print("Smart Contract Score: <50%")
+    else:
+        print("Smart Contract Score: " + str(score) +"%" )
+    
 def handlephase2():
     global test2
     test2 = True
@@ -839,7 +857,40 @@ def handlephase2():
     else:
         print("Smart Contract Score: " + str(sc) +"%" )
         
-    print("lol" + str(var.get()))
+def phase3():
+    root1 = Tk()
+    root1.geometry('500x400')
+    root1.title("Reetrancy DAO Analysis")
+    label_0 = Label(root1, text="Reetrancy DAO Analysis",width=20,font=("bold", 20))
+    label_0.place(x=80,y=53)
+    label_1 = Label(root1, text="Solidity File Name",width=30,font=("bold", 10))
+    label_1.place(x=50,y=130)
+    entry_1 = Entry(root1)
+    global fname
+    fname = entry_1
+    entry_1.place(x=260,y=130)
+    label_2 = Label(root1, text="Withdraw Function Name",width=30,font=("bold", 10))
+    label_2.place(x=40,y=180)
+    entry_2 = Entry(root1)
+    global withname
+    withname = entry_2
+    entry_2.place(x=260,y=180)
+    label_4 = Label(root1, text="Balance State Variable Name",width=30,font=("bold", 10))
+    label_4.place(x=40,y=230)
+    entry_3 = Entry(root1)
+    global balname
+    balname = entry_3
+    entry_3.place(x=260,y=230)
+    label_5 = Label(root1, text="Variable Amount Variable Name",width=30,font=("bold", 10))
+    label_5.place(x=40,y=280)
+    entry_4 = Entry(root1)
+    global amountname
+    amountname = entry_4
+    entry_4.place(x=260,y=280)
+    Button(root1, text='Start Reetrancy DAO Analysis',width=30,bg='brown',fg='white', command=handlephase3).place(x=140,y=330)
+    # it is use for display the registration form on the window
+    root1.mainloop()
+
 
 def phase2():
     root2 = Tk()
@@ -857,6 +908,12 @@ def phase2():
     # it is use for display the registration form on the window
     root2.mainloop()
     print("UMMMMM")
+
+def inter2():
+    time.sleep(1)
+    root.destroy()
+    phase3()
+
 
 def inter():
     #global test
@@ -901,13 +958,13 @@ def main():
     label_0 = Label(root, text="Static Analayis",width=20,font=("bold", 20))
     label_0.place(x=90,y=53)
     Button(root, text='Standard Analysis',width=20,bg='brown',fg='white', command=inter).place(x=180,y=150)
-    Button(root, text='Reetrancy DAO Analysis',width=20,bg='brown',fg='white').place(x=180,y=250)
+    Button(root, text='Reetrancy DAO Analysis',width=20,bg='brown',fg='white', command=inter2).place(x=180,y=250)
     # it is use for display the registration form on the window
 
     root.mainloop()
-    if (test2 == True):
-        score = call_simple_checks(bigfile, score)
-    print("WINDOW CLOSED")
+    #if (test2 == True):
+    #    score = call_simple_checks(bigfile, score)
+    #print("WINDOW CLOSED")
     """     score += compiler_issue(file)
     score += check_safe_math(file2) 
     score +=check_integer_operations(file3)   
