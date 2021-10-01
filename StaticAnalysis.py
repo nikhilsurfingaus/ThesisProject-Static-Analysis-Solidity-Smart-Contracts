@@ -574,13 +574,13 @@ def check_withdraw_a(file, func_name, state_var, with_amount_var):
             start = True
             line_var = i + 1
             
-        if ((end_char in line) and  (start_char not in line) and (found == False)):
+        if ((end_char in line) and  (start_char not in line) and (found == False) and (start == True)):
             start = False
             print("\nWithdraw Function Call Bug Detected at Line: " + str(line_var))
             print("Solution: We need this to check require balance and amount first")
             print("Risk: Medium")  
             print("Confidence: Medium\n")
-            score += 6
+            score += 10
             
         if ((end_char in line) and  (start_char not in line) and (found == True)):
             start = False
@@ -609,7 +609,7 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
             print("Solution: Update state variable balance before call")
             print("Risk: High")  
             print("Confidence: High\n")
-            score += 9
+            score += 10
           
         if ((call_made == False) and (state_var in line) and (with_amount_var in line) and (subtract in line)):
             found = True
@@ -631,7 +631,7 @@ def check_external_call(file):
             print("Solution: Be aware that subsequent calls also inherit untrust state")
             print("Risk: low") 
             print("Confidence: Medium\n")
-            score += 3
+            score += 2
         #Bad Case external call is untrusted
         if ((end in line) and (len(line) <= 2)):
             start = False
@@ -641,7 +641,7 @@ def check_external_call(file):
             print("Solution: Be aware that subsequent calls also inherit untrust state")
             print("Risk: High") 
             print("Confidence: Medium\n")
-            score +=9
+            score +=5
         if ((keyword_func in line) and (keyword in line)):
             start = True
         
@@ -651,7 +651,7 @@ def check_external_call(file):
             print("Solution: Unknown trust, label function either trusted/untrusted")
             print("Risk: Medium") 
             print("Confidence: Medium\n")
-            score += 6
+            score += 2
     return score
 
 #Checks-effects-interactions pattern
@@ -691,42 +691,42 @@ def check_effects_interactions_pattern(file):
                 print("Solution: Check is missing")
                 print("Risk: Medium") 
                 print("Confidence: Medium\n")
-                score += 6  
+                score += 2  
             #Check Order
             if (single_check == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Check is out of order")
                 print("Risk: Medium")
                 print("Confidence: Medium\n")
-                score += 6  
+                score += 2  
             #Effect Order
             if ((effect_found == False) and (single_effect == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Effect is missing")
                 print("Risk: Medium")  
                 print("Confidence: Medium\n")
-                score += 6   
+                score += 2   
             #Effect Missing     
             if (single_effect == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Effect is out of order")
                 print("Risk: Medium")  
                 print("Confidence: Medium\n")
-                score += 6  
+                score += 2  
             #Interact Missing
             if ((interact_found == False) and (single_interact == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Interact is missing")
                 print("Risk: Medium")   
                 print("Confidence: Medium\n")  
-                score += 6           
+                score += 2           
             #Interact Order
             if (single_interact == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Interact is out of order")
                 print("Risk: Medium")      
                 print("Confidence: Medium\n")
-                score += 6  
+                score += 2  
             #Reset Variables
             start = False
             first = False
@@ -768,6 +768,19 @@ def check_effects_interactions_pattern(file):
     return score
 
 #Catergorise Score
+def calc_complex_score(score):
+    if (score < 20):
+        return 90
+    if (score < 30):
+        return 80
+    if (score < 50):
+        return 70
+    if (score < 80):
+        return 60
+    if (score > 80):
+        return 49
+    
+    
 def calc_score(score):
     if (score < 40):
         return 100
@@ -819,7 +832,6 @@ def call_simple_checks(file, score):
     score +=check_assemble_shift(file)
     score +=check_self_destruct(file)
     score +=check_contract_lock(file)
-    score +=check_contract_lock(file)
     return score
 
 def check_complex_checks(file, score, func_name, state_var, with_amount_var):
@@ -827,18 +839,19 @@ def check_complex_checks(file, score, func_name, state_var, with_amount_var):
     score+=check_withdraw_b(file, func_name, state_var, with_amount_var)
     score+=check_external_call(file)
     score+=check_effects_interactions_pattern(file)
+    #print("Total Score: " + str(score))
     return score
 
 
 def handlephase3():
-    print("filename " + fname.get())
-    print("Withdraw Function " + withname.get())
-    print("Balance Name " + balname.get())
-    print("Amount Name " + amountname.get())
+    #print("filename " + fname.get())
+    #print("Withdraw Function " + withname.get())
+    #print("Balance Name " + balname.get())
+    #print("Amount Name " + amountname.get())
     score = 0
     filename = "Tests/" + fname.get()
     score = check_complex_checks(filename, score, withname.get(), balname.get(), amountname.get())
-    score = calc_score(score)
+    score = calc_complex_score(score)
     if (score < 50):
         print("Smart Contract Score: <50%")
     else:
@@ -907,7 +920,7 @@ def phase2():
     Button(root2, text='Start Static Analysis',width=30,bg='brown',fg='white', command=handlephase2).place(x=140,y=280)
     # it is use for display the registration form on the window
     root2.mainloop()
-    print("UMMMMM")
+    #print("UMMMMM")
 
 def inter2():
     time.sleep(1)
