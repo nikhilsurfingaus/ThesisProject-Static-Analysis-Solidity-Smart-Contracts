@@ -1042,8 +1042,8 @@ def main():
     #    print("Smart Contract Score: " + str(score) +"%" )
         
     #Reentracy Score Overall
-    while(True):
-        x = 1
+    #while(True):
+    #    x = 1
         
     
 if __name__ == "__main__":
