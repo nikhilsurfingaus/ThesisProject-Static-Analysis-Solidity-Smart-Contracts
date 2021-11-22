@@ -1,3 +1,4 @@
+from os import write
 import numpy as np
 from tkinter import*
 import time
@@ -10,6 +11,9 @@ withname = IntVar()
 balname = IntVar()
 amountname = IntVar()
 
+#Output File Report
+report = open('bugreport.txt', 'w')
+
 #Checks for compiler version bug
 def compiler_issue(file):
     code = enumerate(open(file))
@@ -21,6 +25,12 @@ def compiler_issue(file):
             print("Solution: Remove ^ operator as future compilers may have unintended effects")
             print("Risk: Medium")
             print("Confidence: High\n")
+            
+            report.write("\nCompiler Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Remove ^ operator as future compilers may have unintended effects")
+            report.write("\nRisk: Medium")
+            report.write("\nConfidence: High\n")
+            
             score += 6
     return score
 
@@ -55,6 +65,12 @@ def check_safe_math(file):
                 print("Solution: Use SafeMath library to minimise vulnerbaility")
                 print("Risk: High")
                 print("Confidence: High\n")
+                
+                report.write("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Use SafeMath library to minimise vulnerbaility")
+                report.write("\nRisk: High")
+                report.write("\nConfidence: High\n")
+                
                 score+=9
     return score
 
@@ -73,6 +89,11 @@ def check_integer_operations(file):
                 print("Solution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
                 print("Risk: High")
                 print("Confidence: High\n")
+                
+                report.write("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
+                report.write("\nRisk: High")
+                report.write("\nConfidence: High\n")
                 score+=9
     return score
 
@@ -96,6 +117,12 @@ def check_div_multiply(file):
                         \nwith loss of precision to minimise vulnerbaility")
                     print("Risk: Medium")  
                     print("Confidence: Medium\n")
+                    
+                    report.write("\nDivsion before multiply Bug Detected at Line: " + str(i + 1))
+                    report.write("\nSolution: Re-Order expression with multiplication first as integer truncation")
+                    report.write("\nwith loss of precision to minimise vulnerbaility")
+                    report.write("\nRisk: Medium")  
+                    report.write("\nConfidence: Medium\n")
                     score+= 6
     return score            
                     
@@ -112,6 +139,11 @@ def check_unary(file):
             print("Solution: Check correct use could have meant += or -= or *=")
             print("Risk: Low")  
             print("Confidence: High\n")
+            
+            report.write("\nDangerous Unary Expression Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Check correct use could have meant += or -= or *=")
+            report.write("\nRisk: Low")  
+            report.write("\nConfidence: High\n")
             score += 3
     return score
 
@@ -138,6 +170,11 @@ def check_bool_const(file):
             print("Solution: Simplify condition or verify code is not a mistake in boolen const")
             print("Risk: Low")   
             print("Confidence: High\n")
+            
+            report.write("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Simplify condition or verify code is not a mistake in boolen const")
+            report.write("\nRisk: Low")   
+            report.write("\nConfidence: High\n")
             score+= 3
                    
         if ((bug_six in line) or (bug_seven in line) or (bug_eight in line) or (bug_nine in line) or (bug_ten in line)):
@@ -145,6 +182,11 @@ def check_bool_const(file):
             print("Solution: Simplify condition or verify code is not a mistake in boolen const")
             print("Risk: Low")   
             print("Confidence: High\n")
+            
+            report.write("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Simplify condition or verify code is not a mistake in boolen const")
+            report.write("\nRisk: Low")   
+            report.write("\nConfidence: High\n")
             score+= 3
 
         if((key in line) and ((var_one in line) or (var_two in line))):
@@ -152,6 +194,11 @@ def check_bool_const(file):
             print("Solution: Verify whether mistake of tautology")
             print("Risk: Low")   
             print("Confidence: High\n")
+            
+            report.write("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Verify whether mistake of tautology")
+            report.write("\nRisk: Low")   
+            report.write("\nConfidence: High\n")
             score+= 3
     return score
 
@@ -185,6 +232,11 @@ def check_arr_length(file):
                 print("Solution: Don't set array length directly, add values as needed storage could be vulnerble")
                 print("Risk: Medium") 
                 print("Confidence: Medium\n")
+                
+                report.write("\nArray Length Assignement Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Don't set array length directly, add values as needed storage could be vulnerble")
+                report.write("\nRisk: Medium") 
+                report.write("\nConfidence: Medium\n")
                 score += 6
     return score  
 #uninitialised storage var check not already coded this bro
@@ -218,18 +270,36 @@ def check_init_storage_var(file):
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
                 print("Risk: High") 
                 print("Confidence: Medium\n")
+                
+                report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
+                report.write("\nRisk: High") 
+                report.write("\nConfidence: Medium\n")
+                
                 score += 9
         if((var_one in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
                 print("Risk: High") 
                 print("Confidence: Medium\n")
+                
+                report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
+                report.write("\nRisk: High") 
+                report.write("\nConfidence: Medium\n")
+                
                 score += 9
         if((var_two in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
                 print("Risk: High") 
                 print("Confidence: Medium\n")
+                
+                report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
+                report.write("\nRisk: High") 
+                report.write("\nConfidence: Medium\n")
+                
                 score += 9
     return score
 #incorrect shift in assembely
@@ -258,6 +328,12 @@ def check_assemble_shift(file):
                 print("Solution: Swap order of parametres in shift")
                 print("Risk: High") 
                 print("Confidence: Medium\n")
+                
+                report.write("\nIncorrect Shit In Assembly Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Swap order of parametres in shift")
+                report.write("\nRisk: High") 
+                report.write("\nConfidence: Medium\n")
+                
                 score += 9
     return score
 #suicidel
@@ -280,6 +356,12 @@ def check_self_destruct(file):
             print("Solution: Check that address is not used as could send ether to an attacker contract")
             print("Risk: Medium")          
             print("Confidence: Low\n")
+            
+            report.write("\nSelf Destruct Vulnerability Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Check that address is not used as could send ether to an attacker contract")
+            report.write("\nRisk: Medium")          
+            report.write("\nConfidence: Low\n")
+            
             score += 6
     #Case 2 public function with selfdestruct
     for i, line in code_second:
@@ -292,6 +374,12 @@ def check_self_destruct(file):
             print("Solution: If using self detruct restrict access to function as not public")
             print("Risk: High") 
             print("Confidence: High\n")
+            
+            report.write("\nSelf Destruct Vulnerability Detected at Line: " + str(i + 1))
+            report.write("\nSolution: If using self detruct restrict access to function as not public")
+            report.write("\nRisk: High") 
+            report.write("\nConfidence: High\n")
+            
             score += 9
                 
     return score
@@ -311,12 +399,25 @@ def check_transfer(file):
                 \ntransaction fails to minimise vulnerbaility")
             print("Risk: Medium") 
             print("Confidence: High\n")
+            
+            report.write("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Use transfer function instead of send operation as send doesn't capture")
+            report.write("\ntransaction fails to minimise vulnerbaility")
+            report.write("\nRisk: Medium") 
+            report.write("\nConfidence: High\n")
+            
             score +=6     
         elif bug_2 in line:
             print("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
             print("Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility")
             print("Risk: High")  
             print("Confidence: Medium\n")
+            
+            report.write("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Use transfer function operation since call has no gas limit to minimise vulnerbaility")
+            report.write("\nRisk: High")  
+            report.write("\nConfidence: Medium\n")
+            
             score += 9
     return score          
             
@@ -334,6 +435,12 @@ def check_bytes(file):
             print("Solution: Use bytes instead of bytes[] array to minimise vulnerbaility")
             print("Risk: Low")  
             print("Confidence: High\n")
+            
+            report.write("\nStorage Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Use bytes instead of bytes[] array to minimise vulnerbaility")
+            report.write("\nRisk: Low")  
+            report.write("\nConfidence: High\n")
+            
             score += 3
     return score  
 
@@ -349,6 +456,12 @@ def check_tx_origin(file):
             print("Solution: Use msg.sender instead of tx.origin to minimise vulnerbaility")
             print("Risk: High") 
             print("Confidence: High\n") 
+            
+            report.write("\nAuthentication Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Use msg.sender instead of tx.origin to minimise vulnerbaility")
+            report.write("\nRisk: High") 
+            report.write("\nConfidence: High\n") 
+            
             score += 9
     return score
             
@@ -366,6 +479,12 @@ def check_function_visibility(file):
             print("Solution: Use public/private specifier when defining function to minimise vulnerbaility")
             print("Risk: High") 
             print("Confidence: High\n")
+            
+            report.write("\nVisibility Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Use public/private specifier when defining function to minimise vulnerbaility")
+            report.write("\nRisk: High") 
+            report.write("\nConfidence: High\n")
+            
             score += 9
     return score
  
@@ -381,6 +500,12 @@ def check_balance_equality(file):
             print("Solution: Use public/private specifier when defining function to minimise vulnerbaility")
             print("Risk: High") 
             print("Confidence: Low\n")
+            
+            report.write("\nEquality Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Use public/private specifier when defining function to minimise vulnerbaility")
+            report.write("\nRisk: High") 
+            report.write("\nConfidence: Low\n")
+            
             score += 9
     return score
 
@@ -396,6 +521,11 @@ def check_block_timestamp(file):
             print("Solution: Avoid block.randomness for randomness to minimise DoS vulnerbaility")
             print("Risk: Medium")                
             print("Confidence: High\n")
+            
+            report.write("\nRandomness Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Avoid block.randomness for randomness to minimise DoS vulnerbaility")
+            report.write("\nRisk: Medium")                
+            report.write("\nConfidence: High\n")
             score += 6
     return score
 
@@ -412,6 +542,12 @@ def check_block_variable(file):
             print("Solution: Potenital leaky PRNGS rely heavily on past block hashes future vulnerbility")
             print("Risk: Low") 
             print("Confidence: High\n")
+            
+            report.write("\nBlock Variable Dependency Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Potenital leaky PRNGS rely heavily on past block hashes future vulnerbility")
+            report.write("\nRisk: Low") 
+            report.write("\nConfidence: High\n")
+            
             score+= 3
     return score
 
@@ -426,6 +562,12 @@ def check_block_number(file):
             print("Solution: Check function not send/transfer, can be manipulated by attackers")
             print("Risk: Low") 
             print("Confidence: High\n")
+            
+            report.write("\nBlock Number Dependency Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Check function not send/transfer, can be manipulated by attackers")
+            report.write("\nRisk: Low") 
+            report.write("\nConfidence: High\n")
+            
             score += 3
     return score
             
@@ -441,6 +583,12 @@ def check_delegate_call(file):
             print("Solution: Avoid Delegate Call this can lead to unexpected code execution vulnerbaility")
             print("Risk: Low") 
             print("Confidence: High\n")
+            
+            report.write("\nDelegate Call Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Avoid Delegate Call this can lead to unexpected code execution vulnerbaility")
+            report.write("\nRisk: Low") 
+            report.write("\nConfidence: High\n")
+            
             score += 3
     return score
 
@@ -460,6 +608,12 @@ def check_loop_function(file):
             print("Solution: Avoid Function Call In For/While Loop possible DoS vulnerbaility")
             print("Risk: Low")   
             print("Confidence: High\n")
+            
+            report.write("\nFor/While Loop Function Call Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Avoid Function Call In For/While Loop possible DoS vulnerbaility")
+            report.write("\nRisk: Low")   
+            report.write("\nConfidence: High\n")
+            
             score += 3
        
         if ((loop_for in line) or (loop_while in line)):
@@ -485,6 +639,12 @@ def check_block_gas(file):
             print("Solution: Avoid loop of unknown size that could grow and cause DoS vulnerability")
             print("Risk: High")  
             print("Confidence: Medium\n")
+            
+            report.write("\nBlock Gas Limit Bug Detected at Line: " + str(i + 1))
+            report.write("\nSolution: Avoid loop of unknown size that could grow and cause DoS vulnerability")
+            report.write("\nRisk: High")  
+            report.write("\nConfidence: Medium\n")
+            
             score += 9
     return score
             
@@ -504,6 +664,12 @@ def check_fallback(file):
                 print("Solution: Mark Fallback function with payable otherwise contract cannot recieve ether")
                 print("Risk: Medium")  
                 print("Confidence: Medium\n")
+
+                report.write("\nPayable Fallback Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Mark Fallback function with payable otherwise contract cannot recieve ether")
+                report.write("\nRisk: Medium")  
+                report.write("\nConfidence: Medium\n")
+                
                 score += 6
     return score
 
@@ -552,6 +718,13 @@ def check_contract_lock(file):
         print("Solution: Use a blockreentracy contract lock mechanism so only a single contract function is executed")
         print("Risk: Medium") 
         print("Confidence: Medium\n") 
+        
+        report.write("\nReentracy Bug Detected in contract")
+        report.write("\nSolution: Use a blockreentracy contract lock mechanism so only a single contract") 
+        report.write("\nfunction is executed")
+        report.write("\nRisk: Medium") 
+        report.write("\nConfidence: Medium\n") 
+        
         score += 6
     return score
 
@@ -580,6 +753,12 @@ def check_withdraw_a(file, func_name, state_var, with_amount_var):
             print("Solution: We need this to check require balance and amount first")
             print("Risk: Medium")  
             print("Confidence: Medium\n")
+            
+            report.write("\nWithdraw Function Call Bug Detected at Line: " + str(line_var))
+            report.write("\nSolution: We need this to check require balance and amount first")
+            report.write("\nRisk: Medium")  
+            report.write("\nConfidence: Medium\n")
+            
             score += 10
             
         if ((end_char in line) and  (start_char not in line) and (found == True)):
@@ -609,6 +788,12 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
             print("Solution: Update state variable balance before call")
             print("Risk: High")  
             print("Confidence: High\n")
+            
+            report.write("\nWithdraw Function Call Bug Detected at Line: " + str(i +1))
+            report.write("\nSolution: Update state variable balance before call")
+            report.write("\nRisk: High")  
+            report.write("\nConfidence: High\n")
+            
             score += 10
           
         if ((call_made == False) and (state_var in line) and (with_amount_var in line) and (subtract in line)):
@@ -631,6 +816,12 @@ def check_external_call(file):
             print("Solution: Be aware that subsequent calls also inherit untrust state")
             print("Risk: low") 
             print("Confidence: Medium\n")
+            
+            report.write("\nUntrusted Function Bug Detected at Line: " + str(i +1))
+            report.write("\nSolution: Be aware that subsequent calls also inherit untrust state")
+            report.write("\nRisk: low") 
+            report.write("\nConfidence: Medium\n")
+            
             score += 2
         #Bad Case external call is untrusted
         if ((end in line) and (len(line) <= 2)):
@@ -641,6 +832,12 @@ def check_external_call(file):
             print("Solution: Be aware that subsequent calls also inherit untrust state")
             print("Risk: High") 
             print("Confidence: Medium\n")
+            
+            report.write("\nUntrusted Function External Call Bug Detected at Line: " + str(i +1))
+            report.write("\nSolution: Be aware that subsequent calls also inherit untrust state")
+            report.write("\nRisk: High") 
+            report.write("\nConfidence: Medium\n")
+            
             score +=5
         if ((keyword_func in line) and (keyword in line)):
             start = True
@@ -651,6 +848,12 @@ def check_external_call(file):
             print("Solution: Unknown trust, label function either trusted/untrusted")
             print("Risk: Medium") 
             print("Confidence: Medium\n")
+            
+            report.write("\nUntrusted Function Bug Detected at Line: " + str(i +1))
+            report.write("\nSolution: Unknown trust, label function either trusted/untrusted")
+            report.write("\nRisk: Medium") 
+            report.write("\nConfidence: Medium\n")
+            
             score += 2
     return score
 
@@ -691,6 +894,12 @@ def check_effects_interactions_pattern(file):
                 print("Solution: Check is missing")
                 print("Risk: Medium") 
                 print("Confidence: Medium\n")
+                
+                report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
+                report.write("\nSolution: Check is missing")
+                report.write("\nRisk: Medium") 
+                report.write("\nConfidence: Medium\n")
+                
                 score += 2  
             #Check Order
             if (single_check == True):
@@ -698,6 +907,12 @@ def check_effects_interactions_pattern(file):
                 print("Solution: Check is out of order")
                 print("Risk: Medium")
                 print("Confidence: Medium\n")
+                
+                report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
+                report.write("\nSolution: Check is out of order")
+                report.write("\nRisk: Medium")
+                report.write("\nConfidence: Medium\n")
+                
                 score += 2  
             #Effect Order
             if ((effect_found == False) and (single_effect == False)):
@@ -705,6 +920,12 @@ def check_effects_interactions_pattern(file):
                 print("Solution: Effect is missing")
                 print("Risk: Medium")  
                 print("Confidence: Medium\n")
+                
+                report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
+                report.write("\nSolution: Effect is missing")
+                report.write("\nRisk: Medium")  
+                report.write("\nConfidence: Medium\n")
+                
                 score += 2   
             #Effect Missing     
             if (single_effect == True):
@@ -712,6 +933,12 @@ def check_effects_interactions_pattern(file):
                 print("Solution: Effect is out of order")
                 print("Risk: Medium")  
                 print("Confidence: Medium\n")
+                
+                report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
+                report.write("\nSolution: Effect is out of order")
+                report.write("\nRisk: Medium")  
+                report.write("\nConfidence: Medium\n")
+                
                 score += 2  
             #Interact Missing
             if ((interact_found == False) and (single_interact == False)):
@@ -719,6 +946,12 @@ def check_effects_interactions_pattern(file):
                 print("Solution: Interact is missing")
                 print("Risk: Medium")   
                 print("Confidence: Medium\n")  
+                
+                report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
+                report.write("\nSolution: Interact is missing")
+                report.write("\nRisk: Medium")   
+                report.write("\nConfidence: Medium\n")
+                
                 score += 2           
             #Interact Order
             if (single_interact == True):
@@ -726,6 +959,12 @@ def check_effects_interactions_pattern(file):
                 print("Solution: Interact is out of order")
                 print("Risk: Medium")      
                 print("Confidence: Medium\n")
+                
+                report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
+                report.write("\nSolution: Interact is out of order")
+                report.write("\nRisk: Medium")      
+                report.write("\nConfidence: Medium\n")
+                
                 score += 2  
             #Reset Variables
             start = False
@@ -851,11 +1090,17 @@ def handlephase3():
     score = 0
     filename = "Tests/" + fname.get()
     score = check_complex_checks(filename, score, withname.get(), balname.get(), amountname.get())
+    print(score)
+    report.write("\nTotal Bug Points: " + str(score))
     score = calc_complex_score(score)
     if (score < 50):
         print("Smart Contract Score: <50%")
+        report.write("\nSmart Contract Score: <50% \n")
+
     else:
         print("Smart Contract Score: " + str(score) +"%" )
+        report.write("\nSmart Contract Score: " + str(score) +"%\n" )
+
     
 def handlephase2():
     global test2
@@ -864,11 +1109,16 @@ def handlephase2():
     filename = "Tests/" + var.get()
     sc = call_simple_checks(filename, sc)
     print(sc)
+    report.write("\nTotal Bug Points: " + str(sc))
     sc = calc_score(sc)
     if (sc < 50):
         print("Smart Contract Score: <50%")
+        report.write("\nSmart Contract Score: <50% \n")
+
     else:
         print("Smart Contract Score: " + str(sc) +"%" )
+        report.write("\nSmart Contract Score: " + str(sc) +"%\n" )
+
         
 def phase3():
     root1 = Tk()
@@ -975,6 +1225,12 @@ def main():
     # it is use for display the registration form on the window
 
     root.mainloop()
+    
+    
+    #Close Report
+    report.close()
+    
+    
     #if (test2 == True):
     #    score = call_simple_checks(bigfile, score)
     #print("WINDOW CLOSED")
