@@ -1,0 +1,39 @@
+
+Integer Overflow/Underflow Bug Detected at Line: 3
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 8
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Unsafe Type Innference Overflow/Underflow Bug Detected at Line: 5
+Solution: Explicitly declare uint data types to avoid unexpected behaviors
+Risk: Low
+Confidence: High
+
+Unsafe Type Innference Overflow/Underflow Bug Detected at Line: 7
+Solution: Explicitly declare uint data types to avoid unexpected behaviors
+Risk: Low
+Confidence: High
+
+Unsafe Type Innference Overflow/Underflow Bug Detected at Line: 9
+Solution: Explicitly declare uint data types to avoid unexpected behaviors
+Risk: Low
+Confidence: High
+
+Uninitialised Storage Variable Bug Detected at Line: 3
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Reentracy Bug Detected in contract
+Solution: Use a blockreentracy contract lock mechanism so only a single contract
+function is executed
+Risk: Medium
+Confidence: Medium
+
+Total Bug Points: 42
+Smart Contract Score: 95%

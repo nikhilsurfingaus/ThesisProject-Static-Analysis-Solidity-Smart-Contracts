@@ -87,7 +87,7 @@ def check_integer_operations(file):
             if ((pos_inc or neg_inc) not in line) and (op in line):    
                 print("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
-                print("Risk: High")
+                print("Risk: Medium")
                 print("Confidence: High\n")
                 
                 report.write("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
@@ -95,6 +95,34 @@ def check_integer_operations(file):
                 report.write("\nRisk: High")
                 report.write("\nConfidence: High\n")
                 score+=9
+    return score
+
+
+#Overflow/Underflow For/While loop
+def check_loop_condition(file):
+    code = enumerate(open(file))
+    type_1 = "for"
+    type_2 = "while"
+    var_type = "uint"
+    bug_1 = ">="
+    bug_2 = "<="
+    score = 0
+    for i, line in code:
+        if((type_1 in line) or (type_2 in line)):
+            if (var_type in line):
+                if((bug_1 in line) or (bug_2 in line)):    
+                    print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                    print("Solution: When using uint for/while loop avoid >= or <= that could cause infinite loop")
+                    print("Instead use >, <, == or != operators")
+                    print("Risk: High")  
+                    print("Confidence: Medium\n")
+                    
+                    report.write("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                    report.write("\nSolution: When using uint for/while loop avoid >= or <= that")
+                    report.write("\ncould cause infinite loop. Instead use >, <, == or != operators")
+                    report.write("\nRisk: High")  
+                    report.write("\nConfidence: Medium\n")
+                    score+= 6
     return score
 
 #Division before multiply
@@ -145,6 +173,31 @@ def check_unary(file):
             report.write("\nRisk: Low")  
             report.write("\nConfidence: High\n")
             score += 3
+    return score
+
+
+#Unsafe Type Inference Overflow/Underflow
+def check_type_infer(file):
+    code = enumerate(open(file))
+    score = 0
+    key = "var"
+    start = "= "
+    end = ";"
+    for i, line in code:
+        if (key in line):
+            value = line[line.find(start)+len(start):line.rfind(end)]
+            if (value.isnumeric()):
+        
+                print("\nUnsafe Type Innference Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                print("Solution: Explicitly declare uint data types to avoid unexpected behaviors")
+                print("Risk: Low")  
+                print("Confidence: High\n")
+            
+                report.write("\nUnsafe Type Innference Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Explicitly declare uint data types to avoid unexpected behaviors")
+                report.write("\nRisk: Low")  
+                report.write("\nConfidence: High\n")
+                score += 3
     return score
 
 #Boolean Constance Bug
@@ -571,7 +624,7 @@ def check_block_number(file):
             score += 3
     return score
             
-#Checks for Delegate Call bug
+#Checks for Delegate Call  for parity sig wallet attack
 def check_delegate_call(file):
     code = enumerate(open(file))
     bug = "delegatecall"
@@ -1050,6 +1103,8 @@ def calc_score(score):
 def call_simple_checks(file, score):
     score += compiler_issue(file)
     score += check_safe_math(file) 
+    score += check_type_infer(file)
+    score += check_loop_condition(file)
     score +=check_integer_operations(file)   
     score +=check_transfer(file)
     score +=check_tx_origin(file)
