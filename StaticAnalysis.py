@@ -679,6 +679,119 @@ def check_loop_function(file):
             loop_start = False
     return score
 
+#Overpowered Owner Address bug
+def check_owner_power(file):
+    code = enumerate(open(file))
+    code_1 = enumerate(open(file))
+    code_2 = enumerate(open(file))
+    code_3 = enumerate(open(file))
+    
+    score = 0
+    
+    #General Req
+    add = "address"
+    own = "owner"
+    constructor = "constructor"
+    creator = "msg.sender"
+    cont = False
+    
+    for i, line in code:
+        if ((add in line) and (own in line)):
+            cont = True
+    #Case 1 using constructor
+    start_con = False
+    con_defined = False
+    con_end_char = "}"
+    end_len = 6
+    func = "function"
+    req = "require"
+    start_func = False
+    func_end_char = "}"
+    if (cont == True):
+        for i, line in code_1:
+            if ((con_end_char in line) and (len(line) == end_len)):
+                start_con = False
+            if ((func_end_char in line) and (len(line) == end_len)):
+                start_func = False       
+            if (constructor in line):
+                start_con = True
+            if (start_con == True):
+                #look for case
+                if ((own in line) and (creator in line)):
+                    con_defined = True
+            if ((func in line) and (start_con == False) and (con_defined == True)):
+                start_func = True
+            if(start_func == True):
+                if ((req in line) and (own in line) and (creator in line)):
+                    print("\nOver Powered Owner Bug Detected at Line: " + str(i + 1))
+                    print("Solution: Owner private key at risk of being comprimised don't base function control on owner")
+                    print("Risk: High")   
+                    print("Confidence: High\n")
+            
+                    report.write("\nOver Powered Owner Bug Detected at Line: " + str(i + 1))
+                    report.write("\nSolution: Owner private key at risk of being comprimised") 
+                    report.write("\ndon't base function control on owner")
+                    report.write("\nRisk: High")   
+                    report.write("\nConfidence: High\n") 
+                    
+                    score += 9
+           
+    #Case 2 using modifer
+    mod = "modifier "
+    mod_last_part = "{"
+    start_mod = False
+    mod_end_char = "}"
+    mod_exists = False
+    modifier_name = ""
+    mod_names = np.array([])
+    inner = "("
+    outer = ")"
+    req_found = False
+    owner_found = False
+    msg_sender_found = False
+    
+    #List unkown size of owner modifiers
+    for i, line in code_2:
+        if ((start_mod == True) and (mod_end_char in line) and (len(line) == end_len)):
+            start_mod = False
+            if ((req_found == True) and (owner_found == True) and (msg_sender_found == True)):
+                mod_exists = True
+                mod_names = np.append(mod_names, modifier_name)
+            req_found = False
+            owner_found = False
+            msg_sender_found = False
+            modifier_name = ""
+        if ((mod in line) and (inner not in line) and (outer not in line)):
+            start_mod = True
+            modifier_name = line[line.find(mod)+len(mod):line.rfind(mod_last_part)].replace(" ", "")
+            #assign potential mod name here
+        if ((start_mod == True) and (req in line)):
+            req_found = True
+
+        if ((start_mod == True) and (own in line)):
+            owner_found = True
+
+        if ((start_mod == True) and (creator in line)):
+            msg_sender_found = True
+
+    for i, line in code_3:
+        if ((mod_exists == True) and (func in line)):
+            for mod_variable in mod_names:
+                if (mod_variable in line):
+                    print("\nOver Powered Owner Bug Detected at Line: " + str(i + 1))
+                    print("Solution: Owner private key at risk of being comprimised don't use modifier function") 
+                    print("control of owner for functions")
+                    print("Risk: High")   
+                    print("Confidence: High\n")
+            
+                    report.write("\nOver Powered Owner Bug Detected at Line: " + str(i + 1))
+                    report.write("\nSolution: Owner private key at risk of being comprimised don't use modifier function") 
+                    report.write("\ncontrol of owner for functions")
+                    report.write("\nRisk: High")   
+                    report.write("\nConfidence: High\n") 
+                    
+                    score += 9    
+    return score
 #Block Gas Limit
 def check_block_gas(file):
     code = enumerate(open(file))
@@ -1105,27 +1218,28 @@ def call_simple_checks(file, score):
     score += check_safe_math(file) 
     score += check_type_infer(file)
     score += check_loop_condition(file)
-    score +=check_integer_operations(file)   
-    score +=check_transfer(file)
-    score +=check_tx_origin(file)
-    score +=check_function_visibility(file)
-    score +=check_balance_equality(file)
-    score +=check_block_timestamp(file)
-    score +=check_delegate_call(file)
-    score +=check_loop_function(file)
-    score +=check_bytes(file)
-    score +=check_block_variable(file)
-    score +=check_block_number(file)
-    score +=check_block_gas(file)
-    score +=check_fallback(file)
-    score +=check_unary(file)
-    score +=check_div_multiply(file)
-    score +=check_bool_const(file)
-    score +=check_arr_length(file)
-    score +=check_init_storage_var(file)
-    score +=check_assemble_shift(file)
-    score +=check_self_destruct(file)
-    score +=check_contract_lock(file)
+    score += check_integer_operations(file)   
+    score += check_transfer(file)
+    score += check_tx_origin(file)
+    score += check_function_visibility(file)
+    score += check_balance_equality(file)
+    score += check_block_timestamp(file)
+    score += check_delegate_call(file)
+    score += check_loop_function(file)
+    score += check_owner_power(file)
+    score += check_bytes(file)
+    score += check_block_variable(file)
+    score += check_block_number(file)
+    score += check_block_gas(file)
+    score += check_fallback(file)
+    score += check_unary(file)
+    score += check_div_multiply(file)
+    score += check_bool_const(file)
+    score += check_arr_length(file)
+    score += check_init_storage_var(file)
+    score += check_assemble_shift(file)
+    score += check_self_destruct(file)
+    score += check_contract_lock(file)
     return score
 
 def check_complex_checks(file, score, func_name, state_var, with_amount_var):

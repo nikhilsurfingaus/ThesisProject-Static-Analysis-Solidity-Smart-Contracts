@@ -1,30 +1,64 @@
 
-Integer Overflow/Underflow Bug Detected at Line: 3
+Integer Overflow/Underflow Bug Detected at Line: 12
 Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 8
-Solution: Use SafeMath library to minimise vulnerbaility
+Integer Overflow/Underflow Bug Detected at Line: 27
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Unsafe Type Innference Overflow/Underflow Bug Detected at Line: 5
-Solution: Explicitly declare uint data types to avoid unexpected behaviors
-Risk: Low
+Integer Overflow/Underflow Bug Detected at Line: 37
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Risk: High
 Confidence: High
 
-Unsafe Type Innference Overflow/Underflow Bug Detected at Line: 7
-Solution: Explicitly declare uint data types to avoid unexpected behaviors
-Risk: Low
+Integer Overflow/Underflow Bug Detected at Line: 40
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Risk: High
 Confidence: High
 
-Unsafe Type Innference Overflow/Underflow Bug Detected at Line: 9
-Solution: Explicitly declare uint data types to avoid unexpected behaviors
-Risk: Low
+Integer Overflow/Underflow Bug Detected at Line: 42
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Risk: High
 Confidence: High
 
-Uninitialised Storage Variable Bug Detected at Line: 3
+Integer Overflow/Underflow Bug Detected at Line: 46
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 21
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Over Powered Owner Bug Detected at Line: 29
+Solution: Owner private key at risk of being comprimised
+don't base function control on owner
+Risk: High
+Confidence: High
+
+Over Powered Owner Bug Detected at Line: 33
+Solution: Owner private key at risk of being comprimised
+don't base function control on owner
+Risk: High
+Confidence: High
+
+Over Powered Owner Bug Detected at Line: 41
+Solution: Owner private key at risk of being comprimised don't use modifier function
+control of owner for functions
+Risk: High
+Confidence: High
+
+Over Powered Owner Bug Detected at Line: 45
+Solution: Owner private key at risk of being comprimised don't use modifier function
+control of owner for functions
+Risk: High
+Confidence: High
+
+Uninitialised Storage Variable Bug Detected at Line: 2
 Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
 Confidence: Medium
@@ -35,5 +69,5 @@ function is executed
 Risk: Medium
 Confidence: Medium
 
-Total Bug Points: 42
-Smart Contract Score: 95%
+Total Bug Points: 114
+Smart Contract Score: 85%
