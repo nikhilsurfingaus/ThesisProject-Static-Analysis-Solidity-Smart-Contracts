@@ -98,7 +98,7 @@ def check_integer_operations(file):
     return score
 
 
-#Overflow/Underflow For/While loop
+#Overflow/Underflow For/While loop using >= or <= or unint in loop could be infinite 
 def check_loop_condition(file):
     code = enumerate(open(file))
     type_1 = "for"
@@ -109,20 +109,34 @@ def check_loop_condition(file):
     score = 0
     for i, line in code:
         if((type_1 in line) or (type_2 in line)):
-            if (var_type in line):
-                if((bug_1 in line) or (bug_2 in line)):    
-                    print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
-                    print("Solution: When using uint for/while loop avoid >= or <= that could cause infinite loop")
-                    print("Instead use >, <, == or != operators")
-                    print("Risk: High")  
-                    print("Confidence: Medium\n")
+            if((bug_1 in line) or (bug_2 in line)):    
+                print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                print("Solution: When using uint for/while loop avoid >= or <= that could cause infinite loop")
+                print("Instead use >, <, == or != loop operators")
+                print("Risk: Medium")  
+                print("Confidence: Medium\n")
                     
-                    report.write("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
-                    report.write("\nSolution: When using uint for/while loop avoid >= or <= that")
-                    report.write("\ncould cause infinite loop. Instead use >, <, == or != operators")
-                    report.write("\nRisk: High")  
-                    report.write("\nConfidence: Medium\n")
-                    score+= 6
+                report.write("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: When using uint for/while loop avoid >= or <= that")
+                report.write("\ncould cause infinite loop. Instead use >, <, == or != loop operators")
+                report.write("\nRisk: Medium")  
+                report.write("\nConfidence: Medium\n")
+                score+= 3
+                
+            if (var_type in line):
+                print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                print("Solution: Careful when using uint within loop as could cause infinite loop check no")
+                print("constant true condition can evaluate")
+                print("Risk: High")  
+                print("Confidence: Low\n")
+                    
+                report.write("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
+                report.write("\nSolution: Careful when using uint within loop as could cause infinite loop check no")
+                report.write("\nconstant true condition can evaluate")
+                report.write("\nRisk: High")  
+                report.write("\nConfidence: Low\n")
+                
+                score+= 6
     return score
 
 #Division before multiply

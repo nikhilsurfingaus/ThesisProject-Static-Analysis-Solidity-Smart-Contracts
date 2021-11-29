@@ -6,7 +6,12 @@ contract FallbackPayable {
     function dog() public {
         var x = 1;
         uint c = 5;
+        ///BAD infered as uint8 auto overflow possible
         for (var x = 7; x ++){
+            unit8 g = 0;
+        }
+        ///GOOD
+        for (unint256 x = 7; x ++){
             unit8 g = 0;
         }
     }
