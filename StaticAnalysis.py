@@ -806,6 +806,120 @@ def check_owner_power(file):
                     
                     score += 9    
     return score
+
+#Multiple Constructor Definitations and data initialisations 
+def check_constructor_init(file):
+    code = enumerate(open(file))
+    code_1 = enumerate(open(file))
+    code_2 = enumerate(open(file))
+    score = 0
+
+    start = " "
+    end = ";"
+    equal = "="
+    con = "constructor"
+    func = "function"
+    mod = "modifier"
+    struct = "struct"
+    
+    #List of variables defined prior to other parts in contract
+    var_names = np.array([])
+    
+    #Store contrcat name
+    contract_name = "";
+    cont = "contract"
+    con_end = "{"
+    
+    #Get init variable names
+    for i, line in code:
+        if (cont in line):
+            contract_name = line[line.find(cont)+len(cont):line.rfind(con_end)].replace(" ", "")
+        if((con in line) or (func in line) or (mod in line) or (struct in line)):
+            break;
+        if ((end in line) and (equal not in line)):
+            #Find and store variable name in list 
+            sub = line[line.find(start)+len(start):line.rfind(end)]
+            dtype = sub[sub.find(start)+len(start):sub.rfind(start)]            
+            var = line[line.find(dtype)+len(dtype):line.rfind(end)].replace(" ", "")
+            var_names = np.append(var_names, var)
+
+    #Case Overloading with old scheme using consturtor and function contract methods of consturctr 
+    count = 0
+    con_line = 0;
+    func_line = 0;
+    
+    #CASE 1 Multiple Constructors
+    for i, line in code_1:
+        #Case 1 we have 2 Constructors Defined causes unintended effect
+        if (con in line):
+            count += 1
+            con_line = i + 1
+        if ((func in line) and (contract_name in line)):
+            count += 1
+            func_line = i + 1
+        
+    if (count >= 2):
+        print("\nMultiple Constructors Defined with constructor at Line: " + str(con_line))
+        print("And function constructor at Line " + str(func_line))
+        print("Solution: Use single constructor to initialise contract second constructor will be ignored") 
+        print("Risk: Low")   
+        print("Confidence: High\n")
+        
+        report.write("\nMultiple Constructors Defined with constructor at Line: " + str(con_line))
+        report.write("\nAnd function constructor at Line " + str(func_line))
+        report.write("\nSolution: Use single constructor to initialise contract second constructor will be ignored")
+        report.write("\nRisk: Low")  
+        report.write("\nConfidence: High\n")
+        
+        score += 3
+
+    found_vars = np.array([])
+    
+    #Constructor
+    start_con = False
+    length = 6
+    
+    #Function
+    start_func = False
+    func_con_end =  "}"
+    
+    #CASE 2 Defined Variables Across Multiple Constructors 
+    for i, line in code_2:
+        if ((func_con_end in line) and (start_con == True) and (len(line) == length)):
+            start_con = False
+            
+        if ((con in line) and (start_con == False)):
+            start_con = True
+            
+        if((func in line) and (contract_name in line) and (start_func == False)):
+            start_func = True
+    
+        if ((func_con_end in line) and (start_func == True) and (len(line) == length)):
+            start_func = False
+    
+        if((start_con == True) and (equal in line) and (end in line)):
+            for current_var in var_names:
+                if ((current_var in line)):
+                    found_vars = np.append(found_vars, current_var)
+                    
+        if (start_func == True):
+            for con_var in found_vars:
+                if (con_var in line):
+                    print("\nVariable " + con_var + " defined across multiple constructors")
+                    print("See constructor Line: " + str(con_line) + " And function constructor Line: " + str(func_line))
+                    print("Solution: Use single constructor and intialise variables once in constructor") 
+                    print("Risk: Medium")   
+                    print("Confidence: High\n")
+        
+                    report.write("\nVariable " + con_var + " defined across multiple constructors")
+                    report.write("\nSee constructor Line: " + str(con_line) + " And function constructor Line: " + str(func_line))
+                    report.write("\nSolution: Use single constructor and intialise variables once in constructor")
+                    report.write("\nRisk: Medium")  
+                    report.write("\nConfidence: High\n")
+        
+                    score += 6                    
+    return score
+
 #Block Gas Limit
 def check_block_gas(file):
     code = enumerate(open(file))
@@ -1241,6 +1355,7 @@ def call_simple_checks(file, score):
     score += check_delegate_call(file)
     score += check_loop_function(file)
     score += check_owner_power(file)
+    score += check_constructor_init(file)
     score += check_bytes(file)
     score += check_block_variable(file)
     score += check_block_number(file)
