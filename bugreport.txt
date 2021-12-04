@@ -1,0 +1,102 @@
+
+Integer Overflow/Underflow Bug Detected at Line: 2
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 15
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 26
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 16
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 27
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 30
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 33
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Multiple Constructors Defined with constructor at Line: 4
+And function constructor at Line 33
+Solution: Use single constructor to initialise contract second constructor will be ignored
+Risk: Low
+Confidence: High
+
+Variable x defined across multiple constructors
+See constructor Line: 4 And function constructor Line: 33
+Solution: Use single constructor and intialise variables once in constructor
+Risk: Medium
+Confidence: High
+
+Variable x defined across multiple constructors
+See constructor Line: 4 And function constructor Line: 33
+Solution: Use single constructor and intialise variables once in constructor
+Risk: Medium
+Confidence: High
+
+Variable x defined across multiple constructors
+See constructor Line: 4 And function constructor Line: 33
+Solution: Use single constructor and intialise variables once in constructor
+Risk: Medium
+Confidence: High
+
+Variable x defined across multiple constructors
+See constructor Line: 4 And function constructor Line: 33
+Solution: Use single constructor and intialise variables once in constructor
+Risk: Medium
+Confidence: High
+
+Uninitialised Storage Variable Bug Detected at Line: 2
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 3
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Zero Address Check Bug Detected at Function Line: 16
+Solution: Check address is not zero using require, address variable and checking
+it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
+Risk: Low
+Confidence: High
+
+Zero Address Check Bug Detected at Function Line: 19
+Solution: Check address is not zero using require, address variable and checking
+it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
+Risk: Low
+Confidence: High
+
+Zero Address Check Bug Detected at Function Line: 22
+Solution: Check address is not zero using require, address variable and checking
+it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
+Risk: Low
+Confidence: High
+
+Reentracy Bug Detected in contract
+Solution: Use a blockreentracy contract lock mechanism so only a single contract
+function is executed
+Risk: Medium
+Confidence: Medium
+
+Total Bug Points: 123
+Smart Contract Score: 80%

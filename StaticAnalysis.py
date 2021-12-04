@@ -306,6 +306,81 @@ def check_arr_length(file):
                 report.write("\nConfidence: Medium\n")
                 score += 6
     return score  
+
+#Missing Address Zero Validation Check
+def check_address_zero(file):
+    code = enumerate(open(file))
+    score = 0;
+   
+    func = "function"
+    add = "address"
+    not_eq = "!="
+    req = "require"
+    
+    #Checks
+    type_1 = "address(0)"
+    type_2 = "0x0"
+    type_3 = "address(0x0)"
+    
+    #Find Address name in function
+    address_name = ""
+    add_function_start = False
+    end_func = "}"
+    end_len = 6
+    overall_safe = False
+    req_safe = False
+    add_zero_safe = False
+    function_line = 0
+    
+    #Start in function when find address stop when function ends
+    for i, line in code:
+        if ((add_function_start == True) and (end_func in line) and (len(line) == end_len)):
+            #Here we can do print and write output
+            if (overall_safe == False):
+                
+                print("\nZero Address Check Bug Detected at Function Line: " + str(function_line))
+                print("Solution: Check address is not zero using require, address variable and checking")
+                print("it is not equal to either 'address(0)', '0x0' or 'address(0x0)'")
+                print("Risk: Low") 
+                print("Confidence: High\n")
+                
+                report.write("\nZero Address Check Bug Detected at Function Line: " + str(function_line))
+                report.write("\nSolution: Check address is not zero using require, address variable and checking")
+                report.write("\nit is not equal to either 'address(0)', '0x0' or 'address(0x0)'")
+                report.write("\nRisk: Low") 
+                report.write("\nConfidence: High\n")
+                
+                score += 3
+                
+            #Reset Variables for next function
+            address_name = ""
+            add_function_start = False
+            overall_safe = False
+            req_safe = False
+            add_zero_safe = False        
+            function_line = 0
+
+        if ((func in line) and (add in line)):
+            add_function_start = True
+            function_line = i + 1
+            #Here we parse the address name
+            start = "(address"
+            end = ")"
+            address_name =  line[line.find(start)+len(start):line.rfind(end)].replace(" ", "")
+             
+        if(add_function_start == True):
+            #Here we are in the function and we check require and not null address exists
+            if (req in line):
+                req_safe = True
+                if((address_name in line) and (not_eq in line)):
+                    if((type_1 in line) or (type_2 in line) or (type_3 in line)):
+                        add_zero_safe = True
+                        
+            if ((add_zero_safe == True) and (req_safe == True)):
+                overall_safe = True
+                
+    return score
+
 #uninitialised storage var check not already coded this bro
 def check_init_storage_var(file):
     code_first = enumerate(open(file))
@@ -1366,6 +1441,7 @@ def call_simple_checks(file, score):
     score += check_bool_const(file)
     score += check_arr_length(file)
     score += check_init_storage_var(file)
+    score += check_address_zero(file)
     score += check_assemble_shift(file)
     score += check_self_destruct(file)
     score += check_contract_lock(file)
