@@ -995,6 +995,118 @@ def check_constructor_init(file):
                     score += 6                    
     return score
 
+#Check Local Variable Shadowing Bug
+def check_loc_var_shadow(file):
+    code = enumerate(open(file))
+    code_1 = enumerate(open(file))
+    code_2 = enumerate(open(file))
+    
+    score = 0;
+   
+    varname_type = {}
+    mod = "modifier"
+    func = "function"
+    con = "constructor"
+    contract = "contract"
+    search_var = False
+    start = " "
+    end = ";"
+    equals = "="
+    
+    for i, line in code:
+        if ((mod in line) or (func in line) or (con in line)):
+            search_var = False
+        if (contract in line):
+            search_var = True
+        #Case 1 No Equals
+        if ((search_var == True) and (equals not in line) and (end in line)):
+            sub = line[line.find(start)+len(start):line.rfind(end)]
+            dtype = sub[sub.find(start)+len(start):sub.rfind(start)]            
+            var = line[line.find(dtype)+len(dtype):line.rfind(end)].replace(" ", "")
+            dtype = dtype.replace(" ", "")
+            
+            entry = {var:dtype}
+            varname_type.update(entry)
+        #Case 2 Equals Set    
+        if ((search_var == True) and (equals in line) and (end in line)):
+            sub = line[line.find(start)+len(start):line.rfind(equals)]
+            dtype = sub.split()[0]
+            var = sub.split()[1]   
+             
+            entry = {var:dtype}
+            varname_type.update(entry)
+        
+    #Now use value and data type to search for two cases
+    #CASE 1 Function passes same variable name from dictionary could be same or different datatype
+    for i, line in code_1:
+        if (func in line):
+            for var, data_type in varname_type.items():
+                if (var in line):                    
+                    print("\nFunction Local Shadow Bug at Line: " + str(i+1) + " has variable " + var)
+                    print("this is local variable shadowing")
+                    print("Solution: Consider renaming local variable to mitigate unintended variable shadowing") 
+                    print("Risk: Low")   
+                    print("Confidence: High\n")
+        
+                    report.write("\nFunction Local Shadow Bug at Line: " + str(i+1) + " has variable " + var)
+                    report.write("\nthis is local variable shadowing")
+                    report.write("\nSolution: Consider renaming local variable to mitigate unintended local variable shadowing")
+                    report.write("\nRisk: Low")  
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 3
+                    
+    start_func = False
+    end_func = "}"
+    end_len = 6
+    doub_eq = "=="
+    o_brac = "("
+    c_brac = ")"
+    #CASE 2 Define variable in function with different or same data type but same varible name
+    for i, line in code_2:
+        if ((start_func == True) and (end_func in line) and (len(line) == end_len)):
+            start_func = False
+        if ((start_func == False) and (func in line)):
+            start_func = True
+        
+        
+        if (start_func == True):
+            for var, data_type in varname_type.items():
+                var = " " + var + " "
+                #2A Redefine WORST
+                if ((var in line) and (data_type in line) and (doub_eq not in line) and (o_brac not in line) and (c_brac not in line) and (end in line)):
+                                        
+                    print("\nLocal Shadow Bug at Bug detected at Line: " + str(i+1) + " has data type: " + data_type + " and variable: " + var)
+                    print("this is local variable shadowing, and can redefine contract prior variables")
+                    print("Solution:  Consider not redefining contract local variable unless inteded to") 
+                    print("Risk: Medium")   
+                    print("Confidence: Medium\n")
+        
+                    report.write("\nLocal Shadow Bug at Bug detected at Line: " + str(i+1) + " has data type: " + data_type)
+                    report.write("\nand variable: " + var + "this is local variable shadowing, and can redefine contract prior variables")
+                    report.write("\nSolution: Consider not redefining contract local variable unless inteded to")
+                    report.write("\nRisk: Medium")  
+                    report.write("\nConfidence: Medium\n")
+                    
+                    score += 6
+                #2B Duplicate Variable Medium bad
+                if ((var in line) and (data_type not in line) and (doub_eq not in line) and (o_brac not in line) and (c_brac not in line) and (end in line)):
+                                        
+                    print("\nLocal Shadow Bug at Bug detected at Line: " + str(i+1) + " has variable: " + var)
+                    print("this is local variable shadowing, 2 variables defined with same name but different data types")
+                    print("Solution: Consider renaming local variable to mitigate unintended local variable shadowing") 
+                    print("Risk: Low")   
+                    print("Confidence: High\n")
+        
+                    report.write("\nLocal Shadow Bug at Bug detected at Line: " + str(i+1) + " has variable: " + var)
+                    report.write("\nthis is local variable shadowing, 2 variables defined with same name but different data types")
+                    report.write("\nSolution: Consider renaming local variable to mitigate unintended variable shadowing")
+                    report.write("\nRisk: Low")  
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 3
+    return score
+
 #Block Gas Limit
 def check_block_gas(file):
     code = enumerate(open(file))
@@ -1431,6 +1543,7 @@ def call_simple_checks(file, score):
     score += check_loop_function(file)
     score += check_owner_power(file)
     score += check_constructor_init(file)
+    score += check_loc_var_shadow(file)
     score += check_bytes(file)
     score += check_block_variable(file)
     score += check_block_number(file)

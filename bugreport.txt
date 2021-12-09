@@ -1,92 +1,111 @@
 
-Integer Overflow/Underflow Bug Detected at Line: 2
+Compiler Bug Detected at Line: 1
+Solution: Remove ^ operator as future compilers may have unintended effects
+Risk: Medium
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 4
 Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 15
+Integer Overflow/Underflow Bug Detected at Line: 6
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 8
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 23
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 41
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 19
 Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 26
+Integer Overflow/Underflow Bug Detected at Line: 24
 Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Visibility Bug Detected at Line: 16
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Integer Overflow/Underflow Bug Detected at Line: 29
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Visibility Bug Detected at Line: 27
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Integer Overflow/Underflow Bug Detected at Line: 34
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Visibility Bug Detected at Line: 30
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Integer Overflow/Underflow Bug Detected at Line: 38
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Visibility Bug Detected at Line: 33
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Integer Overflow/Underflow Bug Detected at Line: 42
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Multiple Constructors Defined with constructor at Line: 4
-And function constructor at Line 33
-Solution: Use single constructor to initialise contract second constructor will be ignored
+Over Powered Owner Bug Detected at Line: 33
+Solution: Owner private key at risk of being comprimised don't use modifier function
+control of owner for functions
+Risk: High
+Confidence: High
+
+Function Local Shadow Bug at Line: 33 has variable owner
+this is local variable shadowing
+Solution: Consider renaming local variable to mitigate unintended local variable shadowing
 Risk: Low
 Confidence: High
 
-Variable x defined across multiple constructors
-See constructor Line: 4 And function constructor Line: 33
-Solution: Use single constructor and intialise variables once in constructor
-Risk: Medium
+Function Local Shadow Bug at Line: 37 has variable send
+this is local variable shadowing
+Solution: Consider renaming local variable to mitigate unintended local variable shadowing
+Risk: Low
 Confidence: High
 
-Variable x defined across multiple constructors
-See constructor Line: 4 And function constructor Line: 33
-Solution: Use single constructor and intialise variables once in constructor
-Risk: Medium
+Local Shadow Bug at Bug detected at Line: 18 has variable:  owner 
+this is local variable shadowing, 2 variables defined with same name but different data types
+Solution: Consider renaming local variable to mitigate unintended variable shadowing
+Risk: Low
 Confidence: High
 
-Variable x defined across multiple constructors
-See constructor Line: 4 And function constructor Line: 33
-Solution: Use single constructor and intialise variables once in constructor
+Local Shadow Bug at Bug detected at Line: 23 has data type: uint
+and variable:  owner this is local variable shadowing, and can redefine contract prior variables
+Solution: Consider not redefining contract local variable unless inteded to
 Risk: Medium
-Confidence: High
+Confidence: Medium
 
-Variable x defined across multiple constructors
-See constructor Line: 4 And function constructor Line: 33
-Solution: Use single constructor and intialise variables once in constructor
-Risk: Medium
-Confidence: High
-
-Uninitialised Storage Variable Bug Detected at Line: 2
+Uninitialised Storage Variable Bug Detected at Line: 4
 Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
 Confidence: Medium
 
-Uninitialised Storage Variable Bug Detected at Line: 3
+Uninitialised Storage Variable Bug Detected at Line: 5
 Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
 Confidence: Medium
 
-Zero Address Check Bug Detected at Function Line: 16
+Zero Address Check Bug Detected at Function Line: 33
 Solution: Check address is not zero using require, address variable and checking
 it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
 Risk: Low
 Confidence: High
 
-Zero Address Check Bug Detected at Function Line: 19
-Solution: Check address is not zero using require, address variable and checking
-it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
-Risk: Low
-Confidence: High
-
-Zero Address Check Bug Detected at Function Line: 22
+Zero Address Check Bug Detected at Function Line: 37
 Solution: Check address is not zero using require, address variable and checking
 it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
 Risk: Low
@@ -98,5 +117,5 @@ function is executed
 Risk: Medium
 Confidence: Medium
 
-Total Bug Points: 123
-Smart Contract Score: 80%
+Total Bug Points: 159
+Smart Contract Score: 75%
