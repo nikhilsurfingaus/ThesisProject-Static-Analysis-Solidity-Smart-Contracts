@@ -14,80 +14,137 @@ Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 8
+Integer Overflow/Underflow Bug Detected at Line: 7
 Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 23
+Integer Overflow/Underflow Bug Detected at Line: 9
 Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 41
+Integer Overflow/Underflow Bug Detected at Line: 30
 Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 19
+Integer Overflow/Underflow Bug Detected at Line: 31
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 58
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 59
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 65
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 66
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 21
 Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 24
+Integer Overflow/Underflow Bug Detected at Line: 27
 Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 29
+Integer Overflow/Underflow Bug Detected at Line: 43
 Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 34
+Integer Overflow/Underflow Bug Detected at Line: 56
 Solution: Use SafeMath library operation .div to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 38
-Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Unhadled Exceptions Bug Detected at Line: 13
+Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility
 Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 42
-Solution: Use SafeMath library operation .div to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Over Powered Owner Bug Detected at Line: 33
-Solution: Owner private key at risk of being comprimised don't use modifier function
-control of owner for functions
-Risk: High
-Confidence: High
-
-Function Local Shadow Bug at Line: 33 has variable owner
-this is local variable shadowing
-Solution: Consider renaming local variable to mitigate unintended local variable shadowing
-Risk: Low
-Confidence: High
-
-Function Local Shadow Bug at Line: 37 has variable send
-this is local variable shadowing
-Solution: Consider renaming local variable to mitigate unintended local variable shadowing
-Risk: Low
-Confidence: High
-
-Local Shadow Bug at Bug detected at Line: 18 has variable:  owner 
-this is local variable shadowing, 2 variables defined with same name but different data types
-Solution: Consider renaming local variable to mitigate unintended variable shadowing
-Risk: Low
-Confidence: High
-
-Local Shadow Bug at Bug detected at Line: 23 has data type: uint
-and variable:  owner this is local variable shadowing, and can redefine contract prior variables
-Solution: Consider not redefining contract local variable unless inteded to
-Risk: Medium
 Confidence: Medium
+
+Unhadled Exceptions Bug Detected at Line: 32
+Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility
+Risk: High
+Confidence: Medium
+
+Visibility Bug Detected at Line: 20
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 36
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 50
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 69
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Multiple Constructors Defined with constructor at Line: 61
+And function constructor at Line 0
+Solution: Use single constructor to initialise contract second constructor will be ignored
+Risk: Low
+Confidence: High
+
+State Variable Bug Detected at Line: 29
+Solution: Define inherited parent contract variable: name in Constructor
+Risk: High
+Confidence: High
+
+State Variable Bug Detected at Line: 30
+Solution: Define inherited parent contract variable: mData in Constructor
+Risk: High
+Confidence: High
+
+State Variable Bug Detected at Line: 31
+Solution: Define inherited parent contract variable: cData in Constructor
+Risk: High
+Confidence: High
+
+State Variable Bug Detected at Line: 32
+Solution: Define inherited parent contract variable: ConOwn in Constructor
+Risk: High
+Confidence: High
+
+State Variable Bug Detected at Line: 33
+Solution: Same variable name from parent redefined use different variable name
+Risk: Medium
+Confidence: High
+
+State Variable Bug Detected at Line: 33
+Solution: Parent contract variable never assigned, assign in parent contract to prevent
+unintended effect
+Risk: High
+Confidence: High
+
+State Variable Bug Detected at Line: 47
+Solution: Assign Parent Contract prior to child contract
+Risk: Medium
+Confidence: High
 
 Uninitialised Storage Variable Bug Detected at Line: 4
 Solution: Immediatly initalise storage variables could be ovveridded
@@ -99,17 +156,20 @@ Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
 Confidence: Medium
 
-Zero Address Check Bug Detected at Function Line: 33
-Solution: Check address is not zero using require, address variable and checking
-it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
-Risk: Low
-Confidence: High
+Uninitialised Storage Variable Bug Detected at Line: 9
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
 
-Zero Address Check Bug Detected at Function Line: 37
-Solution: Check address is not zero using require, address variable and checking
-it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
-Risk: Low
-Confidence: High
+Uninitialised Storage Variable Bug Detected at Line: 33
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 59
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
 
 Reentracy Bug Detected in contract
 Solution: Use a blockreentracy contract lock mechanism so only a single contract
@@ -117,5 +177,5 @@ function is executed
 Risk: Medium
 Confidence: Medium
 
-Total Bug Points: 159
-Smart Contract Score: 75%
+Total Bug Points: 276
+Smart Contract Score: <50% 

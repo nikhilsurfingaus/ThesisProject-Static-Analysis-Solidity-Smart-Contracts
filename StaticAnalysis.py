@@ -904,11 +904,13 @@ def check_constructor_init(file):
     contract_name = "";
     cont = "contract"
     con_end = "{"
+    con_count = 0
     
     #Get init variable names
     for i, line in code:
         if (cont in line):
             contract_name = line[line.find(cont)+len(cont):line.rfind(con_end)].replace(" ", "")
+            con_count +=1
         if((con in line) or (func in line) or (mod in line) or (struct in line)):
             break;
         if ((end in line) and (equal not in line)):
@@ -933,7 +935,7 @@ def check_constructor_init(file):
             count += 1
             func_line = i + 1
         
-    if (count >= 2):
+    if ((count >= 2) and (con_count <= 1)):
         print("\nMultiple Constructors Defined with constructor at Line: " + str(con_line))
         print("And function constructor at Line " + str(func_line))
         print("Solution: Use single constructor to initialise contract second constructor will be ignored") 
@@ -1012,8 +1014,13 @@ def check_loc_var_shadow(file):
     start = " "
     end = ";"
     equals = "="
+    con_count = 0;
     
     for i, line in code:
+        if(con_count > 1):
+            break
+        if (contract in line):
+            con_count += 1
         if ((mod in line) or (func in line) or (con in line)):
             search_var = False
         if (contract in line):
@@ -1105,6 +1112,190 @@ def check_loc_var_shadow(file):
                     report.write("\nConfidence: High\n")
                     
                     score += 3
+    return score
+#Check State Variable Shadowing Bug
+def check_state_var_shadow(file):
+    code = enumerate(open(file))
+    code_1 = enumerate(open(file))
+
+    score = 0;
+   
+    #Before the constructor code is executed, state variables are initialised to their 
+    #specified value if you initialise them inline, or zero if you do not.
+    
+    contract = "contract"
+    construct = "constructor"
+    func = "function"
+    modify = "modifier"
+    pub = "public"
+    eq = "="
+    close = ";"
+    contract_name = ""
+    end_len = 2
+    end_con = "}"
+    start_con = "{"
+    start_search = False
+    in_con = False
+    
+    #Array House Variable Names
+    var_names = np.array([])
+
+    #Dictionary House Variables Names and weather assigned
+    var_assigned = {}
+    
+    #Store all state variabled from first contract and get parent contract name
+    for i, line in code:
+        #print(line + " start: " + str(start_search))
+        if ((modify in line) or (func in line) or ((end_con in line) and (len(line) == end_len))):
+            start = False
+            break
+        
+        if (contract in line):
+            start_search = True
+            contract_name = line[line.find(contract)+len(contract):line.rfind(start_con)].replace(" ", "")
+
+        if ((eq in line) and (start_search == True) and (in_con == False)):
+            #Here store var name in array and var and and assigned in dictoonary
+            if (pub not in line):             
+                start = " "
+                end_var = ""
+                first = line[line.find(start)+len(start):line.rfind(eq)]
+                Dtype = first[first.find(start)+len(start):first.rfind(start)]
+                Dtype = Dtype[Dtype.find(start)+len(start):Dtype.rfind(start)]
+
+                var_name = first[first.find(Dtype)+len(Dtype):first.rfind(end_var)].replace(" ", "")
+                var_names = np.append(var_names, var_name)
+                
+                entry = {var_name:True}
+                var_assigned.update(entry)
+                
+            if (pub in line):
+                var_name = line[line.find(pub)+len(pub):line.rfind(eq)].replace(" ", "")
+                var_names = np.append(var_names, var_name) 
+                
+                entry = {var_name:True}
+                var_assigned.update(entry)   
+                
+        if ((eq not in line) and (close in line) and (start_search == True) and (in_con == False)):
+            #Here store var name in list
+            if (pub not in line):
+                start = " "
+                end_var = ""
+                first = line[line.find(start)+len(start):line.rfind(close)]
+                Dtype = first[first.find(start)+len(start):first.rfind(start)]
+                var_name = first[first.find(Dtype)+len(Dtype):first.rfind(end_var)].replace(" ", "")
+                var_names = np.append(var_names, var_name)
+            
+            if (pub in line):
+                var_name = line[line.find(pub)+len(pub):line.rfind(close)].replace(" ", "")
+                var_names = np.append(var_names, var_name)
+                
+        if (in_con == True):
+        #Loop over stored variables if that name and eq in line and not in dic then put in dic with assigned value
+            for name in var_names:
+                if ((name in line) and (eq in line) and (name not in var_assigned)):
+                    entry = {name:True}
+                    var_assigned.update(entry)
+                
+        if ((construct in line) and (start_search == True)):
+            in_con = True
+
+    #Loop over variable list and if not in dictionary then put in dictionary with unassgined value
+    for name in var_names:
+        if (name not in var_assigned):
+            entry = {name:False}
+            var_assigned.update(entry)
+    
+    #Now look over remiaining contrcats
+    inherit = "is"
+    current_con = False
+    current_construct = False
+    end_contract = False
+    end = "}"
+    con_len = 6;
+    before_anything = False
+    
+    for i, line in code_1:
+        
+        if (((current_con == True) and (end in line) and (len(line) == con_len)) or (end_contract == True)):
+            current_con = False
+            before_anything = False
+            end_contract = False
+
+        if ((inherit in line) and (contract_name in line)):
+            current_con = True
+            
+        if ((construct in line) and (before_anything == True)):
+            before_anything = False
+            current_construct = True
+            
+        if (current_construct == True):
+            for name,assign in var_assigned.items():
+                if ((name in line) and (assign == False)):
+                    print("\nState Variable Bug Detected at Line: " + str(i+1))
+                    print("Solution: Assign Parent Contract prior to child contract")
+                    print("Risk: Medium")      
+                    print("Confidence: High\n")
+                
+                    report.write("\nState Variable Bug Detected at Line: " + str(i+1))
+                    report.write("\nSolution: Assign Parent Contract prior to child contract")
+                    report.write("\nRisk: Medium")      
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 3
+                
+        if ((func in line) or (modify in line)):
+            before_anything = False
+            end_contract = True
+            
+        if ((before_anything == True)):
+            for name in var_names:
+                if ((name in line) and (eq in line)):
+                    print("\nState Variable Bug Detected at Line: " + str(i+1))
+                    print("Solution: Define inherited parent contract variable: " + name + " in Constructor")
+                    print("Risk: High")      
+                    print("Confidence: High\n")
+                
+                    report.write("\nState Variable Bug Detected at Line: " + str(i+1))
+                    report.write("\nSolution: Define inherited parent contract variable: " + name + " in Constructor")
+                    report.write("\nRisk: High")      
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 6
+                    
+                if ((name in line) and (eq not in line)):
+                    print("\nState Variable Bug Detected at Line: " + str(i+1))
+                    print("Solution: Same variable name from parent redefined use different variable name")
+                    print("Risk: Medium")      
+                    print("Confidence: High\n")
+                
+                    report.write("\nState Variable Bug Detected at Line: " + str(i+1))
+                    report.write("\nSolution: Same variable name from parent redefined use different variable name")
+                    report.write("\nRisk: Medium")      
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 3
+                                    
+            for name,assign in var_assigned.items():
+                if ((name in line) and (assign == False)):
+                    print("\nState Variable Bug Detected at Line: " + str(i+1))
+                    print("Solution: Parent contract variable never assigned, assign in parent contract to prevent")
+                    print("unintended effect")
+                    print("Risk: High")      
+                    print("Confidence: High\n")
+                
+                    report.write("\nState Variable Bug Detected at Line: " + str(i+1))
+                    report.write("\nSolution: Parent contract variable never assigned, assign in parent contract to prevent")
+                    report.write("\nunintended effect")
+                    report.write("\nRisk: High")      
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 6
+                                                   
+        #Look through Vars before constructor, function or modifier check not from parent contract
+        if ((current_con == True) and (before_anything == False) and (current_construct == False)):
+            before_anything = True            
+            
     return score
 
 #Block Gas Limit
@@ -1544,6 +1735,7 @@ def call_simple_checks(file, score):
     score += check_owner_power(file)
     score += check_constructor_init(file)
     score += check_loc_var_shadow(file)
+    score += check_state_var_shadow(file)
     score += check_bytes(file)
     score += check_block_variable(file)
     score += check_block_number(file)
