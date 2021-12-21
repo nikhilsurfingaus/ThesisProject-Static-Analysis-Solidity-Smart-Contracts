@@ -4,172 +4,111 @@ Solution: Remove ^ operator as future compilers may have unintended effects
 Risk: Medium
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 4
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 6
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
 Integer Overflow/Underflow Bug Detected at Line: 7
 Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 9
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 30
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 31
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 58
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 59
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 65
-Solution: Use SafeMath library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 66
+Integer Overflow/Underflow Bug Detected at Line: 11
 Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
 Integer Overflow/Underflow Bug Detected at Line: 21
-Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 22
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 23
+Solution: Use SafeMath library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 24
+Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
 Integer Overflow/Underflow Bug Detected at Line: 27
-Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 43
-Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Integer Overflow/Underflow Bug Detected at Line: 28
+Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Integer Overflow/Underflow Bug Detected at Line: 56
-Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Integer Overflow/Underflow Bug Detected at Line: 29
+Solution: Use SafeMath library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Unhadled Exceptions Bug Detected at Line: 13
-Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility
+Visibility Bug Detected at Line: 13
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Uninitialised Storage Variable Bug Detected at Line: 6
+Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
 Confidence: Medium
 
-Unhadled Exceptions Bug Detected at Line: 32
-Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility
+Uninitialised Storage Variable Bug Detected at Line: 20
+Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
 Confidence: Medium
 
-Visibility Bug Detected at Line: 20
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Uninitialised Storage Variable Bug Detected at Line: 21
+Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
-Confidence: High
+Confidence: Medium
 
-Visibility Bug Detected at Line: 36
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Uninitialised Storage Variable Bug Detected at Line: 22
+Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
-Confidence: High
+Confidence: Medium
 
-Visibility Bug Detected at Line: 50
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Uninitialised Storage Variable Bug Detected at Line: 23
+Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
-Confidence: High
+Confidence: Medium
 
-Visibility Bug Detected at Line: 69
-Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Uninitialised Storage Variable Bug Detected at Line: 27
+Solution: Immediatly initalise storage variables could be ovveridded
 Risk: High
-Confidence: High
+Confidence: Medium
 
-Multiple Constructors Defined with constructor at Line: 61
-And function constructor at Line 0
-Solution: Use single constructor to initialise contract second constructor will be ignored
+Mapping Data Type Mismatch Bug detected Line: 11
+Solution: Use same data type key as defined in struct for mapping
 Risk: Low
 Confidence: High
 
-State Variable Bug Detected at Line: 29
-Solution: Define inherited parent contract variable: name in Constructor
-Risk: High
-Confidence: High
-
-State Variable Bug Detected at Line: 30
-Solution: Define inherited parent contract variable: mData in Constructor
-Risk: High
-Confidence: High
-
-State Variable Bug Detected at Line: 31
-Solution: Define inherited parent contract variable: cData in Constructor
-Risk: High
-Confidence: High
-
-State Variable Bug Detected at Line: 32
-Solution: Define inherited parent contract variable: ConOwn in Constructor
-Risk: High
-Confidence: High
-
-State Variable Bug Detected at Line: 33
-Solution: Same variable name from parent redefined use different variable name
+Mapping Deletion Bug detected Line: 14
+Only single item removed not entire mapping from mapping struct:  stackBalance
+From deletion Function in line: 13
+Solution: Use lock technqiue mechanism to disable mapping structure if needed to remove
 Risk: Medium
 Confidence: High
 
-State Variable Bug Detected at Line: 33
-Solution: Parent contract variable never assigned, assign in parent contract to prevent
-unintended effect
-Risk: High
-Confidence: High
-
-State Variable Bug Detected at Line: 47
-Solution: Assign Parent Contract prior to child contract
+Mapping Deletion Bug detected Line: 15
+Only single item removed not entire mapping from mapping struct:  stockBalance
+From deletion Function in line: 13
+Solution: Use lock technqiue mechanism to disable mapping structure if needed to remove
 Risk: Medium
 Confidence: High
 
-Uninitialised Storage Variable Bug Detected at Line: 4
-Solution: Immediatly initalise storage variables could be ovveridded
-Risk: High
-Confidence: Medium
-
-Uninitialised Storage Variable Bug Detected at Line: 5
-Solution: Immediatly initalise storage variables could be ovveridded
-Risk: High
-Confidence: Medium
-
-Uninitialised Storage Variable Bug Detected at Line: 9
-Solution: Immediatly initalise storage variables could be ovveridded
-Risk: High
-Confidence: Medium
-
-Uninitialised Storage Variable Bug Detected at Line: 33
-Solution: Immediatly initalise storage variables could be ovveridded
-Risk: High
-Confidence: Medium
-
-Uninitialised Storage Variable Bug Detected at Line: 59
-Solution: Immediatly initalise storage variables could be ovveridded
-Risk: High
-Confidence: Medium
+Mapping Deletion Bug detected Line: 33
+Only single item removed not entire mapping from mapping struct: campaigns
+From deletion Function in line: 32
+Solution: Use lock technqiue mechanism to disable mapping structure if needed to remove
+Risk: Medium
+Confidence: High
 
 Reentracy Bug Detected in contract
 Solution: Use a blockreentracy contract lock mechanism so only a single contract
@@ -177,5 +116,5 @@ function is executed
 Risk: Medium
 Confidence: Medium
 
-Total Bug Points: 276
-Smart Contract Score: <50% 
+Total Bug Points: 177
+Smart Contract Score: 70%

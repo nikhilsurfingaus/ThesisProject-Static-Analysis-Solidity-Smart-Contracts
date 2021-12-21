@@ -381,6 +381,133 @@ def check_address_zero(file):
                 
     return score
 
+#Mapping Struct Deletion Bug
+def check_map_struct_delete(file):
+    code = enumerate(open(file))
+    code_1 = enumerate(open(file))
+    code_2 = enumerate(open(file))
+
+    score = 0;
+   
+    pub = "public"
+    priv = "private"
+    struct = "struct"
+    mapp = "mapping"
+    supress = ";"
+    func = "function"
+    before_type = "("
+    after_type = " =>"
+    after_dest = ") "
+    empty = " "
+    
+    start_search = False
+    end_struct = "}"
+    start_struct = "{"
+    end_len = 6
+    struct_name = ""
+    dtype = ""
+    
+    struct_dtype = {}
+    
+    #Find Struct Names if this struct contains a map then store it in np array
+    for i, line in code:
+        
+        if((start_search == True) and (end_struct in line) and (len(line) == end_len)):
+            start_search = False
+            struct_name = ""
+            dtype = ""
+            
+        if (struct in line):
+            start_search = True
+            #Get struct name
+            struct_name = line[line.find(struct)+len(struct):line.rfind(start_struct)].replace(" ", "")
+        
+        if((mapp in line) and (start_search == True)):
+            #Here store the data type with the struct name in dictionary
+            dtype = line[line.find(before_type)+len(before_type):line.rfind(after_type)].replace(" ", "")
+            entry = {struct_name:dtype}
+            struct_dtype.update(entry)
+       
+    defined_mappings = np.array([])
+    #Look for mapping outside of struct and store its name in array
+    for i, line in code_1:
+        
+        if (mapp in line):
+            for struct_name, dtype in struct_dtype.items():
+                if ((struct_name in line) and (dtype in line)):
+                    #print(line)
+                    if (pub in line):
+                        map_name = line[line.find(pub)+len(pub):line.rfind(supress)]
+                        map_name.replace(" ", "")  
+                        defined_mappings = np.append(defined_mappings, map_name)
+                    if (priv in line):
+                        map_name = line[line.find(priv)+len(priv):line.rfind(supress)]
+                        map_name.replace(" ", "")  
+                        defined_mappings = np.append(defined_mappings, map_name)
+                if ((struct_name in line) and (dtype not in line)):
+                    print("\nMapping Data Type Mismatch Bug detected Line: " + str(i+1))
+                    print("Solution: Use same data type kry as defined in struct for mapping")
+                    print("Risk: Low") 
+                    print("Confidence: High\n")
+                
+                    report.write("\nMapping Data Type Mismatch Bug detected Line: " + str(i+1))
+                    report.write("\nSolution: Use same data type key as defined in struct for mapping")
+                    report.write("\nRisk: Low") 
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 3
+                    
+                    if (pub in line):
+                        map_name = line[line.find(pub)+len(pub):line.rfind(supress)]
+                        map_name.replace(" ", "")  
+                        defined_mappings = np.append(defined_mappings, map_name)
+                    if (priv in line):
+                        map_name = line[line.find(priv)+len(priv):line.rfind(supress)]
+                        map_name.replace(" ", "")  
+                        defined_mappings = np.append(defined_mappings, map_name)
+                if ((struct_name in line) and (priv not in line) and (pub not in line)):
+                    map_name = line[line.find(after_dest)+len(after_dest):line.rfind(supress)]
+                    map_name.replace(" ", "")  
+                    defined_mappings = np.append(defined_mappings, map_name)
+        
+    #Look for functions that fail to delete mapping
+    start_func = False
+    delete = "delete"
+    func_line = 0
+    
+    for i, line in code_2:
+        if ((start_func == True) and (end_struct in line) and (len(line) == end_len)):
+            start_func = False
+            func_line = 0
+
+        if (func in line):
+            start_func = True
+            func_line = i + 1
+
+            
+        if ((start_func == True) and (delete in line)):
+            for name in defined_mappings:
+                if (name in line):
+                    
+                    print("\nMapping Deletion Bug detected Line: " + str(i+1))
+                    print("Only single item removed not entire mapping from mapping struct: " + name)
+                    print("From deletion Function in line: " + str(func_line))
+                    print("Solution: Use lock technqiue mechanism to disable mapping structure if needed to remove")
+                    print("Risk: Medium") 
+                    print("Confidence: High\n")
+                
+                    report.write("\nMapping Deletion Bug detected Line: " + str(i+1))
+                    report.write("\nOnly single item removed not entire mapping from mapping struct: " + name)
+                    report.write("\nFrom deletion Function in line: " + str(func_line))
+                    report.write("\nSolution: Use lock technqiue mechanism to disable mapping structure if needed to remove")
+                    report.write("\nRisk: Medium") 
+                    report.write("\nConfidence: High\n")
+                    
+                    score += 6        
+    
+    return score
+
+
 #uninitialised storage var check not already coded this bro
 def check_init_storage_var(file):
     code_first = enumerate(open(file))
@@ -1010,6 +1137,7 @@ def check_loc_var_shadow(file):
     func = "function"
     con = "constructor"
     contract = "contract"
+    struct = "struct"
     search_var = False
     start = " "
     end = ";"
@@ -1021,7 +1149,7 @@ def check_loc_var_shadow(file):
             break
         if (contract in line):
             con_count += 1
-        if ((mod in line) or (func in line) or (con in line)):
+        if ((mod in line) or (func in line) or (con in line) or (struct in line)):
             search_var = False
         if (contract in line):
             search_var = True
@@ -1747,6 +1875,7 @@ def call_simple_checks(file, score):
     score += check_arr_length(file)
     score += check_init_storage_var(file)
     score += check_address_zero(file)
+    score += check_map_struct_delete(file)
     score += check_assemble_shift(file)
     score += check_self_destruct(file)
     score += check_contract_lock(file)
