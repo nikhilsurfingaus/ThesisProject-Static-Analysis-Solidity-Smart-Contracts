@@ -40,6 +40,7 @@ def check_safe_math(file):
     code = enumerate(open(file))
     library = "using SafeMath for uint"
     integer = "uint"
+    func = "function"
     safe = False
     function_current = True
     start = True
@@ -59,15 +60,15 @@ def check_safe_math(file):
                 #Already using SafeMath Lib
 
         if (integer in line) and (safe == False) and (start == True):
-            if (library not in line) and (function_current == True):
+            if (library not in line) and (function_current == True) and (func not in line):
                 #Not using SafeMath Lib
                 print("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
-                print("Solution: Use SafeMath library to minimise vulnerbaility")
+                print("Solution: Use SafeMath for uint library to minimise vulnerbaility")
                 print("Risk: High")
                 print("Confidence: High\n")
                 
                 report.write("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
-                report.write("\nSolution: Use SafeMath library to minimise vulnerbaility")
+                report.write("\nSolution: Use SafeMath for uint library to minimise vulnerbaility")
                 report.write("\nRisk: High")
                 report.write("\nConfidence: High\n")
                 
@@ -77,8 +78,8 @@ def check_safe_math(file):
 #Underflow/Overflow Check 2
 def check_integer_operations(file):
     code = enumerate(open(file))
-    pos_inc = "++)"
-    neg_inc = "--)"
+    pos_inc = "++"
+    neg_inc = "--"
     ma_lib = ["+", "-", "*", "/", "%"]
     ma_lib_name = {"+":".add", "-":".sub", "*":".mul", "/":".div", "%":".mod"}   
     score = 0
@@ -104,6 +105,7 @@ def check_loop_condition(file):
     type_1 = "for"
     type_2 = "while"
     var_type = "uint"
+    use = "using"
     bug_1 = ">="
     bug_2 = "<="
     score = 0
@@ -123,7 +125,7 @@ def check_loop_condition(file):
                 report.write("\nConfidence: Medium\n")
                 score+= 3
                 
-            if (var_type in line):
+            if ((var_type in line) and (use not in line)):
                 print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Careful when using uint within loop as could cause infinite loop check no")
                 print("constant true condition can evaluate")
@@ -513,6 +515,7 @@ def check_init_storage_var(file):
     code_first = enumerate(open(file))
     code_second = enumerate(open(file))
     inner = "struct"
+    con = "con"
     outer = " {" 
     req = "="
     req_end = ";"
@@ -520,8 +523,11 @@ def check_init_storage_var(file):
     var_one = "uint"
     var_two = "address"
     score = 0
+    struct_exists = False
     #Get all struct names
     for i, line in code_first:
+        if ((inner in line) and (con not in line)):
+            struct_exists = True
         if (inner in line):
             struct_name = line[line.find(inner)+len(inner):line.rfind(outer)]
             exists = False
@@ -533,8 +539,21 @@ def check_init_storage_var(file):
     #Look for uninitialised variables 
     for i, line in code_second:
         #Look for struct varibales 
-        for var in names:
-            if((var in line) and (req_end in line) and (req not in line)):
+        if (struct_exists == True):
+            for var in names:
+                if((var in line) and (req_end in line) and (req not in line)):
+                    print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                    print("Solution: Immediatly initalise storage variables could be ovveridded")
+                    print("Risk: High") 
+                    print("Confidence: Medium\n")
+                
+                    report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
+                    report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
+                    report.write("\nRisk: High") 
+                    report.write("\nConfidence: Medium\n")
+                
+                    score += 9
+            if((var_one in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
                 print("Risk: High") 
@@ -546,19 +565,7 @@ def check_init_storage_var(file):
                 report.write("\nConfidence: Medium\n")
                 
                 score += 9
-        if((var_one in line) and (req_end in line) and (req not in line)):
-                print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
-                print("Solution: Immediatly initalise storage variables could be ovveridded")
-                print("Risk: High") 
-                print("Confidence: Medium\n")
-                
-                report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
-                report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
-                report.write("\nRisk: High") 
-                report.write("\nConfidence: Medium\n")
-                
-                score += 9
-        if((var_two in line) and (req_end in line) and (req not in line)):
+            if((var_two in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
                 print("Risk: High") 
@@ -866,6 +873,7 @@ def check_loop_function(file):
     code = enumerate(open(file))
     loop_for = "for"
     loop_while = "while"
+    use = "using"
     bug = "."
     function_current = False
     loop_start = False
@@ -885,7 +893,7 @@ def check_loop_function(file):
             
             score += 3
        
-        if ((loop_for in line) or (loop_while in line)):
+        if (((loop_for in line) or (loop_while in line)) and (use not in line)):
             function_current = True
             loop_start = True            
 
@@ -1494,6 +1502,7 @@ def check_contract_lock(file):
     pass_four = False;
     safe = False
     score = 0
+    mod_in_line = False;
     for i, line in code:
         if((start == True) and (end in line) and (len(line) <= length)):
             start = False
@@ -1505,15 +1514,16 @@ def check_contract_lock(file):
             pass_four = False;
         if(key in line):
             start = True
-        if ((first in line) and (pass_two == False) and (pass_three == False) and (pass_four == False)):
+            mod_in_line = True
+        if ((first in line) and (pass_two == False) and (pass_three == False) and (pass_four == False) and (start == True)):
             pass_one = True
-        if ((second in line) and (pass_one == True) and (pass_three == False) and (pass_four == False)):
+        if ((second in line) and (pass_one == True) and (pass_three == False) and (pass_four == False)and (start == True)):
             pass_two = True
-        if ((third in line) and (pass_one == True) and (pass_two == True) and (pass_four == False)):
+        if ((third in line) and (pass_one == True) and (pass_two == True) and (pass_four == False)and (start == True)):
             pass_three = True
-        if ((fourth in line) and (pass_one == True) and (pass_two == True) and (pass_three == True)):
+        if ((fourth in line) and (pass_one == True) and (pass_two == True) and (pass_three == True)and (start == True)):
             pass_four = True
-    if (safe == False):            
+    if ((safe == False) and (mod_in_line == True)):            
         print("\nReentracy Bug Detected in contract")
         print("Solution: Use a blockreentracy contract lock mechanism so only a single contract function is executed")
         print("Risk: Medium") 
@@ -1931,9 +1941,9 @@ def handlephase2():
 def phase3():
     root1 = Tk()
     root1.geometry('500x400')
-    root1.title("Reetrancy DAO Analysis")
-    label_0 = Label(root1, text="Reetrancy DAO Analysis",width=20,font=("bold", 20))
-    label_0.place(x=80,y=53)
+    root1.title("Reetrancy DAO and Withdraw Function Analysis")
+    label_0 = Label(root1, text="Reetrancy DAO and Withdraw Function Analysis",width=40,font=("bold", 14))
+    label_0.place(x=50,y=53)
     label_1 = Label(root1, text="Solidity File Name",width=30,font=("bold", 10))
     label_1.place(x=50,y=130)
     entry_1 = Entry(root1)
@@ -1958,7 +1968,7 @@ def phase3():
     global amountname
     amountname = entry_4
     entry_4.place(x=260,y=280)
-    Button(root1, text='Start Reetrancy DAO Analysis',width=30,bg='brown',fg='white', command=handlephase3).place(x=140,y=330)
+    Button(root1, text='Start Reetrancy DAO and Withdraw Function Analysis',width=50,bg='brown',fg='white', command=handlephase3).place(x=100,y=330)
     # it is use for display the registration form on the window
     root1.mainloop()
 
@@ -2029,7 +2039,7 @@ def main():
     label_0 = Label(root, text="Static Analayis",width=20,font=("bold", 20))
     label_0.place(x=90,y=53)
     Button(root, text='Standard Analysis',width=20,bg='brown',fg='white', command=inter).place(x=180,y=150)
-    Button(root, text='Reetrancy DAO Analysis',width=20,bg='brown',fg='white', command=inter2).place(x=180,y=250)
+    Button(root, text='Reetrancy DAO and Withdraw Function Analysis',width=40,bg='brown',fg='white', command=inter2).place(x=100,y=250)
     # it is use for display the registration form on the window
 
     root.mainloop()
