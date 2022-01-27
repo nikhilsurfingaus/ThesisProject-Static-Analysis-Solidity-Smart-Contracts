@@ -18,4 +18,7 @@ contract HashForEther {
     function _sendWinnings() public {
          msg.sender.transfer(this.balance);
      }
+     function _sendWinnings() internal {
+        msg.sender.transfer(this.balance);
+    }
 }

@@ -80,12 +80,13 @@ def check_integer_operations(file):
     code = enumerate(open(file))
     pos_inc = "++"
     neg_inc = "--"
+    com = "//"
     ma_lib = ["+", "-", "*", "/", "%"]
     ma_lib_name = {"+":".add", "-":".sub", "*":".mul", "/":".div", "%":".mod"}   
     score = 0
     for i, line in code:
         for op in ma_lib:
-            if ((pos_inc or neg_inc) not in line) and (op in line):    
+            if ( ((pos_inc not in line) or (neg_inc not in line)) and (op in line) and (com not in line)):    
                 print("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
                 print("Risk: Medium")
@@ -748,9 +749,10 @@ def check_function_visibility(file):
     type_1 = "public"
     type_2 = "private"
     keyword = "function"
+    type_3 = "internal"
     score = 0
     for i, line in code:
-        if (keyword in line) and not((type_1 in line) or (type_2 in line)):
+        if (keyword in line) and not((type_1 in line) or (type_2 in line) or (type_3 in line)):
             print("\nVisibility Bug Detected at Line: " + str(i + 1))
             print("Solution: Use public/private specifier when defining function to minimise vulnerbaility")
             print("Risk: High") 
@@ -873,6 +875,7 @@ def check_loop_function(file):
     code = enumerate(open(file))
     loop_for = "for"
     loop_while = "while"
+    start_loop = "{"
     use = "using"
     bug = "."
     function_current = False
@@ -893,7 +896,7 @@ def check_loop_function(file):
             
             score += 3
        
-        if (((loop_for in line) or (loop_while in line)) and (use not in line)):
+        if (((loop_for in line) or (loop_while in line)) and (use not in line) and (start_loop in line)):
             function_current = True
             loop_start = True            
 
@@ -1146,6 +1149,11 @@ def check_loc_var_shadow(file):
     con = "constructor"
     contract = "contract"
     struct = "struct"
+    map = "mapping"
+    booly = "bool"
+    pub = "public"
+    start_pub = "public "
+    under = "_"
     search_var = False
     start = " "
     end = ";"
@@ -1157,12 +1165,13 @@ def check_loc_var_shadow(file):
             break
         if (contract in line):
             con_count += 1
-        if ((mod in line) or (func in line) or (con in line) or (struct in line)):
-            search_var = False
         if (contract in line):
             search_var = True
+        if ((mod in line) or (func in line) or (con in line) or (struct in line)):
+            search_var = False
+
         #Case 1 No Equals
-        if ((search_var == True) and (equals not in line) and (end in line)):
+        if ((search_var == True) and (equals not in line) and (end in line) and (map not in line) and (pub not in line) and (booly not in line)):
             sub = line[line.find(start)+len(start):line.rfind(end)]
             dtype = sub[sub.find(start)+len(start):sub.rfind(start)]            
             var = line[line.find(dtype)+len(dtype):line.rfind(end)].replace(" ", "")
@@ -1171,20 +1180,34 @@ def check_loc_var_shadow(file):
             entry = {var:dtype}
             varname_type.update(entry)
         #Case 2 Equals Set    
-        if ((search_var == True) and (equals in line) and (end in line)):
+        if ((search_var == True) and (equals in line) and (end in line) and (map not in line) and (pub not in line) and (booly not in line)):
             sub = line[line.find(start)+len(start):line.rfind(equals)]
             dtype = sub.split()[0]
             var = sub.split()[1]   
-             
             entry = {var:dtype}
             varname_type.update(entry)
-        
+        #Case 3 Public no Equals
+        if ((search_var == True) and (equals not in line) and (end in line) and (map not in line) and (pub in line) and (booly not in line)):
+            sub = line[line.find(start_pub)+len(start_pub):line.rfind(end)]
+            var = sub
+            dtype = line[line.find(start)+len(start):line.rfind(start_pub)].replace(" ", "")
+            entry = {var:dtype}
+            varname_type.update(entry)
+                                            
+        #Case 4 Public Equals
+        if ((search_var == True) and (equals in line) and (end in line) and (map not in line) and (pub in line) and (booly not in line)):
+            sub = line[line.find(start_pub)+len(start_pub):line.rfind(equals)]
+            var = sub  
+            dtype = line[line.find(start)+len(start):line.rfind(start_pub)].replace(" ", "")
+            entry = {var:dtype}
+            varname_type.update(entry)
+
     #Now use value and data type to search for two cases
     #CASE 1 Function passes same variable name from dictionary could be same or different datatype
     for i, line in code_1:
         if (func in line):
             for var, data_type in varname_type.items():
-                if (var in line):                    
+                if ((var in line) and (under not in line)):                    
                     print("\nFunction Local Shadow Bug at Line: " + str(i+1) + " has variable " + var)
                     print("this is local variable shadowing")
                     print("Solution: Consider renaming local variable to mitigate unintended variable shadowing") 
@@ -1490,7 +1513,7 @@ def check_contract_lock(file):
     code = enumerate(open(file))
     key = "modifier"
     end = "}"
-    length = 2;
+    length = 6;
     start = False
     first = "require"
     second = "= true"
@@ -1503,18 +1526,36 @@ def check_contract_lock(file):
     safe = False
     score = 0
     mod_in_line = False;
+    line_num = 0
     for i, line in code:
         if((start == True) and (end in line) and (len(line) <= length)):
             start = False
             if ((pass_one == True) and (pass_two == True) and (pass_three == True) and (pass_four == True)):
                 safe = True
+            if ((safe == False) and (mod_in_line == True)):            
+                print("\nReentracy Bug Detected in contract at line: " + str(line_num))
+                print("Solution: Use a blockreentracy contract lock mechanism so only a single contract function is executed")
+                print("Risk: Medium") 
+                print("Confidence: Medium\n") 
+        
+                report.write("\nReentracy Bug Detected in contract at line: "  + str(line_num))
+                report.write("\nSolution: Use a blockreentracy contract lock mechanism so only a single contract") 
+                report.write("\nfunction is executed")
+                report.write("\nRisk: Medium") 
+                report.write("\nConfidence: Medium\n") 
+        
+                score += 6
+                
             pass_one = False;
             pass_two = False;
             pass_three = False;
             pass_four = False;
+            mod_in_line = False;
+            safe = False;
         if(key in line):
             start = True
             mod_in_line = True
+            line_num = i + 1
         if ((first in line) and (pass_two == False) and (pass_three == False) and (pass_four == False) and (start == True)):
             pass_one = True
         if ((second in line) and (pass_one == True) and (pass_three == False) and (pass_four == False)and (start == True)):
@@ -1523,19 +1564,7 @@ def check_contract_lock(file):
             pass_three = True
         if ((fourth in line) and (pass_one == True) and (pass_two == True) and (pass_three == True)and (start == True)):
             pass_four = True
-    if ((safe == False) and (mod_in_line == True)):            
-        print("\nReentracy Bug Detected in contract")
-        print("Solution: Use a blockreentracy contract lock mechanism so only a single contract function is executed")
-        print("Risk: Medium") 
-        print("Confidence: Medium\n") 
-        
-        report.write("\nReentracy Bug Detected in contract")
-        report.write("\nSolution: Use a blockreentracy contract lock mechanism so only a single contract") 
-        report.write("\nfunction is executed")
-        report.write("\nRisk: Medium") 
-        report.write("\nConfidence: Medium\n") 
-        
-        score += 6
+
     return score
 
         
