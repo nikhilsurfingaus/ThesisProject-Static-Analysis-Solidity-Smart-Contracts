@@ -1,112 +1,28 @@
 
-Compiler Bug Detected at Line: 2
-Solution: Remove ^ operator as future compilers may have unintended effects
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 26
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 27
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 28
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 29
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 30
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 31
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 34
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 35
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 36
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 38
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 39
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 41
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 43
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 72
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Unhadled Exceptions Bug Detected at Line: 71
-Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility
-Risk: High
-Confidence: Medium
-
-Authentication Bug Detected at Line: 17
-Solution: Use msg.sender instead of tx.origin to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Reentracy Bug Detected in contract at line: 6
-Solution: Use a blockreentracy contract lock mechanism so only a single contract
-function is executed
+Withdraw Function Call Bug Detected at Line: 18
+Solution: We need this to check require balance and amount first
 Risk: Medium
 Confidence: Medium
 
-Reentracy Bug Detected in contract at line: 11
-Solution: Use a blockreentracy contract lock mechanism so only a single contract
-function is executed
+Withdraw Function Call Bug Detected at Line: 22
+Solution: Update state variable balance before call
+Risk: High
+Confidence: High
+
+Check-Effect-Interaction Bug Detected at Line: 18
+Solution: Check is out of order
 Risk: Medium
 Confidence: Medium
 
-Reentracy Bug Detected in contract at line: 16
-Solution: Use a blockreentracy contract lock mechanism so only a single contract
-function is executed
+Check-Effect-Interaction Bug Detected at Line: 18
+Solution: Effect is out of order
 Risk: Medium
 Confidence: Medium
 
-Reentracy Bug Detected in contract at line: 21
-Solution: Use a blockreentracy contract lock mechanism so only a single contract
-function is executed
+Check-Effect-Interaction Bug Detected at Line: 18
+Solution: Interact is missing
 Risk: Medium
 Confidence: Medium
 
-Total Bug Points: 174
-Smart Contract Score: 70%
+Total Bug Points: 26
+Smart Contract Score: 80%

@@ -57,6 +57,7 @@ def check_safe_math(file):
         if (integer in line) and (safe == False) and (start == True):
             if library in line:
                 function_current = False
+                safe = True
                 #Already using SafeMath Lib
 
         if (integer in line) and (safe == False) and (start == True):
@@ -378,7 +379,11 @@ def check_address_zero(file):
                 if((address_name in line) and (not_eq in line)):
                     if((type_1 in line) or (type_2 in line) or (type_3 in line)):
                         add_zero_safe = True
-                        
+                     
+            
+                if((type_1 in line or (type_2 in line) or (type_3 in line))):
+                    add_zero_safe = True   
+                    
             if ((add_zero_safe == True) and (req_safe == True)):
                 overall_safe = True
                 
@@ -750,9 +755,10 @@ def check_function_visibility(file):
     type_2 = "private"
     keyword = "function"
     type_3 = "internal"
+    type_4 = "onlyOwner"
     score = 0
     for i, line in code:
-        if (keyword in line) and not((type_1 in line) or (type_2 in line) or (type_3 in line)):
+        if (keyword in line) and not((type_1 in line) or (type_2 in line) or (type_3 in line) or (type_4 in line)):
             print("\nVisibility Bug Detected at Line: " + str(i + 1))
             print("Solution: Use public/private specifier when defining function to minimise vulnerbaility")
             print("Risk: High") 
@@ -1697,7 +1703,7 @@ def check_external_call(file):
     return score
 
 #Checks-effects-interactions pattern
-def check_effects_interactions_pattern(file):
+def check_effects_interactions_pattern(file, func_name):
     code = enumerate(open(file))
     check_one = "require"
     check_two = "assert"
@@ -1708,6 +1714,8 @@ def check_effects_interactions_pattern(file):
     inter_send = "send"
     inter_trans = "transfer"
     inter_call = "call"
+    less = "<"
+    big = '>'
     
     first = False
     Second = False
@@ -1728,7 +1736,7 @@ def check_effects_interactions_pattern(file):
         if ((end in line) and (len(line) <= 2) and (start == True)):
             #Output Phase
             #Check Missing
-            if (check_found == False):
+            if ((check_found == False) and (single_check == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Check is missing")
                 print("Risk: Medium") 
@@ -1753,7 +1761,7 @@ def check_effects_interactions_pattern(file):
                 report.write("\nConfidence: Medium\n")
                 
                 score += 2  
-            #Effect Order
+            #Effect Missing
             if ((effect_found == False) and (single_effect == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Effect is missing")
@@ -1766,7 +1774,7 @@ def check_effects_interactions_pattern(file):
                 report.write("\nConfidence: Medium\n")
                 
                 score += 2   
-            #Effect Missing     
+            #Effect Order     
             if (single_effect == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Effect is out of order")
@@ -1818,29 +1826,30 @@ def check_effects_interactions_pattern(file):
             single_interact = False
             function_line = 0;
         #Come accross new function
-        if ((new_function in line) and (start == False)):
+        if ((new_function in line) and (func_name in line) and (start == False)):
             start = True 
             first = True  
             function_line = i + 1
+
         #Check Phase
-        if (((check_one in line) or (check_two in line)) and (first == True)):
+        if (((check_one in line) or (check_two in line)) and (first == True) and (single_effect == False) and (interact_found == False) and (single_interact == False)):
             check_found = True
             Second = True
         #Check Phase out of order
-        if((Second == False) and ((check_one in line) or (check_two in line))):
+        if((Second == False) and (first == True) and ((check_one in line) or (check_two in line))):
             single_check = True;
         #Effect Phase
-        if ((Second == True) and (update in line)):
+        if ((Second == True) and  (first == True) and (update in line) and (less not in line) and (big not in line)):
             effect_found = True
             third = True
         #Effect But no Check
-        if ((update in line) and (Second == False)):
-            single_effect = True        
-            #Interact Phase
-        if ((third == True) and ((inter_call in line) or (inter_send in line) or (inter_trans in line))):
+        if ((update in line) and (less not in line) and (first == True) and (big not in line) and (Second == False) and (effect_found == False)):
+            single_effect = True 
+        #Interact Phase
+        if (((third == True) and (start == True) and (update not in line) and  ((inter_call in line) or (inter_send in line) or (inter_trans in line)))):
             interact_found = True
         #Interact But no Check/Effect
-        if (((inter_call in line) or (inter_send in line) or (inter_trans in line)) and (third == False)):
+        if (((inter_call in line) or (inter_send in line) or (inter_trans in line)) and (third == False) and (interact_found == False) and (start == True) and (update not in line)):
             single_interact = True 
 
     return score
@@ -1895,6 +1904,7 @@ def call_simple_checks(file, score):
     score += check_transfer(file)
     score += check_tx_origin(file)
     score += check_function_visibility(file)
+    score+=check_external_call(file)
     score += check_balance_equality(file)
     score += check_block_timestamp(file)
     score += check_delegate_call(file)
@@ -1923,8 +1933,7 @@ def call_simple_checks(file, score):
 def check_complex_checks(file, score, func_name, state_var, with_amount_var):
     score+=check_withdraw_a(file, func_name, state_var, with_amount_var)
     score+=check_withdraw_b(file, func_name, state_var, with_amount_var)
-    score+=check_external_call(file)
-    score+=check_effects_interactions_pattern(file)
+    score+=check_effects_interactions_pattern(file, func_name)
     #print("Total Score: " + str(score))
     return score
 
