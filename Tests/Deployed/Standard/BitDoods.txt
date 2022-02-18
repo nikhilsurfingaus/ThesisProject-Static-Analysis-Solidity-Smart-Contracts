@@ -23,8 +23,8 @@ contract BitDoods is ERC721Enumerable, Ownable {
     setBaseURI(_initBaseURI);
     
   }
-
-  function mint(uint256 _mintAmount) public payable {
+    
+  function mint(uint256 _mintAmount) public {
     require(!paused, "the contract is paused");
     uint256 supply = totalSupply();
     require(_mintAmount > 0, "need to mint at least 1 NFT");
@@ -55,28 +55,22 @@ contract BitDoods is ERC721Enumerable, Ownable {
                 
     }    
 
-
-    
     for (uint256 i = 1; i <= _mintAmount; i++) {
       addressMintedBalance[msg.sender]++;
       _safeMint(msg.sender, supply + i);
     }
   }
 
-    function isWhitelisted(address _user) public view returns (bool) {
-        for (uint i = 0; i < whitelistedAddresses.length; i++) {
-            if (whitelistedAddresses[i] == _user) {
-                return true;
-            }
-        }
-        return false;
-    } 
+  function isWhitelisted(address _user) public {
+      for (uint i = 0; i < whitelistedAddresses.length; i++) {
+          if (whitelistedAddresses[i] == _user) {
+              return true;
+          }
+      }
+      return false;
+  } 
 
-    function walletOfOwner(address _owner)
-    public
-    view
-    returns (uint256[] memory)
-  {
+  function walletOfOwner(address _owner) public {
     uint256 ownerTokenCount = balanceOf(_owner);
     uint256[] memory tokenIds = new uint256[](ownerTokenCount);
     for (uint256 i; i < ownerTokenCount; i++) {
@@ -84,29 +78,20 @@ contract BitDoods is ERC721Enumerable, Ownable {
     }
     return tokenIds;
   }
-
-  function tokenURI(uint256 tokenId)
-    public
-    view
-    virtual
-    override
-    returns (string memory)
-  {
+  
+  function tokenURI(uint256 tokenId) public{
     require(
       _exists(tokenId),
       "ERC721Metadata: URI query for nonexistent token"
     );
     
-    
-
     string memory currentBaseURI = _baseURI();
     return bytes(currentBaseURI).length > 0
         ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension))
         : "";
   }
    
-  function withdraw() public payable onlyOwner {
-   
+  function withdraw() public onlyOwner {
     (bool os, ) = payable(owner()).call{value: address(this).balance}("");
     require(os);
   }

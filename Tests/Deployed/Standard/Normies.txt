@@ -4,31 +4,23 @@ contract Normies is IERC721, Ownable, Functional {
 
     using Address for address;
     
-    // Token name
     string private _name;
 
-    // Token symbol
     string private _symbol;
     
-    // URI Root Location for Json Files
     string private _baseURI;
 
-    // Mapping from token ID to owner address
     mapping(uint256 => address) private _owners;
 
-    // Mapping owner address to token count
     mapping(address => uint256) private _balances;
 
-    // Mapping from token ID to approved address
     mapping(uint256 => address) private _tokenApprovals;
 
-    // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
     
-    // Specific Functionality
     bool public mintActive;
     bool public whitelistActive;
-    bool private _hideTokens;  //for URI redirects
+    bool private _hideTokens;  
     uint256 public price;
     uint256 public totalTokens;
     uint256 public numberMinted;
@@ -52,15 +44,13 @@ contract Normies is IERC721, Ownable, Functional {
         whiteListMax = 4;
     }
 
-    //@dev See {IERC165-supportsInterface}. Interfaces Supported by this Standard
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public {
         return  interfaceId == type(IERC721).interfaceId ||
                 interfaceId == type(IERC721Metadata).interfaceId ||
                 interfaceId == type(IERC165).interfaceId ||
                 interfaceId == Normies.onERC721Received.selector;
     }
     
-    // Standard Withdraw function for the owner to pull the contract
     function withdraw() external onlyOwner {
         uint256 Funds = address(this).balance;
         bool success;
@@ -87,7 +77,7 @@ contract Normies is IERC721, Ownable, Functional {
         require((numberMinted + qty) > numberMinted, "Math overflow error");
         require((numberMinted + qty) <= totalTokens, "Cannot fill order");
         
-        uint256 mintSeedValue = numberMinted; //Store the starting value of the mint batch
+        uint256 mintSeedValue = numberMinted; 
         
         for(uint256 i = 0; i < qty; i++) {
             _safeMint(_to, mintSeedValue + i);
@@ -98,9 +88,9 @@ contract Normies is IERC721, Ownable, Functional {
     function singleAirdrop(address _to) external onlyOwner {
         require(numberMinted <= totalTokens, "Cannot Fill Order");
 
-        uint256 mintSeedValue = numberMinted; //Store the starting value of the mint batch
+        uint256 mintSeedValue = numberMinted; 
 
-        numberMinted ++;  //reservedTokens can be reset, numberMinted can not
+        numberMinted ++; 
         _safeMint(_to, mintSeedValue);
     }
     
@@ -117,7 +107,7 @@ contract Normies is IERC721, Ownable, Functional {
         }
     }
     
-    function mintWL(uint256 qty) external payable reentryLock {
+    function mintWL(uint256 qty) external {
         require(whitelistActive, "WL not open");
         require(msg.value == qty * WLprice, "WL: Wrong Eth Amount");
         require((qty + numberMinted) <= totalTokens, "WL: Not enough avaialability");
@@ -125,9 +115,8 @@ contract Normies is IERC721, Ownable, Functional {
 
         _whitelist[_msgSender()] -= qty;
         
-        uint256 mintSeedValue = numberMinted; //Store the starting value of the mint batch
+        uint256 mintSeedValue = numberMinted; 
 
-        //send tokens
         for(uint256 i = 0; i < qty; i++) {
             _safeMint(_msgSender(), mintSeedValue + i);
             numberMinted ++;
@@ -135,22 +124,20 @@ contract Normies is IERC721, Ownable, Functional {
 
     }
 
-    function mint(uint256 qty) external payable reentryLock {
+    function mint(uint256 qty) external {
         require(mintActive, "mint not open");
         require(msg.value >= qty * price, "Mint: Insufficient Funds");
         require(qty <= maxPerTxn, "Mint: Above Trxn Threshold!");
         require((qty + numberMinted) <= totalTokens, "Mint: Not enough avaialability");
         
-        uint256 mintSeedValue = numberMinted; //Store the starting value of the mint batch
+        uint256 mintSeedValue = numberMinted; 
 
-        //send tokens
         for(uint256 i = 0; i < qty; i++) {
             _safeMint(_msgSender(), mintSeedValue + i);
             numberMinted ++;
         }
     }
     
-    // allows holders to burn their own tokens if desired
     function burn(uint256 tokenID) external {
         require(_msgSender() == ownerOf(tokenID));
         _burn(tokenID);
@@ -166,17 +153,11 @@ contract Normies is IERC721, Ownable, Functional {
         }
     }
 
-
-    function _transfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal virtual {
+    function _transfer(address from, address to, uint256 tokenId) internal {
         require(ownerOf(tokenId) == from, "ERC721: txfr token not owned");
         require(to != address(0), "ERC721: txfr to 0x0 address");
         _beforeTokenTransfer(from, to, tokenId);
 
-        // Clear approvals from the previous owner
         _approve(address(0), tokenId);
 
         _balances[from] -= 1;
@@ -186,12 +167,11 @@ contract Normies is IERC721, Ownable, Functional {
         emit Transfer(from, to, tokenId);
     }
 
-    function _approve(address to, uint256 tokenId) internal virtual {
+    function _approve(address to, uint256 tokenId) internal {
         _tokenApprovals[tokenId] = to;
         emit Approval(ownerOf(tokenId), to, tokenId);
     }
     
-
     receive() external payable {}
     
     fallback() external payable {}

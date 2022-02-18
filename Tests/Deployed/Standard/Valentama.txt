@@ -21,7 +21,7 @@ contract Valentama is ERC20, Ownable {
     bool public swapEnabled = false;
     mapping (address => bool) private bots;
     
-    mapping(address => uint256) private _holderLastTransferTimestamp; // to hold last Transfers temporarily during launch
+    mapping(address => uint256) private _holderLastTransferTimestamp; 
     bool public transferDelayEnabled = false;
     bool private boughtEarly = true;
     uint256 private _firstBlock;
@@ -46,24 +46,6 @@ contract Valentama is ERC20, Ownable {
 
     mapping (address => bool) public automatedMarketMakerPairs;
 
-    event UpdateUniswapV2Router(address indexed newAddress, address indexed oldAddress);
-
-    event ExcludeFromFees(address indexed account, bool isExcluded);
-
-    event SetAutomatedMarketMakerPair(address indexed pair, bool indexed value);
-
-    event marketingWalletUpdated(address indexed newWallet, address indexed oldWallet);
-    
-    event devWalletUpdated(address indexed newWallet, address indexed oldWallet);
-
-    event EndedBoughtEarly(bool boughtEarly);
-
-    event SwapAndLiquify(
-        uint256 tokensSwapped,
-        uint256 ethReceived,
-        uint256 tokensIntoLiquidity
-    );
-
     constructor() ERC20("Valentama", "VALENTAMA") {
         IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
         
@@ -85,7 +67,7 @@ contract Valentama is ERC20, Ownable {
         uint256 totalSupply = 1e14 * 1e18;
         
         maxTransactionAmount = totalSupply * 3 / 100; 
-        maxWallet = totalSupply * 2 / 100; // 2% maxWallet
+        maxWallet = totalSupply * 2 / 100; 
         swapTokensAtAmount = totalSupply * 5 / 10000; 
 
         buyMarketingFee = _buyMarketingFee;
@@ -118,7 +100,7 @@ contract Valentama is ERC20, Ownable {
 
   	}    
     
-    function updateSwapTokensAtAmount(uint256 newAmount) external onlyOwner returns (bool){
+    function updateSwapTokensAtAmount(uint256 newAmount) external onlyOwner {
   	    require(newAmount >= totalSupply() * 1 / 100000, "Swap amount cannot be lower than 0.001% total supply.");
   	    require(newAmount <= totalSupply() * 5 / 1000, "Swap amount cannot be higher than 0.5% total supply.");
   	    swapTokensAtAmount = newAmount;
@@ -162,11 +144,7 @@ contract Valentama is ERC20, Ownable {
         _setAutomatedMarketMakerPair(pair, value);
     }
 
-    function _transfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal override {
+    function _transfer(address from, address to, uint256 amount) internal {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
         
@@ -188,12 +166,10 @@ contract Valentama is ERC20, Ownable {
                     require(_isExcludedFromFees[from] || _isExcludedFromFees[to], "Trading is not active.");
                 }
                  
-                //when buy
                 if (automatedMarketMakerPairs[from] && !_isExcludedMaxTransactionAmount[to]) {
                         require(amount <= maxTransactionAmount, "Buy transfer amount exceeds the maxTransactionAmount.");
                 }
                 
-                //when sell
                 else if (automatedMarketMakerPairs[to] && !_isExcludedMaxTransactionAmount[from]) {
                         require(amount <= maxTransactionAmount, "Sell transfer amount exceeds the maxTransactionAmount.");
                 }
@@ -221,22 +197,18 @@ contract Valentama is ERC20, Ownable {
 
         bool takeFee = !swapping;
 
-        // if any account belongs to _isExcludedFromFee account then remove the fee
         if(_isExcludedFromFees[from] || _isExcludedFromFees[to]) {
             takeFee = false;
         }
         
         uint256 fees = 0;
-        // only take fees on buys/sells, do not take on wallet transfers
         if(takeFee){
-            // on sell
             if (automatedMarketMakerPairs[to] && sellTotalFees > 0){
                 fees = amount.mul(sellTotalFees).div(100);
                 tokensForLiquidity += fees * sellLiquidityFee / sellTotalFees;
                 tokensForDev += fees * sellDevFee / sellTotalFees;
                 tokensForMarketing += fees * sellMarketingFee / sellTotalFees;
             }
-            // on buy
             else if(automatedMarketMakerPairs[from] && buyTotalFees > 0) {
         	    fees = amount.mul(buyTotalFees).div(100);
         	    tokensForLiquidity += fees * buyLiquidityFee / buyTotalFees;
@@ -256,17 +228,15 @@ contract Valentama is ERC20, Ownable {
 
     function swapTokensForEth(uint256 tokenAmount) private {
 
-        // generate the uniswap pair path of token -> weth
         address[] memory path = new address[](2);
         path[0] = address(this);
         path[1] = uniswapV2Router.WETH();
 
         _approve(address(this), address(uniswapV2Router), tokenAmount);
 
-        // make the swap
         uniswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
             tokenAmount,
-            0, // accept any amount of ETH
+            0, 
             path,
             address(this),
             block.timestamp
@@ -285,7 +255,6 @@ contract Valentama is ERC20, Ownable {
           contractBalance = swapTokensAtAmount * 20;
         }
         
-        // Halve the amount of liquidity tokens
         uint256 liquidityTokens = contractBalance * tokensForLiquidity / totalTokensToSwap / 2;
         uint256 amountToSwapForETH = contractBalance.sub(liquidityTokens);
         
@@ -315,13 +284,12 @@ contract Valentama is ERC20, Ownable {
         }
     }
     
-
     function openTrading(uint256 botBlocks) private {
         _firstBlock = block.number;
         _botBlocks = botBlocks;
         tradingActive = true;
     }
-    function enableTrading(uint256 botBlocks) external onlyOwner() {
+    function enableTrading(uint256 botBlocks) external onlyOwner {
         require(botBlocks <= 1, "don't catch humans");
         swapEnabled = true;
         require(boughtEarly == true, "done");

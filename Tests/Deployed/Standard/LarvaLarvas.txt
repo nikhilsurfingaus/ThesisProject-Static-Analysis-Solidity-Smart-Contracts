@@ -14,7 +14,7 @@ contract LarvaLarvas is ERC721Enumerable, Ownable {
   string public notRevealedUri;
 
   constructor(
-    string memory _name,
+string memory _name,
     string memory _symbol,
     string memory _initBaseURI,
     string memory _initNotRevealedUri
@@ -23,7 +23,7 @@ contract LarvaLarvas is ERC721Enumerable, Ownable {
     setNotRevealedURI(_initNotRevealedUri);
   }
 
-  function needToUpdateCost(uint256 _supply) internal view returns (uint256 _cost){ 
+  function needToUpdateCost(uint256 _supply) internal { 
       if(_supply < 2000) {
           return 0.00 ether;
       }
@@ -32,7 +32,7 @@ contract LarvaLarvas is ERC721Enumerable, Ownable {
       }
   }
 
-  function mint(uint256 _mintAmount) public payable {
+  function mint(uint256 _mintAmount) public {
     uint256 supply = totalSupply();
     require(!paused);
     require(_mintAmount > 0);
@@ -45,11 +45,7 @@ contract LarvaLarvas is ERC721Enumerable, Ownable {
     }
   }
 
-  function walletOfOwner(address _owner)
-    public
-    view
-    returns (uint256[] memory)
-  {
+  function walletOfOwner(address _owner) public {
     uint256 ownerTokenCount = balanceOf(_owner);
     uint256[] memory tokenIds = new uint256[](ownerTokenCount);
     for (uint256 i; i < ownerTokenCount; i++) {
@@ -58,13 +54,7 @@ contract LarvaLarvas is ERC721Enumerable, Ownable {
     return tokenIds;
   }
 
-  function tokenURI(uint256 tokenId)
-    public
-    view
-    virtual
-    override
-    returns (string memory)
-  {
+  function tokenURI(uint256 tokenId) public  {
     require(
       _exists(tokenId),
       "ERC721Metadata: URI query for nonexistent token"
@@ -80,7 +70,7 @@ contract LarvaLarvas is ERC721Enumerable, Ownable {
         : "";
   }
 
-  function withdraw() public payable onlyOwner {
+  function withdraw() public onlyOwner {
     (bool os, ) = payable(owner()).call{value: address(this).balance}("");
     require(os);
   }

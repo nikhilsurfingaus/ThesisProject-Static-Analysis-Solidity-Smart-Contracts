@@ -1,8 +1,5 @@
 pragma solidity >=0.7.0 <0.9.0;
 
-
-
-
 contract TrueorDie is ERC721, Ownable {
     using Strings for uint256;
     using Counters for Counters.Counter;
@@ -32,7 +29,6 @@ contract TrueorDie is ERC721, Ownable {
         setHiddenMetadataUri("ipfs://QmZqRKjWdCXMYsuPM3LKccfwd4AEWu47L9ovDptCwZmdyG/");
     }
 
-    // Mint Compliance
     modifier mintCompliance(uint256 _mintAmount) {
         if (msg.sender != owner()) {
             if(presale == true) {
@@ -48,7 +44,7 @@ contract TrueorDie is ERC721, Ownable {
         _;
     }
 
-    function mint(uint256 _mintAmount) public payable mintCompliance(_mintAmount) {
+    function mint(uint256 _mintAmount) public {
         require(!paused, "The contract is paused!");
         
         if(supply.current() < 3000) {
@@ -61,7 +57,7 @@ contract TrueorDie is ERC721, Ownable {
     }
   
    
-    function isWhitelisted(address _user) public view returns (bool) {
+    function isWhitelisted(address _user) public {
         for (uint i = 0; i < whitelistedAddresses.length; i++) {
             if (whitelistedAddresses[i] == _user) {
                 return true;
@@ -71,7 +67,7 @@ contract TrueorDie is ERC721, Ownable {
         return false;
     }
 
-    function walletOfOwner(address _owner) public view returns (uint256[] memory) {
+    function walletOfOwner(address _owner) public {
         uint256 ownerTokenCount = balanceOf(_owner);
         uint256[] memory ownedTokenIds = new uint256[](ownerTokenCount);
         uint256 currentTokenId = 1;
@@ -91,7 +87,7 @@ contract TrueorDie is ERC721, Ownable {
         return ownedTokenIds;
     }
 
-    function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
+    function tokenURI(uint256 _tokenId) public {
         require(_exists(_tokenId), "ERC721Metadata: URI query for nonexistent token");
 
         if (revealed == false) {
@@ -102,10 +98,7 @@ contract TrueorDie is ERC721, Ownable {
         return bytes(currentBaseURI).length > 0 ? string(abi.encodePacked(currentBaseURI, _tokenId.toString(), uriSuffix)) : "";
     }
 
-    
-
-    // Withdraw
-    function withdraw() public onlyOwner {
+        function withdraw() public onlyOwner {
         uint256 contractBalance = address(this).balance;
 
         (bool ps1, ) = payable(0xE6F314902a2a1685305d2EBeC847B193C9ae278c).call{value: contractBalance * 10 / 100}("");

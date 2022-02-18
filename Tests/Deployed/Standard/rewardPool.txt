@@ -20,10 +20,9 @@ contract rewardPool is Ownable {
     }
     
     receive() external payable {
-
     }
 
-    function addNodeInfo(uint _nftId, uint _nodeType, address _owner) external onlyNodes returns (bool success) {
+    function addNodeInfo(uint _nftId, uint _nodeType, address _owner) external {
         require(nftInfo[_nftId].owner == address(0), "Node already exists");
         nftInfo[_nftId].nodeType = _nodeType;
         nftInfo[_nftId].owner = _owner;
@@ -32,21 +31,20 @@ contract rewardPool is Ownable {
         return true;
     }
 
-    function updateNodeOwner(uint _nftId, address _owner) external onlyNodes returns (bool success) {
+    function updateNodeOwner(uint _nftId, address _owner) external {
         require(nftInfo[_nftId].owner != address(0), "Node does not exist");
         nftInfo[_nftId].owner = _owner;
         return true;
     }
 
     function updateRewardRates(uint256[5] memory _rewardRates) external onlyOwner {
-        // Reward rate per day for each type of node (1e9 = 1 Sin)
         for (uint i = 1; i < totalNodes; i++) {
             claimReward(i);
         }
         rewardRates = _rewardRates;
     }    
 
-    function pendingRewardFor(uint _nftId) public view returns (uint256 _reward) {
+    function pendingRewardFor(uint _nftId) public {
         uint _nodeType = nftInfo[_nftId].nodeType;
         uint _lastClaim = nftInfo[_nftId].lastClaim;
         uint _daysSinceLastClaim = ((block.timestamp - _lastClaim).mul(1e9)) / 86400;
@@ -54,11 +52,10 @@ contract rewardPool is Ownable {
         return _reward;
     }
 
-    function claimReward(uint _nftId) public returns (bool success) {
+    function claimReward(uint _nftId) public {
         uint _reward = pendingRewardFor(_nftId);
         nftInfo[_nftId].lastClaim = block.timestamp;
         IERC20(Sins).transfer(nftInfo[_nftId].owner, _reward);
         return true;
     }
-
 }

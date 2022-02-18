@@ -26,7 +26,7 @@ contract CoolSheep is Ownable, ERC721 {
 
     constructor() ERC721("Cool Sheep", "CLSP"){}
 
-    function gift() public mutualCheck{
+    function gift() public {
 
         require(CoolCats.balanceOf(msg.sender) > 0 || CoolDogs.balanceOf(msg.sender) > 0 || AlienFrens.balanceOf(msg.sender) > 0 || BabySpookles.balanceOf(msg.sender)> 0 || ERC721(referenceContract).balanceOf(msg.sender) > 0, "You are not CoolCats, Cool Dogs, Alien frens holder");
         require(balanceOf(msg.sender) < maxPerFreeMint, "One token per wallet for holders");
@@ -35,7 +35,7 @@ contract CoolSheep is Ownable, ERC721 {
         _safeMint(msg.sender,++totalSupply);
     }
 
-    function mint(uint _count) public payable mutualCheck{
+    function mint(uint _count) public {
         require(_count > 0, "mint at least one token");
         require(totalSupply + reservedSupply + _count <= maxSupply, "not enough tokens left");
         require(msg.value == tokenPrice * _count, "incorrect ether amount");
@@ -51,10 +51,10 @@ contract CoolSheep is Ownable, ERC721 {
         totalSupply += _wallets.length;
     }
 
-    function checkGift() public view returns(bool){
+    function checkGift() public {
         return CoolCats.balanceOf(msg.sender) > 0 || CoolDogs.balanceOf(msg.sender) > 0 || AlienFrens.balanceOf(msg.sender) > 0 || BabySpookles.balanceOf(msg.sender)> 0 || ERC721(referenceContract).balanceOf(msg.sender) > 0;
     }
-    function checkMaxFreeMint() public view returns(bool) {
+    function checkMaxFreeMint() public {
         return balanceOf(msg.sender) < maxPerFreeMint;
         
     }

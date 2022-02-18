@@ -1,78 +1,50 @@
 contract GolemZ is ERC721, Ownable, PaymentSplitter {
     using SafeMath for uint256;
 
-    
-    //---------Variables-------------
-    //  Max amount of tokens
     uint256 public maxAmntTokens;
-    //  Max amount of tokens per transaction
     uint256 public maxTknPerTxs;
-    //  Price per NFT
     uint256 public price;
-    //  Max NFTs pre sale per wallet
     uint256 public maxNFTsPresale;
-    //  Max mints pre sale
     uint256 public maxMintsPreSale;
-    //  URI control
     string newURI;
-    //  Sale is active
     bool public saleIsActive;
-    //  URI locked
     bool public URIlocked;
-    //  Ownership Locked
     bool public ownershipLocked;
-    //  Pre sale control
     bool public preSaleIsActive;
-    //   Reserve List Pre-Sale
     mapping(address => bool) public reserveListPreSale;
-    //   Reserve List Pre-Sale counter
     mapping(address => uint) public reserveListPreSaleCounter;
 
     constructor(address[] memory _payees, uint256[] memory _shares) ERC721("GolemZ Genesis", "GLZG") PaymentSplitter(_payees, _shares) payable {
-        //  Max amount of tokens
         maxAmntTokens = 888;
-        //  Max tokens per transaction
         maxTknPerTxs = 3;
-        //  Price per NFT in wei
         price = 100000000000000000 wei;
-        //  Deactivate sale
         saleIsActive = false;
-        //  Unlock URI
         URIlocked = false;
-        //  Ownership locked
         ownershipLocked = false;
-        //  Max NFTs pre sale per wallet
         maxNFTsPresale = 1;
-        //  Pre sale control
         preSaleIsActive = false;
-        //  Max mints pre sale
         maxMintsPreSale = 1;
     }
 
-    // Add addresses to the reserveListPreSale mapping
     function addPreSaleAddresses(address[] calldata _users) public onlyOwner {
         for(uint i = 0; i < _users.length; i++) {
             reserveListPreSale[_users[i]] = true;
         }    
     }
 
-    //  Controls pre sale
     function flipPreSaleState () public onlyOwner {
         preSaleIsActive = !preSaleIsActive;
     }
 
-    //  Total supply for etherscan
-    function totalSupply() public view returns (uint256) {
+    function totalSupply() public {
         return maxAmntTokens;
     } 
     
-    //  Flip sale state
     function flipSaleState() public onlyOwner{
         saleIsActive = !saleIsActive;
     }
     
-    //  Reserve NFTs, this won't cost ETH 
-    function reserveNFT(uint256 reservedTokens)public onlyOwner{
+    function reserveNFT(uint256 reservedTokens) public onlyOwner{
         require ((reservedTokens.add(checkMintedTokens()) <= maxAmntTokens), "You are minting more NFTs than there are available, mint less tokens!");
         require (reservedTokens <= 20, "Sorry, the max amount of reserved tokens per transaction is set to 20");
         
@@ -81,60 +53,45 @@ contract GolemZ is ERC721, Ownable, PaymentSplitter {
         }
     }
     
-    //  Modify URI
     function changeURI(string calldata _newURI) public onlyOwner{
         require (URIlocked == false, "URI locked, you can't change it anymore");
         newURI = _newURI;
     }
 
-    //  Lock URI
     function lockURI() public onlyOwner {
         require(URIlocked == false, "URI already locked");
         URIlocked = true;
     }
     
-    //  Base URI function, this won't be callable, you will use the changeURI function instead
-    function _baseURI() internal view override returns (string memory) {
+    function _baseURI() internal {
         return newURI;
     }
     
-    //  Base mint function, this won't be callable, you will use the mintNFT function instead
-    function safeMint(address to) internal{
+    function safeMint(address to) internal {
         _safeMint(to, _tokenIdCounter.current());
         _tokenIdCounter.increment();
     }
     
-    //  Check amount of already minted NFTs
-    function checkMintedTokens() public view returns(uint256) {
+    function checkMintedTokens() public {
         return(_tokenIdCounter._value);
     }
-    
-    //  Function to mint tokens, this is the function that you are going to use
-    //  instead of safeMint
-    function mintNFT(uint256 amountTokens) public payable {
+
+    function mintNFT(uint256 amountTokens) public {
 
         if (preSaleIsActive) {
             require (reserveListPreSale[msg.sender], "You are not part of the pre sale.");
             require (amountTokens + reserveListPreSaleCounter[msg.sender] == maxMintsPreSale, "You are allowed to mint a max of 1 NFTs in the presale phase.");             
         }
-        
-        //  Requires that the sale state is active
         require(saleIsActive, "Sale is not active at this moment");
-        
-        //  Requires that the amount of tokens user wants to mint + already minted tokens don't surpass the available tokens
         require ((amountTokens.add(checkMintedTokens()) <= maxAmntTokens), "You are minting more NFTs than there are available, mint less tokens!");
         require (amountTokens <= maxTknPerTxs, "Sorry, the max amount of tokens per transaction is set to 3");
-        
-        //  Requires the correct amount of ETH
         require (msg.value == (price.mul(amountTokens)), "Amount of Ether incorrect, try again.");
         
-        //  Internal mint function
         for (uint i=0; i<amountTokens; i++){
             safeMint(msg.sender);
         }
 
         if (preSaleIsActive) {
-            //  Update the mint count of the user
             reserveListPreSaleCounter[msg.sender] += amountTokens;
         }
         

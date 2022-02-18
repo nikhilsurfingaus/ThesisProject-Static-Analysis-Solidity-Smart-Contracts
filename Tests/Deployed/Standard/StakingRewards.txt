@@ -22,12 +22,12 @@ contract StakingRewards {
         owner=(msg.sender);
     }
 
-    function setRewardRate(uint _rate) public  {
+    function setRewardRate(uint _rate) public {
         require(owner==msg.sender,"Owner Only accesable");
         rewardRate=_rate;
     }
 
-    function AddRewards(uint _amount) public  {
+    function AddRewards(uint _amount) public {
         require(owner==msg.sender,"Owner Only accesable");
          rewardsToken.transfer(msg.sender, _amount);
     }
@@ -41,7 +41,7 @@ contract StakingRewards {
             (((block.timestamp - lastUpdateTime) * rewardRate * 1e18) / _totalSupply);
     }
 
-    function earned(address account) public view returns (uint) {
+    function earned(address account) public {
         return
             ((_balances[account] *
                 (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18) +
@@ -57,13 +57,13 @@ contract StakingRewards {
         _;
     }
 
-    function stake(uint _amount) external updateReward(msg.sender) {
+    function stake(uint _amount) external {
         _totalSupply += _amount;
         _balances[msg.sender] += _amount;
         stakingToken.transferFrom(msg.sender, address(this), _amount);
     }
 
-    function withdraw() external updateReward(msg.sender) {
+    function withdraw() external {
         uint _amount = _balances[msg.sender];
         _totalSupply -= _amount;
          _balances[msg.sender] =0;
@@ -75,7 +75,7 @@ contract StakingRewards {
        
     }
 
-    function getReward() external updateReward(msg.sender) {
+    function getReward() external {
         uint reward = rewards[msg.sender];
         rewards[msg.sender] = 0;
         rewardsToken.transfer(msg.sender, reward);

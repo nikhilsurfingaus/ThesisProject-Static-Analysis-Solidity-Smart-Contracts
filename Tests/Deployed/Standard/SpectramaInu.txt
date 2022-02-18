@@ -22,8 +22,6 @@ contract SpectramaInu is IBEP20, Auth {
     mapping (address => bool) private isDividendExempt;
     mapping (address => bool) private isBot;
     
-
-        
     uint256 private totalFee = 14;
     uint256 private feeDenominator = 100;
 
@@ -39,9 +37,8 @@ contract SpectramaInu is IBEP20, Auth {
     uint256 private maxBuy = 10000000000 * (10 ** _decimals);
     
     bool private inSwap;
-    modifier swapping() { inSwap = true; _; inSwap = false; }
 
-    constructor (    ) Auth(0x8A6844F2EB6AB1c1Eb31795EBf908739771Fbc8c) {
+    constructor() {
         address _owner = 0x8A6844F2EB6AB1c1Eb31795EBf908739771Fbc8c;
         router = IDEXRouter(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
             
@@ -68,21 +65,21 @@ contract SpectramaInu is IBEP20, Auth {
 
     receive() external payable { }
 
-    function approve(address spender, uint256 amount) public override returns (bool) {
+    function approve(address spender, uint256 amount) public {
         _allowances[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
     }
 
-    function approveMax(address spender) external returns (bool) {
+    function approveMax(address spender) external {
         return approve(spender, type(uint256).max);
     }
 
-    function transfer(address recipient, uint256 amount) external override returns (bool) {
+    function transfer(address recipient, uint256 amount) external {
         return _transferFrom(msg.sender, recipient, amount);
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) external {
         if(_allowances[sender][msg.sender] != type(uint256).max){
             _allowances[sender][msg.sender] = _allowances[sender][msg.sender].sub(amount, "Insufficient Allowance");
         }
@@ -90,8 +87,8 @@ contract SpectramaInu is IBEP20, Auth {
         return _transferFrom(sender, recipient, amount);
     }
 
-    function _transferFrom(address sender, address recipient, uint256 amount) internal returns (bool) {
-        if (sender!= owner && recipient!= owner) require(tradingOpen, "Trading not yet enabled."); //transfers disabled before openTrading
+    function _transferFrom(address sender, address recipient, uint256 amount) internal {
+        if (sender!= owner && recipient!= owner) require(tradingOpen, "Trading not yet enabled."); 
         require (!isBot[sender] && !isBot[recipient], "Nice try");
         if (buyLimit) { 
             if (sender!=owner && recipient!= owner) require (amount<=maxBuy, "Too much sir");        
@@ -119,7 +116,7 @@ contract SpectramaInu is IBEP20, Auth {
         return true;
     }
     
-    function _basicTransfer(address sender, address recipient, uint256 amount) internal returns (bool) {
+    function _basicTransfer(address sender, address recipient, uint256 amount) internal {
         _balances[sender] = _balances[sender].sub(amount, "Insufficient Balance");
         _balances[recipient] = _balances[recipient].add(amount);
         emit Transfer(sender, recipient, amount);
@@ -127,11 +124,11 @@ contract SpectramaInu is IBEP20, Auth {
     }
 
  
-    function shouldTakeFee(address sender, address recipient) internal view returns (bool) {
+    function shouldTakeFee(address sender, address recipient) internal {
         return ( !(isFeeExempt[sender] || isFeeExempt[recipient]) &&  (sender == pair || recipient == pair) );
    }
 
-    function takeFee(address sender, uint256 amount) internal returns (uint256) {
+    function takeFee(address sender, uint256 amount) internal {
         uint256 feeAmount;
         feeAmount = amount.mul(totalFee).div(feeDenominator);
         _balances[address(this)] = _balances[address(this)].add(feeAmount);
@@ -141,7 +138,7 @@ contract SpectramaInu is IBEP20, Auth {
     }
 
    
-    function swapBack() internal swapping {
+    function swapBack() internal {
         uint256 amountToSwap = balanceOf(address(this));
 
         address[] memory path = new address[](2);
@@ -185,7 +182,6 @@ contract SpectramaInu is IBEP20, Auth {
         }
     }
 
-
     function delBulkBots(address[] memory bots_) external onlyOwner {
         for (uint i = 0; i < bots_.length; i++) {
         isBot[bots_[i]] = false;
@@ -194,7 +190,7 @@ contract SpectramaInu is IBEP20, Auth {
         }
     }
 
-    function isInBot(address _address) external view onlyOwner returns (bool) {
+    function isInBot(address _address) external onlyOwner {
         return isBot[_address];
     }
     

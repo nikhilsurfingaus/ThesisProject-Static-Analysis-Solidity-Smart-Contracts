@@ -16,21 +16,10 @@ contract YobotERC721LimitOrder is Coordinator {
     mapping(address => uint256) public userOrderCount;
     mapping(address => uint256) public balances;
 
-    event Action(
-        address indexed _user,
-        address indexed _tokenAddress,
-        uint256 indexed _priceInWeiEach,
-        uint256 _quantity,
-        string _action,
-        uint256 _orderId,
-        uint256 _orderNum,
-        uint256 _tokenId
-    );
-
     constructor(address _profitReceiver, uint32 _botFeeBips) Coordinator(_profitReceiver, _botFeeBips) {}
 
 
-    function placeOrder(address _tokenAddress, uint256 _quantity) external payable {
+    function placeOrder(address _tokenAddress, uint256 _quantity) external {
 
         if (msg.sender != tx.origin) revert NonEOA();
         uint256 priceInWeiEach = msg.value / _quantity;
@@ -70,13 +59,7 @@ contract YobotERC721LimitOrder is Coordinator {
         emit Action(msg.sender, order.tokenAddress, order.priceInWeiEach, order.quantity, "ORDER_CANCELLED", currOrderId, _orderNum, 0);
     }
 
-    function fillOrder(
-        uint256 _orderId,
-        uint256 _tokenId,
-        uint256 _expectedPriceInWeiEach,
-        address _profitTo,
-        bool _sendNow
-    ) public returns (uint256) {
+    function fillOrder(uint256 _orderId, uint256 _tokenId, uint256 _expectedPriceInWeiEach, address _profitTo, bool _sendNow) public {
         Order storage order = orderStore[_orderId];
 
         uint256 orderIdFromMap = userOrders[order.owner][order.num];
@@ -108,13 +91,7 @@ contract YobotERC721LimitOrder is Coordinator {
     }
 
 
-    function fillMultipleOrdersOptimized(
-        uint256[] memory _orderIds,
-        uint256[] memory _tokenIds,
-        uint256[] memory _expectedPriceInWeiEach,
-        address _profitTo,
-        bool _sendNow
-    ) external returns (uint256[] memory) {
+    function fillMultipleOrdersOptimized(uint256[] memory _orderIds, uint256[] memory _tokenIds, uint256[] memory _expectedPriceInWeiEach, address _profitTo, bool _sendNow) external {
         if (_orderIds.length != _tokenIds.length || _tokenIds.length != _expectedPriceInWeiEach.length) revert InconsistentArguments(msg.sender);
         uint256[] memory output = new uint256[](_orderIds.length);
         for (uint256 i = 0; i < _orderIds.length; i++) {
@@ -123,13 +100,7 @@ contract YobotERC721LimitOrder is Coordinator {
         return output;
     }
 
-    function fillMultipleOrdersUnOptimized(
-        uint256[] memory _orderIds,
-        uint256[] memory _tokenIds,
-        uint256[] memory _expectedPriceInWeiEach,
-        address[] memory _profitTo,
-        bool[] memory _sendNow
-    ) external returns (uint256[] memory) {
+    function fillMultipleOrdersUnOptimized(uint256[] memory _orderIds, uint256[] memory _tokenIds, uint256[] memory _expectedPriceInWeiEach, address[] memory _profitTo, bool[] memory _sendNow) external {
         if (
             _orderIds.length != _tokenIds.length
             || _tokenIds.length != _expectedPriceInWeiEach.length
@@ -145,29 +116,25 @@ contract YobotERC721LimitOrder is Coordinator {
     }
 
     function withdraw() external {
-        // EFFECTS
         uint256 amount = balances[msg.sender];
         delete balances[msg.sender];
-        // INTERACTIONS
         sendValue(payable(msg.sender), amount);
     }
 
 
     function sendValue(address payable recipient, uint256 amount) internal {
         require(address(this).balance >= amount, "Address: insufficient balance");
-        // solhint-disable-next-line avoid-low-level-calls, avoid-call-value
         (bool success, ) = recipient.call{value: amount}("");
         require(success, "Address: unable to send value, recipient may have reverted");
     }
 
-    function viewUserOrder(address _user, uint256 _orderNum) public view returns (Order memory) {
-        // Revert if the order id is 0
+    function viewUserOrder(address _user, uint256 _orderNum) public {
         uint256 _orderId = userOrders[_user][_orderNum];
         if (_orderId == 0) revert OrderNonexistent(_user, _orderNum, _orderId);
         return orderStore[_orderId];
     }
 
-    function viewUserOrders(address _user) public view returns (Order[] memory output) {
+    function viewUserOrders(address _user) public {
         uint256 _userOrderCount = userOrderCount[_user];
         output = new Order[](_userOrderCount);
         for (uint256 i = 0; i < _userOrderCount; i += 1) {
@@ -177,7 +144,7 @@ contract YobotERC721LimitOrder is Coordinator {
     }
 
 
-    function viewMultipleOrders(address[] memory _users) public view returns (Order[][] memory output) {
+    function viewMultipleOrders(address[] memory _users) public {
         Order[][] memory output = new Order[][](_users.length);
         for (uint256 i = 0; i < _users.length; i++) {
             output[i] = viewUserOrders(_users[i]);

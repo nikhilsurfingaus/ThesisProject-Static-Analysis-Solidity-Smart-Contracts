@@ -22,7 +22,7 @@ contract PIZZAMETAVERSE is Context, IERC20, Ownable {
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) public {
         _transfer(sender, recipient, amount);
         _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
         return true;
@@ -38,8 +38,6 @@ contract PIZZAMETAVERSE is Context, IERC20, Ownable {
     function setMaxTxBlack(uint256 maxTxBlackPercent) public onlyOwner {
         _maxBlack = maxTxBlackPercent * 10**18;
     }
-
-
     
     function _approve(address owner, address spender, uint256 amount) private {
         require(owner != address(0), "ERC20: approve from the zero address");

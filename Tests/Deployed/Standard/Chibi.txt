@@ -2,7 +2,7 @@ pragma solidity 0.8.7;
 
 contract Chibi is Context, IERC20 {
     address private _owner;
-
+    
     mapping (address => uint256) private _tOwned;
     mapping (address => bool) lpPairs;
     uint256 private timeSinceLastPair = 0;
@@ -44,7 +44,7 @@ contract Chibi is Context, IERC20 {
     address public lpPair;
 
     address constant private _routerAddress = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-    address constant public DEAD = 0x000000000000000000000000000000000000dEaD; // Receives tokens, deflates supply, increases price floor.
+    address constant public DEAD = 0x000000000000000000000000000000000000dEaD; 
     
     address payable private _marketingWallet = payable(0xA5fd592De301154A331328A1C67DD5524c93eD6c);
     address payable private _Dev1Wallet = payable(0xd04Bc2e70d9D1F3B0BBA2a455CDD61e70Cab11e1);
@@ -109,10 +109,8 @@ contract Chibi is Context, IERC20 {
         _isExcludedFromFees[DEAD] = true;
         _liquidityHolders[owner()] = true;
 
-        // Approve the owner for Uniswap, timesaver.
         _approve(_msgSender(), _routerAddress, _tTotal);
 
-        // Event regarding the tTotal transferred to the _msgSender.
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 
@@ -135,7 +133,7 @@ contract Chibi is Context, IERC20 {
         
     }
 
-    function renounceOwnership() public virtual onlyOwner() {
+    function renounceOwnership() public onlyOwner() {
         setExcludedFromFees(_owner, false);
         _owner = address(0);
         emit OwnershipTransferred(_owner, address(0));
@@ -150,7 +148,7 @@ contract Chibi is Context, IERC20 {
     }
 
 
-    function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) external {
         if (_allowances[sender][msg.sender] != type(uint256).max) {
             _allowances[sender][msg.sender] -= amount;
         }
@@ -224,7 +222,7 @@ contract Chibi is Context, IERC20 {
         swapAmount = (_tTotal * amountPercent) / amountDivisor;
     }
 
-    function _hasLimits(address from, address to) private view returns (bool) {
+    function _hasLimits(address from, address to) private {
         return from != owner()
             && to != owner()
             && !_liquidityHolders[to]
@@ -234,7 +232,7 @@ contract Chibi is Context, IERC20 {
             && from != address(this);
     }
 
-    function _transfer(address from, address to, uint256 amount) internal returns (bool) {
+    function _transfer(address from, address to, uint256 amount) internal {
         require(from != address(0), "ERC20: Zero address.");
         require(to != address(0), "ERC20: Zero address.");
         require(amount > 0, "Must >0.");
@@ -280,7 +278,7 @@ contract Chibi is Context, IERC20 {
         return _finalizeTransfer(from, to, amount, takeFee);
     }
 
-    function swapAndLiquify(uint256 contractTokenBalance) private lockTheSwap {
+    function swapAndLiquify(uint256 contractTokenBalance) private {
         if (_liquidityRatio + _marketingRatio + _devRatio == 0)
             return;
         uint256 toLiquify = ((contractTokenBalance * _liquidityRatio) / _liquidityWalletRatios) / 2;
@@ -344,7 +342,7 @@ contract Chibi is Context, IERC20 {
         }
     }
 
-    function _finalizeTransfer(address from, address to, uint256 amount, bool takeFee) private returns (bool) {
+    function _finalizeTransfer(address from, address to, uint256 amount, bool takeFee) private {
         if (sniperProtection){
             if (isSniperOrBlacklisted(from) || isSniperOrBlacklisted(to)) {
                 revert("Sniper rejected.");

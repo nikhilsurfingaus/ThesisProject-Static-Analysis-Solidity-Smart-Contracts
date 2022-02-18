@@ -3,17 +3,15 @@ pragma solidity 0.8.11;
 
 contract DoodleFriends is ERC721Enumerable, Ownable, ERC721Burnable, ERC721Pausable {
     using SafeMath for uint256;
-
-
     bool public SALE_OPEN = false;
 
-    uint256 private constant MAX_SUPPLY = 3353; // 3353 Doodle Friends
-    uint256 private constant MAX_MINT_LIMITED = 3; // 3 batch mint max
-    uint256 private constant MAX_MINT_UNLIMITED = 3353; // unlimited batch mint
+    uint256 private constant MAX_SUPPLY = 3353; 
+    uint256 private constant MAX_MINT_LIMITED = 3; 
+    uint256 private constant MAX_MINT_UNLIMITED = 3353; 
 
-    uint256 private constant PRICE_WHITELIST_ONE = 0.065 ether; // Stage One for Whitelist
-    uint256 private constant PRICE_WHITELIST_TWO = 0.075 ether; // Stage Two for Whitelist
-    uint256 private constant PRICE_PUBLIC = 0.085 ether; // Public Sale Price
+    uint256 private constant PRICE_WHITELIST_ONE = 0.065 ether; 
+    uint256 private constant PRICE_WHITELIST_TWO = 0.075 ether; 
+    uint256 private constant PRICE_PUBLIC = 0.085 ether; 
 
     uint256 private _price;
     uint256 private _maxMint;
@@ -23,8 +21,8 @@ contract DoodleFriends is ERC721Enumerable, Ownable, ERC721Burnable, ERC721Pausa
 
     string private baseTokenURI;
 
-    address private devWallet = payable(0x18236675fE58640dc2e9dDFfC478eC2EEea6Ca52); // Developer Wallet Address
-    address private fundWallet = payable(0x269D13DaF86aec35e9bD12684B027CbA597360f1); // Owner Fund Wallet Address
+    address private devWallet = payable(0x18236675fE58640dc2e9dDFfC478eC2EEea6Ca52); 
+    address private fundWallet = payable(0x269D13DaF86aec35e9bD12684B027CbA597360f1); 
 
     event DoodleFriendSummoned(address to, uint256 indexed id);
 
@@ -44,7 +42,7 @@ contract DoodleFriends is ERC721Enumerable, Ownable, ERC721Burnable, ERC721Pausa
         setBaseURI(baseURI);
     }
 
-    function mint(address payable _to, uint256[] memory _ids) public payable saleIsOpen {
+    function mint(address payable _to, uint256[] memory _ids) public {
         uint256 total = _totalSupply();
         uint256 maxNFTSupply = MAX_SUPPLY;
         uint256 maxMintCount = _maxMint;
@@ -102,35 +100,35 @@ contract DoodleFriends is ERC721Enumerable, Ownable, ERC721Burnable, ERC721Pausa
         baseTokenURI = baseURI;
     }
 
-    function _baseURI() internal view virtual override returns (string memory) {
+    function _baseURI() internal {
         return baseTokenURI;
     }
 
-    function _totalSupply() internal view returns (uint256) {
+    function _totalSupply() internal{
         return _tokenIdTracker.current();
     }
 
-    function getPrice() public view returns (uint256) {
+    function getPrice() public {
         return _price;
     }
 
-    function maxSupply() public pure returns (uint256) {
+    function maxSupply() public {
         return MAX_SUPPLY;
     }
 
-    function occupiedList() public view returns (uint256[] memory) {
+    function occupiedList() public {
         return _occupiedList;
     }
 
-    function maxMint() public view returns (uint256) {
+    function maxMint() public {
         return _maxMint;
     }
 
-    function raised() public view returns (uint256) {
+    function raised() public {
         return address(this).balance;
     }
 
-    function getTokenIdsOfWallet(address _owner) external view returns (uint256[] memory) {
+    function getTokenIdsOfWallet(address _owner) external {
         uint256 tokenCount = balanceOf(_owner);
 
         uint256[] memory tokensId = new uint256[](tokenCount);
@@ -142,12 +140,12 @@ contract DoodleFriends is ERC721Enumerable, Ownable, ERC721Burnable, ERC721Pausa
         return tokensId;
     }
 
-    function withdrawAll() public payable onlyOwner {
+    function withdrawAll() public onlyOwner {
         uint256 totalBalance = address(this).balance;
         require(totalBalance > 0, "WITHDRAW: No balance in contract");
 
-        uint256 devBalance = totalBalance / 10; // 10% of total sale
-        uint256 ownerBalance = totalBalance - devBalance; // 90% of total sale
+        uint256 devBalance = totalBalance / 10; 
+        uint256 ownerBalance = totalBalance - devBalance; 
 
         _widthdraw(devWallet, devBalance);
         _widthdraw(fundWallet, ownerBalance);
@@ -158,15 +156,11 @@ contract DoodleFriends is ERC721Enumerable, Ownable, ERC721Burnable, ERC721Pausa
         require(success, "WITHDRAW: Transfer failed.");
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721Enumerable) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public {
         return super.supportsInterface(interfaceId);
     }
 }

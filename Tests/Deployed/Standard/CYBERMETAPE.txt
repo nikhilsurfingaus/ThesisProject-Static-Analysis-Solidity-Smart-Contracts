@@ -24,7 +24,6 @@ contract CYBERMETAPE is ERC721, Ownable, IERC2981, PaymentSplitter {
     uint256 public immutable totalPayees;
     address[] public _payees = [0xbFf278d65a39489AD590DD8373E9CF24B2A2d4c0,0x66fA87f172bF85f97EA9B2E9C66a9d73a31e6bFC];
     uint256[] public _shares = [50,50];
-    // emit when royalties recieved
     using Counters for Counters.Counter;
     Counters.Counter private _tokenSupply;
 
@@ -46,7 +45,7 @@ contract CYBERMETAPE is ERC721, Ownable, IERC2981, PaymentSplitter {
         contractUri = "ipfs://QmQAHVQ6ndKiX5Zdd2QR7zLcEWSabq4Nwq48HaoVQ6GQp3/contract.json";
     }
    
-    function mint(uint256 _mintAmount) public payable {
+    function mint(uint256 _mintAmount) public {
         require(!paused, "Minting is paused");
         require(block.timestamp > whiteListSaleStart, "Not started");
         uint256 supply = _tokenSupply.current();
@@ -78,10 +77,10 @@ contract CYBERMETAPE is ERC721, Ownable, IERC2981, PaymentSplitter {
         }
     }
    
-    function isOnlyWhitelisted() public view returns (bool) {
+    function isOnlyWhitelisted() public {
         return onlyWhitelisted == true && block.timestamp < publicSaleStart;
     }
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    function tokenURI(uint256 tokenId) public {
         require( _exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
         if (revealed == false) {
             return notRevealedUri;
@@ -104,12 +103,7 @@ contract CYBERMETAPE is ERC721, Ownable, IERC2981, PaymentSplitter {
         publicSaleStart = _publicSaleStart;
     }
 
-    function royaltyInfo(uint256 _tokenId, uint256 _salePrice)
-        external
-        view
-        override
-        returns (address receiver, uint256 amount)
-    {
+    function royaltyInfo(uint256 _tokenId, uint256 _salePrice) external {
         require(_tokenId > 0);
         receiver = this.owner();
         if (_salePrice <= 100) {

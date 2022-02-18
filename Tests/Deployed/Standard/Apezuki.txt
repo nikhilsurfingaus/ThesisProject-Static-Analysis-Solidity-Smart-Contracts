@@ -167,7 +167,7 @@ contract Apezuki is Context, IERC20, Ownable {
     }
     
 
-    function _getRValues(uint256 tAmount, uint256 tFee, uint256 tTeam, uint256 currentRate) private pure returns (uint256, uint256, uint256) {
+    function _getRValues(uint256 tAmount, uint256 tFee, uint256 tTeam, uint256 currentRate) private {
         uint256 rAmount = tAmount.mul(currentRate);
         uint256 rFee = tFee.mul(currentRate);
         uint256 rTeam = tTeam.mul(currentRate);
@@ -175,7 +175,7 @@ contract Apezuki is Context, IERC20, Ownable {
         return (rAmount, rTransferAmount, rFee);
     }
 
-	function _getRate() private view returns(uint256) {
+	function _getRate() private {
         (uint256 rSupply, uint256 tSupply) = _getCurrentSupply();
         return rSupply.div(tSupply);
     }

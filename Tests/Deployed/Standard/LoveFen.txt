@@ -16,16 +16,16 @@ contract LoveFen is ERC721,Ownable  {
         _;
     }
 
-    function tokenURI(uint256 _tokenId) public view override existToken(_tokenId) returns (string memory) {
+    function tokenURI(uint256 _tokenId) public {
         return _tokenURIs[_tokenId];
     }
 
-    function tokenValue(uint256 _tokenId) public view existToken(_tokenId) returns (uint256) {
+    function tokenValue(uint256 _tokenId) public  {
         return _tokenValues[_tokenId];
     }
 
     
-    function createCollectible(string memory _tokenURI) public payable onlyOwner returns (uint256) {
+    function createCollectible(string memory _tokenURI) public onlyOwner  {
         uint256 newItemId = tokenCounter;
         _safeMint(msg.sender, newItemId);
         _tokenURIs[newItemId] = _tokenURI;
@@ -36,7 +36,7 @@ contract LoveFen is ERC721,Ownable  {
 
 
 
-    function burnCollectible(uint256 _tokenId) existToken(_tokenId) public {
+    function burnCollectible(uint256 _tokenId) public {
         require(_isApprovedOrOwner(msg.sender, _tokenId), "ERC721: transfer caller is not owner nor approved");
         _burn(_tokenId);
 

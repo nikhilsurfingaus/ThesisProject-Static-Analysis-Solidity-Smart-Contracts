@@ -35,7 +35,7 @@ contract ArrayAirdrop is Pausable, Ownable, ReentrancyGuard {
         startedClaim = _flag;
     }
 
-    function setInvestors(address[] memory _investors, uint[] memory _amounts) external checkKeeper {
+    function setInvestors(address[] memory _investors, uint[] memory _amounts) external  {
         require(_investors.length == _amounts.length, "invalid data");
 
         for (uint i = 0; i < _investors.length; i++) {
@@ -67,7 +67,7 @@ contract ArrayAirdrop is Pausable, Ownable, ReentrancyGuard {
         }
     }
 
-    function emergencyWithdraw(uint256 _amount) external checkKeeper {
+    function emergencyWithdraw(uint256 _amount) external  {
         uint256 _bal = token.balanceOf(address(this));
         if (_amount > _bal) _amount = _bal;
 

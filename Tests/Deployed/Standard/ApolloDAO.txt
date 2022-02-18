@@ -41,7 +41,7 @@ contract ApolloDAO is Context {
     }
 
 
-    function voteForDAONomination (uint256 voteAmount, address newDAO, bool voteFor) external {
+    function voteForDAONomination(uint256 voteAmount, address newDAO, bool voteFor) external {
         require(_newDAONominations[newDAO].timeOfNomination > 0 , "There is no DAO Nomination for this address");
         require(_lockedVotes[_msgSender()][newDAO].voteCount == 0, "User already voted on this nomination");
         require(approvedNewDAO == address(0), "There is already an approved new DAO");
@@ -56,7 +56,7 @@ contract ApolloDAO is Context {
         }
     }
 
-    function withdrawNewDAOVotes (address newDAO) external {
+    function withdrawNewDAOVotes(address newDAO) external {
         uint256 currentVoteCount = _lockedVotes[_msgSender()][newDAO].voteCount;
         require(currentVoteCount > 0 , "You have not cast votes for this nomination");
         require((totalLockedVotes - currentVoteCount) >= 0, "Withdrawing would take DAO balance below expected rewards amount");
@@ -78,7 +78,7 @@ contract ApolloDAO is Context {
 
     }
 
-    function nominateNewDAO (address newDAO) external {
+    function nominateNewDAO(address newDAO) external {
         require(apolloToken.balanceOf(_msgSender()) >= minimumDAOBalance , "Nominator does not own enough APOOLLO");
         _newDAONominations[newDAO] = newDAONomination(
             {
@@ -93,7 +93,7 @@ contract ApolloDAO is Context {
         emit newDaoNomination(newDAO, _msgSender());
     }
 
-    function closeNewDAOVoting (address newDAO) external {
+    function closeNewDAOVoting(address newDAO) external {
         require(block.timestamp > (_newDAONominations[newDAO].timeOfNomination + daoVotingDuration), "We have not passed the minimum voting duration");
         require(!_newDAONominations[newDAO].votingClosed, "Voting has already closed for this nomination");
         require(approvedNewDAO == address(0), "There is already an approved new DAO");

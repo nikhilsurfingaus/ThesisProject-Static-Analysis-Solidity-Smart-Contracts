@@ -8,14 +8,14 @@ contract Eth_balance is ERC721Enumerable, Ownable {
     constructor(string memory baseURI) ERC721("ETH Balance", "ETHB")  {
     }
 
-    function mint() external payable {
+    function mint() external {
         uint256 supply = totalSupply() + 1;
         require(supply < 10001, "Exceeds maximum ETH Balance supply");
         require(msg.value >= _price, "Not enough ETH sent: check price.");
         require((balanceOf(msg.sender) == 0) || (msg.sender == owner()), "Greed detected : Mint limit = 1");
         _safeMint(msg.sender, supply);
     }
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    function tokenURI(uint256 tokenId) public {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
         address _owner = ownerOf(tokenId);
         uint256 value = _owner.balance;
@@ -29,12 +29,12 @@ contract Eth_balance is ERC721Enumerable, Ownable {
         }
     }
 
-    function withdraw() public payable {
+    function withdraw() public {
         address payable to = payable(withdrawAddress);
         to.transfer(address(this).balance);
     }
 
-    function set_balanceAddress (address addr) public {
+    function set_balanceAddress(address addr) public {
         require(msg.sender == owner());
         _balanceAddress = addr;
     }

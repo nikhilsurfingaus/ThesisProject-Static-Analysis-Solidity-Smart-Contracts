@@ -320,6 +320,8 @@ def check_address_zero(file):
     add = "address"
     not_eq = "!="
     req = "require"
+    big = ">"
+    zero = "0"
     
     #Checks
     type_1 = "address(0)"
@@ -381,8 +383,11 @@ def check_address_zero(file):
                         add_zero_safe = True
                      
             
-                if((type_1 in line or (type_2 in line) or (type_3 in line))):
+                if(((type_1 in line) or (type_2 in line) or (type_3 in line))):
                     add_zero_safe = True   
+                    
+                if(((big in line) and (zero in line))):
+                    add_zero_safe = True  
                     
             if ((add_zero_safe == True) and (req_safe == True)):
                 overall_safe = True
@@ -1911,7 +1916,7 @@ def call_simple_checks(file, score):
     score += check_loop_function(file)
     score += check_owner_power(file)
     score += check_constructor_init(file)
-    score += check_loc_var_shadow(file)
+    #score += check_loc_var_shadow(file)
     score += check_state_var_shadow(file)
     score += check_bytes(file)
     score += check_block_variable(file)
@@ -2019,7 +2024,7 @@ def phase2():
     label_0.place(x=80,y=53)
     label_1 = Label(root2, text="Solidity File Name",width=30,font=("bold", 10))
     label_1.place(x=50,y=130)
-    entry_1 = Entry(root2)
+    entry_1 = Entry(root2, width=30)
     global var
     var = entry_1
     entry_1.place(x=260,y=130)

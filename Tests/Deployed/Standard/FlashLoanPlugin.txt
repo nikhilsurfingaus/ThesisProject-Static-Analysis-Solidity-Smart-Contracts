@@ -14,9 +14,7 @@ contract FlashLoanPlugin is ICallee, DydxFlashloanBase {
 
     event Leverage(uint256 amountRequested, uint256 amountGiven, bool deficit, address flashLoan);
 
-    constructor (address _strategy)
-    public 
-    {
+    constructor (address _strategy) public {
         strategy = IStrategy(_strategy);
 
         want = IERC20(strategy.want());
@@ -24,29 +22,19 @@ contract FlashLoanPlugin is ICallee, DydxFlashloanBase {
         want.safeApprove(SOLO, type(uint256).max);
     }
 
-    function updateMarketId() 
-    external     
-    {
+    function updateMarketId() external {
         require(msg.sender == address(strategy));
         _setMarketIdFromTokenAddress();
     }
 
-    function setSOLO(address _solo) 
-    external 
-    {   
+    function setSOLO(address _solo) external {   
         require(msg.sender == address(strategy));
         want.approve(SOLO, 0);
         SOLO = _solo;
         want.approve(SOLO, uint256(-1));
     }
 
-    function doDyDxFlashLoan(
-        bool _deficit,
-        uint256 _amountDesired
-    ) 
-    external 
-    returns(uint256) 
-    {
+    function doDyDxFlashLoan(bool _deficit, uint256 _amountDesired) external {
         require(msg.sender == address(strategy), "not strategy!");
         uint256 amount = _amountDesired;
         ISoloMargin solo = ISoloMargin(SOLO);
@@ -95,27 +83,14 @@ contract FlashLoanPlugin is ICallee, DydxFlashloanBase {
         revert("No marketId found for provided token");
     }
 
-    function callFunction(
-        address sender,
-        Account.Info memory account,
-        bytes memory data
-    ) 
-    external
-    override
-    {
+    function callFunction(address sender, Account.Info memory account, bytes memory data) external {
         (bool deficit, uint256 amount, uint256 repayAmount) = abi.decode(data, (bool, uint256, uint256));
         require(msg.sender == SOLO, "NOT_SOLO");
 
         _loanLogic(deficit, amount, repayAmount);    
     }
 
-    function _loanLogic(
-        bool deficit,
-        uint256 amount,
-        uint256 repayAmount
-    ) 
-    internal 
-    {   
+    function _loanLogic(bool deficit, uint256 amount, uint256 repayAmount) internal {   
         want.transfer(address(strategy), want.balanceOf(address(this)));
         strategy.useLoanTokens(deficit, amount, repayAmount);
     }

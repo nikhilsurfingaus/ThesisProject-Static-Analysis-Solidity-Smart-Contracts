@@ -7,7 +7,6 @@ contract OokiRewarder is IRewarder,  BoringOwnable{
 
     IERC20 public rewardToken;
 
-
     struct UserInfo {
         uint256 amount;
         uint256 rewardDebt;
@@ -40,7 +39,7 @@ contract OokiRewarder is IRewarder,  BoringOwnable{
         MASTERCHEF_V2 = _MASTERCHEF_V2;
     }
 
-    function init(bytes calldata data) public payable {
+    function init(bytes calldata data) public {
         require(rewardToken == IERC20(0), "Rewarder: already initialized");
         (rewardToken, owner, rewardPerSecond, masterLpToken) = abi.decode(data, (IERC20, address, uint256, IERC20));
         require(rewardToken != IERC20(0), "Rewarder: bad token");
@@ -48,7 +47,7 @@ contract OokiRewarder is IRewarder,  BoringOwnable{
         emit LogInit(rewardToken, owner, rewardPerSecond, masterLpToken);
     }
 
-    function onSushiReward (uint256 pid, address _user, address to, uint256, uint256 lpTokenAmount) onlyMCV2 lock override external {
+    function onSushiReward (uint256 pid, address _user, address to, uint256, uint256 lpTokenAmount) external {
         require(IMasterChefV2(MASTERCHEF_V2).lpToken(pid) == masterLpToken);
 
         PoolInfo memory pool = updatePool(pid);
@@ -73,7 +72,7 @@ contract OokiRewarder is IRewarder,  BoringOwnable{
         emit LogOnReward(_user, pid, pending - user.unpaidRewards, to);
     }
 
-    function pendingTokens(uint256 pid, address user, uint256) override external view returns (IERC20[] memory rewardTokens, uint256[] memory rewardAmounts) {
+    function pendingTokens(uint256 pid, address user, uint256) external {
         IERC20[] memory _rewardTokens = new IERC20[](1);
         _rewardTokens[0] = (rewardToken);
         uint256[] memory _rewardAmounts = new uint256[](1);
@@ -81,7 +80,7 @@ contract OokiRewarder is IRewarder,  BoringOwnable{
         return (_rewardTokens, _rewardAmounts);
     }
 
-    function rewardRates() external view returns (uint256[] memory) {
+    function rewardRates() external {
         uint256[] memory _rewardRates = new uint256[](1);
         _rewardRates[0] = rewardPerSecond;
         return (_rewardRates);
@@ -95,7 +94,7 @@ contract OokiRewarder is IRewarder,  BoringOwnable{
         }
     }
 
-    function pendingToken(uint256 _pid, address _user) public view returns (uint256 pending) {
+    function pendingToken(uint256 _pid, address _user) public {
         PoolInfo memory pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
         uint256 accToken1PerShare = pool.accToken1PerShare;
@@ -109,7 +108,7 @@ contract OokiRewarder is IRewarder,  BoringOwnable{
     }
 
   
-    function updatePool(uint256 pid) public returns (PoolInfo memory pool) {
+    function updatePool(uint256 pid) public {
         pool = poolInfo[pid];
         if (block.timestamp > pool.lastRewardTime) {
             uint256 lpSupply = IMasterChefV2(MASTERCHEF_V2).lpToken(pid).balanceOf(MASTERCHEF_V2);

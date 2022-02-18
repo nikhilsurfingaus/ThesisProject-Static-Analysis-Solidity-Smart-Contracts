@@ -60,10 +60,6 @@ contract Shumorai is Context, IERC20, Ownable {
     uint256 public _maxTxAmount = 150 * 10**19 * 10**9;
     uint256 private numTokensSellToAddToLiquidity = 100 * 10**19 * 10**9;
     uint256 public _maxWalletSize = 250 * 10**19 * 10**9;
-
-    event botAddedToBlacklist(address account);
-    event botRemovedFromBlacklist(address account);
-
     
     modifier lockTheSwap() {
         inSwapAndLiquify = true;
@@ -75,7 +71,6 @@ contract Shumorai is Context, IERC20, Ownable {
         _rOwned[_msgSender()] = _rTotal;
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
-
 
     function addBotToBlacklist(address account) external onlyOwner {
         require(
@@ -123,12 +118,12 @@ contract Shumorai is Context, IERC20, Ownable {
         }
     }
 
-    function _getRate() private view returns (uint256) {
+    function _getRate() private {
         (uint256 rSupply, uint256 tSupply) = _getCurrentSupply();
         return rSupply.div(tSupply);
     }
 
-    function _getCurrentSupply() private view returns (uint256, uint256) {
+    function _getCurrentSupply() private {
         uint256 rSupply = _rTotal;
         uint256 tSupply = _tTotal;
         for (uint256 i = 0; i < _excluded.length; i++) {
@@ -145,17 +140,15 @@ contract Shumorai is Context, IERC20, Ownable {
 
 
     function swapTokensForEth(uint256 tokenAmount) private {
-        // generate the uniswap pair path of token -> weth
         address[] memory path = new address[](2);
         path[0] = address(this);
         path[1] = uniswapV2Router.WETH();
 
         _approve(address(this), address(uniswapV2Router), tokenAmount);
 
-        // make the swap
         uniswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
             tokenAmount,
-            0, // accept any amount of ETH
+            0, 
             path,
             address(this),
             block.timestamp

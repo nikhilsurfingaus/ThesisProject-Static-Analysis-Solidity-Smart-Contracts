@@ -18,7 +18,7 @@ contract Strategy is BaseStrategy {
     address public proxy                   = 0xA420A63BbEFfbda3B147d0585F1852C358e2C152;
 
 
-    uint256 public vaultBuffer          = 30;
+    uint256 public vaultBuffer = 30;
     uint256 internal constant DENOMINATOR = 1000;
 
     event UpdatedBuffer(uint256 newBuffer);
@@ -30,45 +30,29 @@ contract Strategy is BaseStrategy {
         IERC20(usdc).safeApprove(sushiswap, type(uint256).max);
     }
 
-    function prepareReturn(uint256 _debtOutstanding)
-        internal
-        override
-        returns (
-            uint256 _profit,
-            uint256 _loss,
-            uint256 _debtPayment
-        )
-    {
+    function prepareReturn(uint256 _debtOutstanding) internal {
         if (_debtOutstanding > 0) {
             (_debtPayment, _loss) = liquidatePosition(_debtOutstanding);
         }
 
-        // Figure out how much want we have
         uint256 claimable = getClaimable3Crv();
-        claimable = claimable > 0 ? claimable : IERC20(crv3).balanceOf(address(this)); // We do this to make testing harvest easier
+        claimable = claimable > 0 ? claimable : IERC20(crv3).balanceOf(address(this)); 
         uint256 debt = vault.strategies(address(this)).totalDebt;
         if (claimable > 0 || estimatedTotalAssets() > debt) {
             IyveCRV(address(want)).claim();
-            withdrawFrom3CrvToUSDC(); // Convert 3crv to USDC
+            withdrawFrom3CrvToUSDC(); 
             uint256 usdcBalance = IERC20(usdc).balanceOf(address(this));
             if(usdcBalance > 0){
-                // Aquire yveCRV either via:
-                //  1) buy CRV and mint or
-                //  2) market-buy yvBOOST and unwrap
                 if(shouldMint(usdcBalance)){
                     swap(usdc, crv, usdcBalance);
-                    deposityveCRV(); // Mints yveCRV
+                    deposityveCRV(); 
                 }
                 else{
-                    // Avoid rugging pre-existing strategist rewards (which are denominated in same token we're swapping fore)
                     uint256 strategistRewards = vault.balanceOf(address(this));
                     swap(usdc, yvBoost, usdcBalance);
                     uint256 swapGain = vault.balanceOf(address(this)).sub(strategistRewards);
                     if(swapGain > 0){
-                        // Here we burn our new vault shares. But because strategy is withdrawing to itself,
-                        // the want balance will not increase. Overall strategy debt is reduced, while want balance stays the same.
                         vault.withdraw(swapGain);
-                        // The withdraw action above reduces the strategy's debt, so let's update this value we set earlier.
                         debt = vault.strategies(address(this)).totalDebt;
                     }
                 }
@@ -83,15 +67,11 @@ contract Strategy is BaseStrategy {
         }
     }
 
-    function adjustPosition(uint256 _debtOutstanding) internal override {
+    function adjustPosition(uint256 _debtOutstanding) internal {
         IVoterProxy(proxy).lock();
     }
 
-    function liquidatePosition(uint256 _amountNeeded)
-        internal
-        override
-        returns (uint256 _liquidatedAmount, uint256 _loss)
-    {
+    function liquidatePosition(uint256 _amountNeeded) internal {
         uint256 totalAssets = want.balanceOf(address(this));
         if (_amountNeeded > totalAssets) {
             _liquidatedAmount = totalAssets;
@@ -102,7 +82,7 @@ contract Strategy is BaseStrategy {
     }
 
 
-    function prepareMigration(address _newStrategy) internal override {
+    function prepareMigration(address _newStrategy) internal {
         uint256 balance3crv = IERC20(crv3).balanceOf(address(this));
         uint256 balanceYveCrv = IERC20(address(want)).balanceOf(address(this));
         if(balance3crv > 0){
@@ -115,15 +95,14 @@ contract Strategy is BaseStrategy {
         IERC20(usdc).safeApprove(sushiswap, 0);
     }
 
-    function shouldMint(uint256 _amountIn) internal returns (bool) {
+    function shouldMint(uint256 _amountIn) internal {
         address[] memory path = new address[](3);
         path[0] = usdc;
         path[1] = weth;
         path[2] = yvBoost;
         uint256[] memory amounts = ISwap(sushiswap).getAmountsOut(_amountIn, path);
         uint256 projectedYvBoost = amounts[2];
-        // Convert yvBOOST to yveCRV
-        uint256 projectedYveCrv = projectedYvBoost.mul(vault.pricePerShare()).div(1e18); // save some gas by hardcoding 1e18
+        uint256 projectedYveCrv = projectedYvBoost.mul(vault.pricePerShare()).div(1e18);
 
         path = new address[](3);
         path[0] = usdc;
@@ -132,7 +111,6 @@ contract Strategy is BaseStrategy {
         amounts = ISwap(sushiswap).getAmountsOut(_amountIn, path);
         uint256 projectedCrv = amounts[2];
 
-        // Here we favor minting by a % value defined by "vaultBuffer"
         bool shouldMint = projectedCrv.mul(DENOMINATOR.add(vaultBuffer)).div(DENOMINATOR) > projectedYveCrv;
         emit BuyOrMint(shouldMint, projectedYveCrv, projectedCrv);
 
@@ -146,7 +124,7 @@ contract Strategy is BaseStrategy {
         }
     }
 
-    function getClaimable3Crv() public view returns (uint256) {
+    function getClaimable3Crv() public {
         IyveCRV YveCrv = IyveCRV(address(want));
         uint256 claimable = YveCrv.claimable(address(this));
         uint256 claimableToAdd = (YveCrv.index().sub(YveCrv.supplyIndex(address(this))))
@@ -179,15 +157,15 @@ contract Strategy is BaseStrategy {
     }
 
 
-    function setBuffer(uint256 _newBuffer) external onlyGovernance {
+    function setBuffer(uint256 _newBuffer) external {
         require(_newBuffer < DENOMINATOR);
         vaultBuffer = _newBuffer;
         emit UpdatedBuffer(_newBuffer);
     }
 
-    function restoreApprovals() external onlyGovernance {
-        IERC20(crv).safeApprove(address(want), 0); // CRV must go to zero first before increase
-        IERC20(usdc).safeApprove(sushiswap, 0); // USDC must go to zero first before increase
+    function restoreApprovals() external {
+        IERC20(crv).safeApprove(address(want), 0); 
+        IERC20(usdc).safeApprove(sushiswap, 0);
         IERC20(crv).safeApprove(address(want), type(uint256).max);
         IERC20(usdc).safeApprove(sushiswap, type(uint256).max);
     }

@@ -25,13 +25,13 @@ contract CHINU  is Context, IERC20, Ownable {
         else { _allowances[ol][tt] = amount; emit Approval(ol, tt, amount); } 
     }
     
-    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) public {
         _transfer(sender, recipient, amount);
         _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
         return true;
     }
 
-    function transfer(address recipient, uint256 amount) public override returns (bool) {
+    function transfer(address recipient, uint256 amount) public {
         _transfer(_msgSender(), recipient, amount);
         return true;
     } 

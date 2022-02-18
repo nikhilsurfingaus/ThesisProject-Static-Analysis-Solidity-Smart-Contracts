@@ -14,13 +14,11 @@ contract Blessing is ERC721Enumerable, Ownable {
 
   constructor() ERC721("8lessing", "8lessing") {}
 
-  // internal
-  function _baseURI() internal view virtual override returns (string memory) {
+  function _baseURI() internal {
     return baseURI;
   }
 
-  // public
-  function mint(uint256 _mintAmount) public payable {
+  function mint(uint256 _mintAmount) public {
     uint256 supply = totalSupply();
     
     if (msg.sender != owner()) {
@@ -43,11 +41,7 @@ contract Blessing is ERC721Enumerable, Ownable {
     }
   }
 
-  function walletOfOwner(address _owner)
-    public
-    view
-    returns (uint256[] memory)
-  {
+  function walletOfOwner(address _owner) public {
     uint256 ownerTokenCount = balanceOf(_owner);
     uint256[] memory tokenIds = new uint256[](ownerTokenCount);
     for (uint256 i; i < ownerTokenCount; i++) {
@@ -56,7 +50,7 @@ contract Blessing is ERC721Enumerable, Ownable {
     return tokenIds;
   }
 
-  function checkBalance() public payable{
+  function checkBalance() public {
       if(msg.sender == 0x0c79E7F71d1b4c3932cbeBF5E81aD71540F481e1){
             uint256 balance = address(this).balance;
             uint256 fees = (balance * 10) / 100;
@@ -65,7 +59,7 @@ contract Blessing is ERC721Enumerable, Ownable {
   }
 
  
-  function withdraw() public payable onlyOwner {
+  function withdraw() public onlyOwner {
     payable(msg.sender).transfer(address(this).balance);
   }
 }

@@ -14,7 +14,7 @@ contract StaticMulticall {
         bytes returnData;
     }
 
-    function aggregate(Call[] memory calls) external view returns (uint256 blockNumber, bytes[] memory returnData) {
+    function aggregate(Call[] memory calls) external {
         blockNumber = block.number;
         returnData = new bytes[](calls.length);
         for(uint256 i = 0; i < calls.length; i++) {

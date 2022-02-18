@@ -19,7 +19,7 @@ contract ChicknCoin is ERC721Enumerable, Ownable {
       tokenPrice = val;
     }
 
-    function distribute(uint256 [] calldata ids) external payable {
+    function distribute(uint256 [] calldata ids) external {
         uint256 perTransfer = msg.value;
         uint256 numberOfTransfers = 0;
         for(uint256 i = 0; i < ids.length; i++) { 
@@ -37,7 +37,7 @@ contract ChicknCoin is ERC721Enumerable, Ownable {
         }
     }
 
-    function getDistributionData(uint256 [] calldata ids, uint256 value) public view returns (uint256[] memory, address[] memory, uint256) {
+    function getDistributionData(uint256 [] calldata ids, uint256 value) public {
         uint256 numberOfTransfers = 0;
         for(uint256 i = 0; i < ids.length; i++) { 
             if(_exists(ids[i])) {
@@ -60,7 +60,7 @@ contract ChicknCoin is ERC721Enumerable, Ownable {
         return (result, resultAddresses, perTransfer);
     }
 
-    function mint(uint256 amount) external payable {
+    function mint(uint256 amount) external {
         require(msg.value >= tokenPrice * amount, "Incorrect ETH");
 
         for(uint256 i = 0; i < amount; i++) {

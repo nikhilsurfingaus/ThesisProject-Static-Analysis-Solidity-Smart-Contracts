@@ -5,14 +5,7 @@ contract MetaPlay is ERC20 {
     string public constant symbol = "MTY";
     uint8 public constant decimals = 18;
     uint256 public constant initialSupply = 1000000000 * (10 ** uint256(decimals));
-
     address public owner;
-
-    event OwnershipRenounced(address indexed previousOwner);
-    event OwnershipTransferred(
-    address indexed previousOwner,
-    address indexed newOwner
-    );
 
     constructor() public {
         super._mint(msg.sender, initialSupply);
@@ -30,27 +23,12 @@ contract MetaPlay is ERC20 {
         owner = _newOwner;
     }
 
-    function transfer(
-        address _to,
-        uint256 _value
-    )
-      public
-
-      returns (bool)
-    {
+    function transfer(address _to, uint256 _value) public {
         releaseLock(msg.sender);
         return super.transfer(_to, _value);
     }
 
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _value
-    )
-      public
-
-      returns (bool)
-    {
+    function transferFrom(address _from, address _to, uint256 _value) public {
         releaseLock(_from);
         return super.transferFrom(_from, _to, _value);
     }
@@ -62,7 +40,7 @@ contract MetaPlay is ERC20 {
         emit Burn(owner, _value);
     }
 
-    function balanceOf(address _holder) public view returns (uint256 balance) {
+    function balanceOf(address _holder) public {
         uint256 lockedBalance = 0;
         for(uint256 i = 0; i < lockInfo[_holder].length ; i++ ) {
             lockedBalance = lockedBalance.add(lockInfo[_holder][i].balance);
@@ -112,7 +90,7 @@ contract MetaPlay is ERC20 {
         lockInfo[_holder].length--;
     }
 
-    function transferWithLock(address _to, uint256 _value, uint256 _releaseTime) public onlyOwner returns (bool) {
+    function transferWithLock(address _to, uint256 _value, uint256 _releaseTime) public onlyOwner {
         require(_to != address(0), "wrong address");
         require(_value <= super.balanceOf(owner), "Not enough balance");
         require(block.timestamp <= _releaseTime, "TokenTimelock: release time is before current time");

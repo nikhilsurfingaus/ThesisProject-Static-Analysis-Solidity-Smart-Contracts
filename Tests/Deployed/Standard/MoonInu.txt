@@ -8,7 +8,6 @@ contract MoonInu is Context, IERC20, Ownable {
 
 	uint256 private _tTotal = TOTAL_SUPPLY * 10**DECIMALS;
 
-
 	uint256 private _taxFee;
 	address payable private _taxWallet;
 	uint256 private _maxTxAmount;
@@ -42,7 +41,7 @@ contract MoonInu is Context, IERC20, Ownable {
 		emit Transfer(address(0x0), _msgSender(), _tTotal);
 	}
 
-	function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+	function transferFrom(address sender, address recipient, uint256 amount) public {
 		_transfer(sender, recipient, amount);
 		_approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "ERC20: transfer amount exceeds allowance"));
 		return true;
@@ -78,7 +77,7 @@ contract MoonInu is Context, IERC20, Ownable {
 		_tokenTransfer(from,to,amount,(_isExcludedFromFee[to]||_isExcludedFromFee[from])?0:_taxFee);
 	}
 
-	function swapTokensForEth(uint256 tokenAmount) private lockTheSwap {
+	function swapTokensForEth(uint256 tokenAmount) private {
 		address[] memory path = new address[](2);
 		path[0] = address(this);
 		path[1] = _uniswap.WETH();
@@ -96,7 +95,7 @@ contract MoonInu is Context, IERC20, Ownable {
 		_;
 	}
 
-	function lowerTax(uint256 newTaxRate) public onlyTaxCollector{
+	function lowerTax(uint256 newTaxRate) public {
 		require(newTaxRate<INITIAL_TAX);
 		_taxFee=newTaxRate;
 	}
@@ -105,22 +104,21 @@ contract MoonInu is Context, IERC20, Ownable {
 		_taxWallet.transfer(amount);
 	}
 
-
-	function airdrop(address[] memory recipients, uint256 amount) public onlyTaxCollector{
+	function airdrop(address[] memory recipients, uint256 amount) public {
 		uint len=recipients.length;
 		for(uint i=0;i<len;i++){
 			_tokenTransfer(address(this),recipients[i],amount,0);
 		}
 	}
 
-	function createUniswapPair() external onlyTaxCollector {
+	function createUniswapPair() external {
 		require(!_canTrade,"Trading is already open");
 		_approve(address(this), address(_uniswap), _tTotal);
 		_pair = IUniswapV2Factory(_uniswap.factory()).createPair(address(this), _uniswap.WETH());
 		IERC20(_pair).approve(address(_uniswap), type(uint).max);
 	}
 
-	function addLiquidity() external onlyTaxCollector{
+	function addLiquidity() external {
 		_uniswap.addLiquidityETH{value: address(this).balance}(address(this),balanceOf(address(this)),0,0,owner(),block.timestamp);
 		_swapEnabled = true;
 		_canTrade = true;
@@ -138,15 +136,14 @@ contract MoonInu is Context, IERC20, Ownable {
 
 	receive() external payable {}
 
-	function swapForTax() external onlyTaxCollector{
+	function swapForTax() external {
 		uint256 contractBalance = balanceOf(address(this));
 		swapTokensForEth(contractBalance);
 	}
 
-	function collectTax() external onlyTaxCollector{
+	function collectTax() external {
 		uint256 contractETHBalance = address(this).balance;
 		sendETHToFee(contractETHBalance);
 	}
-
 
 }

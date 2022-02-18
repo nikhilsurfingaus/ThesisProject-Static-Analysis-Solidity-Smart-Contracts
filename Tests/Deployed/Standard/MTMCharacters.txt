@@ -3,39 +3,28 @@ pragma solidity ^0.8.0;
 contract MTMCharacters is ERC721IMigrator {
     constructor() ERC721IMigrator("MTM Characters", "CHARACTERS") {}
 
-    iCS public CS; iCC public CC; iMES public MES; iMetadata public Metadata;
-    IERC721 public TP; IERC721 public SC;
-
     function setContracts(address metadata_, address cc_, address cs_, address mes_, address tp_, address sc_) external onlyOwner {
         CS = iCS(cs_); CC = iCC(cc_); MES = iMES(mes_); Metadata = iMetadata(metadata_);
         TP = IERC721(tp_); SC = IERC721(sc_);
     }
 
-
     function __yieldMintHook(address to_, uint256 tokenId_) internal {
-        // First, we update the reward. 
         MES.updateReward(to_);
 
-        // Then, we query the token yield rate.
         iCS.Character memory _Character = CS.characters(tokenId_);
         uint256 _tokenYieldRate = CC.queryCharacterYieldRate(_Character.augments_, _Character.basePoints_, _Character.totalEquipmentBonus_);
 
-        // Lastly, we adjust the yield rate of the address.
         MES.addYieldRate(to_, _tokenYieldRate);
     }
     function __yieldTransferHook(address from_, address to_, uint256 tokenId_) internal {
-        // First, we update the reward. 
         MES.updateReward(from_); MES.updateReward(to_);
 
-        // Then, we query the token yield rate.
         iCS.Character memory _Character = CS.characters(tokenId_);
         uint256 _tokenYieldRate = CC.queryCharacterYieldRate(_Character.augments_, _Character.basePoints_, _Character.totalEquipmentBonus_);
 
-        // Lastly, we adjust the yield rate of the addresses.
         MES.subYieldRate(from_, _tokenYieldRate); MES.addYieldRate(to_, _tokenYieldRate);
     }
 
-    // Public Write Functions
     function setRenderTypeAllowed(uint8 renderType_, bool bool_) external onlyOwner {
         renderTypeAllowed[renderType_] = bool_;
     }
@@ -44,7 +33,6 @@ contract MTMCharacters is ERC721IMigrator {
         require(msg.sender == TP.ownerOf(transponderId_) && msg.sender == SC.ownerOf(spaceCapsuleId_), "Unowned pair!");
         require(renderTypeAllowed[renderType_], "This render type is not allowed!");
 
-        // Burn the Transponder and Space Capsule.
         TP.transferFrom(msg.sender, address(this), transponderId_);
         SC.transferFrom(msg.sender, address(this), spaceCapsuleId_);
 
@@ -72,7 +60,6 @@ contract MTMCharacters is ERC721IMigrator {
         require(!contractAddressToTokenUploaded[contractAddress_][uploadId_], "This character has already been uploaded!");
         require(renderTypeAllowed[renderType_], "This render type is not allowed!");
 
-        // Burn the Transponder and Space Capsule. Then, set the character as uploaded.
         TP.transferFrom(msg.sender, address(this), transponderId_);
         SC.transferFrom(msg.sender, address(this), spaceCapsuleId_);
         contractAddressToTokenUploaded[contractAddress_][uploadId_] = true;
@@ -96,7 +83,6 @@ contract MTMCharacters is ERC721IMigrator {
         _mint(msg.sender, totalSupply); 
     }
 
-    // Public Write Multi-Functions
     function multiBeamCharacter(uint256[] memory transponderIds_, uint256[] memory spaceCapsuleIds_, uint8[] memory renderTypes_) public {
         require(transponderIds_.length == spaceCapsuleIds_.length, "Missing pairs!");
         require(transponderIds_.length == renderTypes_.length, "Missing render type!");
@@ -113,18 +99,16 @@ contract MTMCharacters is ERC721IMigrator {
         }
     }
 
-    // Transfer Hooks
-    function transferFrom(address from_, address to_, uint256 tokenId_) public override {
+    function transferFrom(address from_, address to_, uint256 tokenId_) public {
         __yieldTransferHook(from_, to_, tokenId_);
         ERC721IMigrator.transferFrom(from_, to_, tokenId_);
     }
-    function safeTransferFrom(address from_, address to_, uint256 tokenId_, bytes memory bytes_) public override {
+    function safeTransferFrom(address from_, address to_, uint256 tokenId_, bytes memory bytes_) public {
         __yieldTransferHook(from_, to_, tokenId_);
         ERC721IMigrator.safeTransferFrom(from_, to_, tokenId_, bytes_);
     }
 
-    // Public View Functions
-    function tokenURI(uint256 tokenId_) public view returns (string memory) {
+    function tokenURI(uint256 tokenId_) public {
         require(_exists(tokenId_), "Character does not exist!");
         return Metadata.renderMetadata(tokenId_);
     }

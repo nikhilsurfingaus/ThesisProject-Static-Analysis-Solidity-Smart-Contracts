@@ -1,28 +1,325 @@
 
-Withdraw Function Call Bug Detected at Line: 18
-Solution: We need this to check require balance and amount first
-Risk: Medium
-Confidence: Medium
-
-Withdraw Function Call Bug Detected at Line: 22
-Solution: Update state variable balance before call
+Integer Overflow/Underflow Bug Detected at Line: 10
+Solution: Use SafeMath for uint library to minimise vulnerbaility
 Risk: High
 Confidence: High
 
-Check-Effect-Interaction Bug Detected at Line: 18
-Solution: Check is out of order
+Integer Overflow/Underflow Bug Detected at Line: 12
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 13
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 18
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 25
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 26
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 27
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 28
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 31
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 32
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 33
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 60
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 64
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 65
+Solution: Use SafeMath for uint library to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 26
+Solution: Use SafeMath library operation .mul to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 49
+Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 50
+Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 53
+Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 55
+Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 62
+Solution: Use SafeMath library operation .sub to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 64
+Solution: Use SafeMath library operation .mul to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 64
+Solution: Use SafeMath library operation .div to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 65
+Solution: Use SafeMath library operation .sub to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 70
+Solution: Use SafeMath library operation .sub to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 71
+Solution: Use SafeMath library operation .sub to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 74
+Solution: Use SafeMath library operation .sub to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 76
+Solution: Use SafeMath library operation .sub to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 92
+Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 97
+Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 105
+Solution: Use SafeMath library operation .sub to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Integer Overflow/Underflow Bug Detected at Line: 111
+Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 44
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 59
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 81
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 96
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 109
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 115
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Visibility Bug Detected at Line: 116
+Solution: Use public/private specifier when defining function to minimise vulnerbaility
+Risk: High
+Confidence: High
+
+Untrusted Function Bug Detected at Line: 44
+Solution: Unknown trust, label function either trusted/untrusted
 Risk: Medium
 Confidence: Medium
 
-Check-Effect-Interaction Bug Detected at Line: 18
-Solution: Effect is out of order
+Untrusted Function Bug Detected at Line: 59
+Solution: Unknown trust, label function either trusted/untrusted
 Risk: Medium
 Confidence: Medium
 
-Check-Effect-Interaction Bug Detected at Line: 18
-Solution: Interact is missing
+Untrusted Function Bug Detected at Line: 81
+Solution: Unknown trust, label function either trusted/untrusted
 Risk: Medium
 Confidence: Medium
 
-Total Bug Points: 26
-Smart Contract Score: 80%
+Untrusted Function Bug Detected at Line: 96
+Solution: Unknown trust, label function either trusted/untrusted
+Risk: Medium
+Confidence: Medium
+
+Untrusted Function Bug Detected at Line: 109
+Solution: Unknown trust, label function either trusted/untrusted
+Risk: Medium
+Confidence: Medium
+
+Untrusted Function Bug Detected at Line: 115
+Solution: Unknown trust, label function either trusted/untrusted
+Risk: Medium
+Confidence: Medium
+
+Untrusted Function Bug Detected at Line: 116
+Solution: Unknown trust, label function either trusted/untrusted
+Risk: Medium
+Confidence: Medium
+
+Randomness Bug Detected at Line: 85
+Solution: Avoid block.randomness for randomness to minimise DoS vulnerbaility
+Risk: Medium
+Confidence: High
+
+Randomness Bug Detected at Line: 97
+Solution: Avoid block.randomness for randomness to minimise DoS vulnerbaility
+Risk: Medium
+Confidence: High
+
+Randomness Bug Detected at Line: 103
+Solution: Avoid block.randomness for randomness to minimise DoS vulnerbaility
+Risk: Medium
+Confidence: High
+
+Randomness Bug Detected at Line: 111
+Solution: Avoid block.randomness for randomness to minimise DoS vulnerbaility
+Risk: Medium
+Confidence: High
+
+Payable Fallback Bug Detected at Line: 116
+Solution: Mark Fallback function with payable otherwise contract cannot recieve ether
+Risk: Medium
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 7
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 10
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 11
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 12
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 13
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 18
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 27
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 28
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 32
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 35
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 45
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Uninitialised Storage Variable Bug Detected at Line: 48
+Solution: Immediatly initalise storage variables could be ovveridded
+Risk: High
+Confidence: Medium
+
+Zero Address Check Bug Detected at Function Line: 81
+Solution: Check address is not zero using require, address variable and checking
+it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
+Risk: Low
+Confidence: High
+
+Zero Address Check Bug Detected at Function Line: 116
+Solution: Check address is not zero using require, address variable and checking
+it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
+Risk: Low
+Confidence: High
+
+Total Bug Points: 500
+Smart Contract Score: <50% 

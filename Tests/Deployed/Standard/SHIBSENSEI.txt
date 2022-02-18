@@ -1,7 +1,6 @@
 pragma solidity 0.8.7;
 
 contract SHIBSENSEI {
-    // Ownership moved to in-contract for customizability.
     address private _owner;
     mapping (address => uint256) private _tOwned;
     mapping (address => bool) lpPairs;
@@ -42,7 +41,6 @@ contract SHIBSENSEI {
     IUniswapV2Router02 public dexRouter;
     address public lpPair;
 
-    // UNI ROUTER
     address private _routerAddress = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
 
     address constant public DEAD = 0x000000000000000000000000000000000000dEaD;
@@ -54,14 +52,14 @@ contract SHIBSENSEI {
     
     uint256 private maxTxPercent = 2;
     uint256 private maxTxDivisor = 100;
-    uint256 private _maxTxAmount = (_tTotal * maxTxPercent) / maxTxDivisor; // 2%
+    uint256 private _maxTxAmount = (_tTotal * maxTxPercent) / maxTxDivisor; 
 
     uint256 private maxWalletPercent = 2;
     uint256 private maxWalletDivisor = 100;
-    uint256 private _maxWalletSize = (_tTotal * maxWalletPercent) / maxWalletDivisor; // 2%
+    uint256 private _maxWalletSize = (_tTotal * maxWalletPercent) / maxWalletDivisor; 
 
-    uint256 private swapThreshold = (_tTotal * 5) / 10_000; // 0.05%
-    uint256 private swapAmount = (_tTotal * 5) / 1_000; // 0.5%
+    uint256 private swapThreshold = (_tTotal * 5) / 10_000; 
+    uint256 private swapAmount = (_tTotal * 5) / 1_000;
 
     bool private sniperProtection = true;
     bool public _hasLiqBeenAdded = false;
@@ -74,17 +72,7 @@ contract SHIBSENSEI {
     bool private sameBlockActive = true;
     mapping (address => uint256) private lastTrade;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-    event MinTokensBeforeSwapUpdated(uint256 minTokensBeforeSwap);
-    event SwapAndLiquifyEnabledUpdated(bool enabled);
-    event SwapAndLiquify(
-        uint256 tokensSwapped,
-        uint256 ethReceived,
-        uint256 tokensIntoLiqudity
-    );
-    event SniperCaught(address sniperAddress);
-    
-    modifier lockTheSwap {
+    modifier lockTheSwap() {
         inSwapAndLiquify = true;
         _;
         inSwapAndLiquify = false;
@@ -95,10 +83,9 @@ contract SHIBSENSEI {
         _;
     }
     
-    constructor () payable {
+    constructor () {
         _tOwned[_msgSender()] = _tTotal;
 
-        // Set the owner.
         _owner = msg.sender;
 
         dexRouter = IUniswapV2Router02(_routerAddress);
@@ -111,20 +98,18 @@ contract SHIBSENSEI {
         _isExcludedFromFees[DEAD] = true;
         _liquidityHolders[owner()] = true;
 
-        // Approve the owner for UniSwap, timesaver.
         _approve(_msgSender(), _routerAddress, _tTotal);
 
-        // Transfer tTotal to the _msgSender.
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 
     receive() external payable {}
 
-    function owner() public view returns (address) {
+    function owner() public {
         return _owner;
     }
 
-    function transferOwner(address newOwner) external onlyOwner() {
+    function transferOwner(address newOwner) external onlyOwner {
         require(newOwner != address(0), "Call renounceOwnership to transfer owner to the zero address.");
         require(newOwner != DEAD, "Call renounceOwnership to transfer owner to the zero address.");
         setExcludedFromFees(_owner, false);
@@ -143,23 +128,23 @@ contract SHIBSENSEI {
         
     }
 
-    function renounceOwnership() public virtual onlyOwner() {
+    function renounceOwnership() public virtual onlyOwner {
         setExcludedFromFees(_owner, false);
         _owner = address(0);
         emit OwnershipTransferred(_owner, address(0));
     }
 
 
-    function balanceOf(address account) public view override returns (uint256) {
+    function balanceOf(address account) public {
         return _tOwned[account];
     }
 
-    function transfer(address recipient, uint256 amount) public override returns (bool) {
+    function transfer(address recipient, uint256 amount) public {
         _transfer(_msgSender(), recipient, amount);
         return true;
     }
 
-    function approve(address spender, uint256 amount) public override returns (bool) {
+    function approve(address spender, uint256 amount) public {
         _approve(_msgSender(), spender, amount);
         return true;
     }
@@ -172,11 +157,11 @@ contract SHIBSENSEI {
         emit Approval(sender, spender, amount);
     }
 
-    function approveMax(address spender) public returns (bool) {
+    function approveMax(address spender) public {
         return approve(spender, type(uint256).max);
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) external {
         if (_allowances[sender][msg.sender] != type(uint256).max) {
             _allowances[sender][msg.sender] -= amount;
         }
@@ -184,17 +169,17 @@ contract SHIBSENSEI {
         return _transfer(sender, recipient, amount);
     }
 
-    function increaseAllowance(address spender, uint256 addedValue) public virtual returns (bool) {
+    function increaseAllowance(address spender, uint256 addedValue) public {
         _approve(_msgSender(), spender, _allowances[_msgSender()][spender] + addedValue);
         return true;
     }
 
-    function decreaseAllowance(address spender, uint256 subtractedValue) public virtual returns (bool) {
+    function decreaseAllowance(address spender, uint256 subtractedValue) public {
         _approve(_msgSender(), spender, _allowances[_msgSender()][spender] - subtractedValue);
         return true;
     }
 
-    function setNewRouter(address newRouter) public onlyOwner() {
+    function setNewRouter(address newRouter) public onlyOwner {
         IUniswapV2Router02 _newRouter = IUniswapV2Router02(newRouter);
         address get_pair = IUniswapV2Factory(_newRouter.factory()).getPair(address(this), _newRouter.WETH());
         if (get_pair == address(0)) {
@@ -218,7 +203,7 @@ contract SHIBSENSEI {
         }
     }
 
-    function isExcludedFromFees(address account) public view returns(bool) {
+    function isExcludedFromFees(address account) public {
         return _isExcludedFromFees[account];
     }
 
@@ -226,11 +211,11 @@ contract SHIBSENSEI {
         _isExcludedFromFees[account] = enabled;
     }
 
-    function isSniperOrBlacklisted(address account) public view returns (bool) {
+    function isSniperOrBlacklisted(address account) public {
         return _isSniperOrBlacklisted[account];
     }
 
-    function setBuyCoolDownTime(uint256 Seconds) public onlyOwner{
+    function setBuyCoolDownTime(uint256 Seconds) public onlyOwner {
         uint256 timeInSeconds = Seconds * 1 seconds;
         buyCoolDown = timeInSeconds;
     }
@@ -240,16 +225,16 @@ contract SHIBSENSEI {
         _liqAddStatus = rInitializer;
     }
 
-    function setBlacklistEnabled(address account, bool enabled) external onlyOwner() {
+    function setBlacklistEnabled(address account, bool enabled) external onlyOwner {
         _isSniperOrBlacklisted[account] = enabled;
     }
 
-    function setStartingProtections(uint8 _block) external onlyOwner{
+    function setStartingProtections(uint8 _block) external onlyOwner {
         require (snipeBlockAmt == 0 && !_hasLiqBeenAdded, "Starting Protections have already been executed.");
         snipeBlockAmt = _block;
     }
 
-    function setProtectionSettings(bool antiSnipe, bool antiBlock) external onlyOwner() {
+    function setProtectionSettings(bool antiSnipe, bool antiBlock) external onlyOwner {
         sniperProtection = antiSnipe;
         sameBlockActive = antiBlock;
     }
@@ -298,7 +283,7 @@ contract SHIBSENSEI {
         emit SwapAndLiquifyEnabledUpdated(_enabled);
     }
 
-    function _hasLimits(address from, address to) private view returns (bool) {
+    function _hasLimits(address from, address to) private {
         return from != owner()
             && to != owner()
             && !_liquidityHolders[to]
@@ -308,7 +293,7 @@ contract SHIBSENSEI {
             && from != address(this);
     }
 
-    function _transfer(address from, address to, uint256 amount) internal returns (bool) {
+    function _transfer(address from, address to, uint256 amount) internal {
         require(from != address(0), "ERC20: Zero address.");
         require(to != address(0), "ERC20: Zero address.");
         require(amount > 0, "Must >0.");
@@ -349,7 +334,7 @@ contract SHIBSENSEI {
         return _finalizeTransfer(from, to, amount, takeFee);
     }
 
-    function swapAndLiquify(uint256 contractTokenBalance) private lockTheSwap {
+    function swapAndLiquify(uint256 contractTokenBalance) private {
         if (_liquidityRatio + _marketingRatio + _devRatio == 0)
             return;
         uint256 toLiquify = ((contractTokenBalance * _liquidityRatio) / (_liquidityRatio + _marketingRatio + _devRatio)) / 2;
@@ -377,7 +362,7 @@ contract SHIBSENSEI {
 
         dexRouter.swapExactTokensForETHSupportingFeeOnTransferTokens(
             tokenAmount,
-            0, // accept any amount of ETH
+            0, 
             path,
             address(this),
             block.timestamp
@@ -388,8 +373,8 @@ contract SHIBSENSEI {
         dexRouter.addLiquidityETH{value: ethAmount}(
             address(this),
             tokenAmount,
-            0, // slippage is unavoidable
-            0, // slippage is unavoidable
+            0, 
+            0, 
             DEAD,
             block.timestamp
         );
@@ -413,7 +398,7 @@ contract SHIBSENSEI {
         }
     }
 
-    function _finalizeTransfer(address from, address to, uint256 amount, bool takeFee) private returns (bool) {
+    function _finalizeTransfer(address from, address to, uint256 amount, bool takeFee) private {
         if (sniperProtection){
             if (isSniperOrBlacklisted(from) || isSniperOrBlacklisted(to)) {
                 revert("Sniper rejected.");
@@ -446,7 +431,7 @@ contract SHIBSENSEI {
         return true;
     }
 
-    function takeTaxes(address from, address to, uint256 amount) internal returns (uint256) {
+    function takeTaxes(address from, address to, uint256 amount) internal {
         uint256 currentFee;
         if (from == lpPair) {
             if (balanceOf(to) > 0){

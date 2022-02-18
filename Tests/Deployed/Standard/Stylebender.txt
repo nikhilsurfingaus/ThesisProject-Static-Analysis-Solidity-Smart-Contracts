@@ -28,7 +28,6 @@ contract Stylebender is ERC20, Ownable {
     bool public tradingActive = false;
     bool public swapEnabled = false;
     
-     // Anti-bot and anti-whale mappings and variables
     mapping(address => uint256) private _holderLastTransferTimestamp; 
     bool public transferDelayEnabled = true;
 
@@ -48,27 +47,6 @@ contract Stylebender is ERC20, Ownable {
     
     mapping (address => bool) private _isExcludedFromFees;
     mapping (address => bool) public _isExcludedMaxTransactionAmount;
-
-
-    event UpdateUniswapV2Router(address indexed newAddress, address indexed oldAddress);
-
-    event ExcludeFromFees(address indexed account, bool isExcluded);
-
-    event SetAutomatedMarketMakerPair(address indexed pair, bool indexed value);
-
-    event marketingWalletUpdated(address indexed newWallet, address indexed oldWallet);
-    
-    event devWalletUpdated(address indexed newWallet, address indexed oldWallet);
-
-    event SwapAndLiquify(
-        uint256 tokensSwapped,
-        uint256 ethReceived,
-        uint256 tokensIntoLiquidity
-    );
-    
-    event AutoNukeLP();
-    
-    event ManualNukeLP();
 
     constructor() ERC20("Stylebender", "Style") {
         
@@ -91,7 +69,6 @@ contract Stylebender is ERC20, Ownable {
         
         uint256 totalSupply = 1 * 1e12 * 1e18;
    
-
         buyMarketingFee = _buyMarketingFee;
         buyLiquidityFee = _buyLiquidityFee;
         buyDevFee = _buyDevFee;
@@ -127,12 +104,12 @@ contract Stylebender is ERC20, Ownable {
         lastLpBurnTime = block.timestamp;
     }
     
-    function removeLimits() external onlyOwner returns (bool){
+    function removeLimits() external onlyOwner {
         limitsInEffect = false;
         return true;
     }
     
-    function updateSwapTokensAtAmount(uint256 newAmount) external onlyOwner returns (bool){
+    function updateSwapTokensAtAmount(uint256 newAmount) external onlyOwner {
   	    require(newAmount >= (totalSupply() * 1 / 100000)/1e18, "Swap amount cannot be lower than 0.001% total supply.");
   	    require(newAmount <= (totalSupply() * 5 / 1000)/1e18, "Swap amount cannot be higher than 0.5% total supply.");
   	    swapTokensAtAmount = newAmount * (10**18);
@@ -174,11 +151,7 @@ contract Stylebender is ERC20, Ownable {
         _setAutomatedMarketMakerPair(pair, value);
     }
 
-    function _transfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal override {
+    function _transfer(address from, address to, uint256 amount) internal {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
         
@@ -199,7 +172,6 @@ contract Stylebender is ERC20, Ownable {
                     require(_isExcludedFromFees[from] || _isExcludedFromFees[to], "Trading is not active.");
                 }
 
-                // at launch if the transfer delay is enabled, ensure the block timestamps for purchasers is set -- during launch.  
                 if (transferDelayEnabled){
                     if (to != owner() && to != address(uniswapV2Router) && to != address(uniswapV2Pair)){
                         require(_holderLastTransferTimestamp[tx.origin] < block.number, "_transfer:: Transfer Delay enabled.  Only one purchase per block allowed.");
@@ -207,13 +179,11 @@ contract Stylebender is ERC20, Ownable {
                     }
                 }
                  
-                //when buy
                 if (automatedMarketMakerPairs[from] && !_isExcludedMaxTransactionAmount[to]) {
                         require(amount <= maxTransactionAmount, "Buy transfer amount exceeds the maxTransactionAmount.");
                         require(amount + balanceOf(to) <= maxWallet, "Max wallet exceeded");
                 }
                 
-                //when sell
                 else if (automatedMarketMakerPairs[to] && !_isExcludedMaxTransactionAmount[from]) {
                         require(amount <= maxTransactionAmount, "Sell transfer amount exceeds the maxTransactionAmount.");
                 }
@@ -222,8 +192,6 @@ contract Stylebender is ERC20, Ownable {
                 }
             }
         }
-        
-        
         
 		uint256 contractTokenBalance = balanceOf(address(this));
         
@@ -250,22 +218,18 @@ contract Stylebender is ERC20, Ownable {
 
         bool takeFee = !swapping;
 
-        // if any account belongs to _isExcludedFromFee account then remove the fee
         if(_isExcludedFromFees[from] || _isExcludedFromFees[to]) {
             takeFee = false;
         }
         
         uint256 fees = 0;
-        // only take fees on buys/sells, do not take on wallet transfers
         if(takeFee){
-            // on sell
             if (automatedMarketMakerPairs[to] && sellTotalFees > 0){
                 fees = amount.mul(sellTotalFees).div(100);
                 tokensForLiquidity += fees * sellLiquidityFee / sellTotalFees;
                 tokensForDev += fees * sellDevFee / sellTotalFees;
                 tokensForMarketing += fees * sellMarketingFee / sellTotalFees;
             }
-            // on buy
             else if(automatedMarketMakerPairs[from] && buyTotalFees > 0) {
         	    fees = amount.mul(buyTotalFees).div(100);
         	    tokensForLiquidity += fees * buyLiquidityFee / buyTotalFees;
@@ -285,17 +249,15 @@ contract Stylebender is ERC20, Ownable {
 
     function swapTokensForEth(uint256 tokenAmount) private {
 
-        // generate the uniswap pair path of token -> weth
         address[] memory path = new address[](2);
         path[0] = address(this);
         path[1] = uniswapV2Router.WETH();
 
         _approve(address(this), address(uniswapV2Router), tokenAmount);
 
-        // make the swap
         uniswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
             tokenAmount,
-            0, // accept any amount of ETH
+            0, 
             path,
             address(this),
             block.timestamp
@@ -306,15 +268,13 @@ contract Stylebender is ERC20, Ownable {
     
     
     function addLiquidity(uint256 tokenAmount, uint256 ethAmount) private {
-        // approve token transfer to cover all possible scenarios
         _approve(address(this), address(uniswapV2Router), tokenAmount);
 
-        // add the liquidity
         uniswapV2Router.addLiquidityETH{value: ethAmount}(
             address(this),
             tokenAmount,
-            0, // slippage is unavoidable
-            0, // slippage is unavoidable
+            0, 
+            0, 
             deadAddress,
             block.timestamp
         );
@@ -331,7 +291,6 @@ contract Stylebender is ERC20, Ownable {
           contractBalance = swapTokensAtAmount * 20;
         }
         
-        // Halve the amount of liquidity tokens
         uint256 liquidityTokens = contractBalance * tokensForLiquidity / totalTokensToSwap / 2;
         uint256 amountToSwapForETH = contractBalance.sub(liquidityTokens);
         
@@ -371,45 +330,37 @@ contract Stylebender is ERC20, Ownable {
         lpBurnEnabled = _Enabled;
     }
     
-    function autoBurnLiquidityPairTokens() internal returns (bool){
+    function autoBurnLiquidityPairTokens() internal {
         
         lastLpBurnTime = block.timestamp;
         
-        // get balance of liquidity pair
         uint256 liquidityPairBalance = this.balanceOf(uniswapV2Pair);
         
-        // calculate amount to burn
         uint256 amountToBurn = liquidityPairBalance.mul(percentForLPBurn).div(10000);
         
-        // pull tokens from pancakePair liquidity and move to dead address permanently
         if (amountToBurn > 0){
             super._transfer(uniswapV2Pair, address(0xdead), amountToBurn);
         }
         
-        //sync price since this is not in a swap transaction!
         IUniswapV2Pair pair = IUniswapV2Pair(uniswapV2Pair);
         pair.sync();
         emit AutoNukeLP();
         return true;
     }
 
-    function manualBurnLiquidityPairTokens(uint256 percent) external onlyOwner returns (bool){
+    function manualBurnLiquidityPairTokens(uint256 percent) external onlyOwner {
         require(block.timestamp > lastManualLpBurnTime + manualBurnFrequency , "Must wait for cooldown to finish");
         require(percent <= 1000, "May not nuke more than 10% of tokens in LP");
         lastManualLpBurnTime = block.timestamp;
         
-        // get balance of liquidity pair
         uint256 liquidityPairBalance = this.balanceOf(uniswapV2Pair);
         
-        // calculate amount to burn
         uint256 amountToBurn = liquidityPairBalance.mul(percent).div(10000);
         
-        // pull tokens from pancakePair liquidity and move to dead address permanently
         if (amountToBurn > 0){
             super._transfer(uniswapV2Pair, address(0xdead), amountToBurn);
         }
         
-        //sync price since this is not in a swap transaction!
         IUniswapV2Pair pair = IUniswapV2Pair(uniswapV2Pair);
         pair.sync();
         emit ManualNukeLP();

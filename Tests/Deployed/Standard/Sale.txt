@@ -23,13 +23,13 @@ contract Sale {
         maxBuy = max;
     }
 
-    function updateMinMax(uint256 min, uint256 max) public{
+    function updateMinMax(uint256 min, uint256 max) public {
         require(msg.sender == owner, "Caller must be owner");
         minBuy = min;
         maxBuy = max;
     }
 
-    function closeSale() public{
+    function closeSale() public {
         require(msg.sender == owner, "Caller must be owner");
         closed = true;
     }
@@ -49,7 +49,7 @@ contract Sale {
         isClaimable = true;
     }
 
-    function buy() public payable {
+    function buy() public {
         require(closed == false, "Sale is closed");
         int price = getETHUSDPrice();
         require(price > 0, "Error with Chainlink");
@@ -64,7 +64,7 @@ contract Sale {
         claimable[msg.sender] += spumeAmount;
     }
 
-    function claim() public{
+    function claim() public {
         require(isClaimable, "Cannot claim tokens yet");
         uint256 spumeAmount = claimable[msg.sender];
         require(spumeAmount > 0, "No tokens to claim or tokens already claimed");
@@ -73,7 +73,7 @@ contract Sale {
         token.transferFrom(owner, msg.sender, spumeAmount);
     }
 
-    function getETHUSDPrice() public view returns (int) {
+    function getETHUSDPrice() public {
         (
             uint80 roundID, 
             int price,

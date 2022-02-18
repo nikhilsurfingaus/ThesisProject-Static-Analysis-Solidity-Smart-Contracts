@@ -18,13 +18,13 @@ contract  TruckersInu is ERC20 {
         emit Transfer(address(0), msg.sender, _totalSupply);
     }
 
-    function findOnePercent(uint256 amount) private view returns (uint256)  {
+    function findOnePercent(uint256 amount) private {
         uint256 roundAmount = amount.ceil(oneHundredPercent);
         uint256 fivePercent = roundAmount.mul(oneHundredPercent).div(1000);
         return fivePercent;
     }
 
-    function transfer(address to, uint256 amount) public returns (bool success) {
+    function transfer(address to, uint256 amount) public {
       require(amount <= balances[msg.sender]);
       require(to != address(0));
 
@@ -41,13 +41,13 @@ contract  TruckersInu is ERC20 {
       return true;
     }
 
-    function approve(address spender, uint256 amount) public returns (bool success) {
+    function approve(address spender, uint256 amount) public {
         allowed[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
     }
 
-    function transferFrom(address from, address to, uint256 amount) public returns (bool success) {
+    function transferFrom(address from, address to, uint256 amount) public {
       require(amount <= balances[from]);
       require(amount <= allowed[from][msg.sender]);
       require(to != address(0));

@@ -56,7 +56,6 @@ contract pickaMeta is Context, IERC20Upgradeable {
     IUniswapV2Router02 public dexRouter;
     address public lpPair;
 
-    // UNI ROUTER
     address public _routerAddress;
 
     address public DEAD = 0x000000000000000000000000000000000000dEaD;
@@ -102,7 +101,6 @@ contract pickaMeta is Context, IERC20Upgradeable {
     }
     
     constructor () payable {
-        // Set the owner.
         _owner = msg.sender;
 
         if (block.chainid == 56) {
@@ -177,9 +175,6 @@ contract pickaMeta is Context, IERC20Upgradeable {
 
         _transfer(owner(), address(this), balanceOf(owner()));
 
-
-        
-
         dexRouter.addLiquidityETH{value: address(this).balance}(
             address(this),
             balanceOf(address(this)),
@@ -193,7 +188,7 @@ contract pickaMeta is Context, IERC20Upgradeable {
     }
 
 
-    function transferOwner(address newOwner) external onlyOwner() {
+    function transferOwner(address newOwner) external onlyOwner {
         require(newOwner != address(0), "Call renounceOwnership to transfer owner to the zero address.");
         require(newOwner != DEAD, "Call renounceOwnership to transfer owner to the zero address.");
         setExcludedFromFee(_owner, false);
@@ -213,13 +208,13 @@ contract pickaMeta is Context, IERC20Upgradeable {
         
     }
 
-    function renounceOwnership() public virtual onlyOwner() {
+    function renounceOwnership() public virtual onlyOwner {
         setExcludedFromFee(_owner, false);
         _owner = address(0);
         emit OwnershipTransferred(_owner, address(0));
     }
 
-    function setNewRouter(address newRouter) external onlyOwner() {
+    function setNewRouter(address newRouter) external onlyOwner {
         IUniswapV2Router02 _newRouter = IUniswapV2Router02(newRouter);
         address get_pair = IUniswapV2Factory(_newRouter.factory()).getPair(address(this), _newRouter.WETH());
         if (get_pair == address(0)) {
@@ -244,13 +239,12 @@ contract pickaMeta is Context, IERC20Upgradeable {
         }
     }
 
-
     function setGasPriceLimit(uint256 gas) external onlyOwner {
         require(gas >= 75, "you fucking jeet");
         gasPriceLimit = gas * 1 gwei;
     }
 
-    function setBlacklistEnabled(address account, bool enabled) external onlyOwner() {
+    function setBlacklistEnabled(address account, bool enabled) external onlyOwner {
         _isSniperOrBlacklisted[account] = enabled;
     }
     
@@ -329,7 +323,7 @@ contract pickaMeta is Context, IERC20Upgradeable {
         }
     }
 
-    function _hasLimits(address from, address to) internal view returns (bool) {
+    function _hasLimits(address from, address to) internal {
         return from != owner()
             && to != owner()
             && !_liquidityHolders[to]
@@ -339,7 +333,7 @@ contract pickaMeta is Context, IERC20Upgradeable {
             && from != address(this);
     }
 
-    function tokenFromReflection(uint256 rAmount) public view returns(uint256) {
+    function tokenFromReflection(uint256 rAmount) public {
         require(rAmount <= _rTotal, "Amount must be less than total reflections");
         uint256 currentRate =  _getRate();
         return rAmount / currentRate;
@@ -353,7 +347,7 @@ contract pickaMeta is Context, IERC20Upgradeable {
         emit Approval(sender, spender, amount);
     }
 
-    function _transfer(address from, address to, uint256 amount) internal returns (bool) {
+    function _transfer(address from, address to, uint256 amount) internal {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
         require(amount > 0, "Transfer amount must be greater than zero");
@@ -398,7 +392,7 @@ contract pickaMeta is Context, IERC20Upgradeable {
         return _finalizeTransfer(from, to, amount, takeFee);
     }
 
-    function swapAndLiquify(uint256 contractTokenBalance) internal lockTheSwap {
+    function swapAndLiquify(uint256 contractTokenBalance) internal {
         if (_liquidityRatio + _marketingRatio == 0)
             return;
         uint256 toLiquify = ((contractTokenBalance * _liquidityRatio) / (_liquidityRatio + _marketingRatio)) / 2;
@@ -470,17 +464,7 @@ contract pickaMeta is Context, IERC20Upgradeable {
         }
     }
 
-    struct ExtraValues {
-        uint256 tTransferAmount;
-        uint256 tFee;
-        uint256 tLiquidity;
-
-        uint256 rTransferAmount;
-        uint256 rAmount;
-        uint256 rFee;
-    }
-
-    function _finalizeTransfer(address from, address to, uint256 tAmount, bool takeFee) internal returns (bool) {
+    function _finalizeTransfer(address from, address to, uint256 tAmount, bool takeFee) internal {
         if (sniperProtection){
             if (isSniperOrBlacklisted(from) || isSniperOrBlacklisted(to)) {
                 revert("Rejected.");
@@ -528,7 +512,7 @@ contract pickaMeta is Context, IERC20Upgradeable {
         return true;
     }
 
-    function _getValues(address from, address to, uint256 tAmount, bool takeFee) internal returns (ExtraValues memory) {
+    function _getValues(address from, address to, uint256 tAmount, bool takeFee) internal {
         ExtraValues memory values;
         uint256 currentRate = _getRate();
 
@@ -566,12 +550,12 @@ contract pickaMeta is Context, IERC20Upgradeable {
         return values;
     }
 
-    function _getRate() internal view returns(uint256) {
+    function _getRate() internal {
         (uint256 rSupply, uint256 tSupply) = _getCurrentSupply();
         return rSupply / tSupply;
     }
 
-    function _getCurrentSupply() internal view returns(uint256, uint256) {
+    function _getCurrentSupply() internal {
         uint256 rSupply = _rTotal;
         uint256 tSupply = _tTotal;
         for (uint256 i = 0; i < _excluded.length; i++) {
