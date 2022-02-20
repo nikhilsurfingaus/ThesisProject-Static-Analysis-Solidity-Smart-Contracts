@@ -12,7 +12,6 @@ contract KrazykarensNFT is ERC721, Ownable, Pausable, ReentrancyGuard {
     uint256 public constant MAX_MINT_PER_WL = 2;
     uint256 public constant GIVEAWAY_SUPPLY = 50;
     uint256 public totalSupply = 0;
-
     bool public saleStarted = false;
     bool public preSaleStarted = false;
     bool public revealed = false;

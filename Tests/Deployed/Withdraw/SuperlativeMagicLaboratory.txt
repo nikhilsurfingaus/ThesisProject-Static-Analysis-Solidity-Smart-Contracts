@@ -24,8 +24,7 @@ contract SuperlativeMagicLaboratory is ERC1155Burnable, Ownable, ReentrancyGuard
 
     mapping (address => bool) public whitelistClaim;
 
-    constructor(string memory _initBaseURI, address slapesAddress) ERC1155(_initBaseURI)
-    {
+    constructor(string memory _initBaseURI, address slapesAddress) ERC1155(_initBaseURI) {
         setBaseURI(_initBaseURI);
         slapeContract = SUPERLATIVEAPES(slapesAddress);
 

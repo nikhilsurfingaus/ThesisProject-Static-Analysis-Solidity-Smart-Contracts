@@ -5,8 +5,6 @@ contract kingmasterchef {
     using SafeMath for uint256;
     using Address for address;
 
-
-    // Withdraw LP tokens from MasterChef.
     function withdraw(uint256 _pid, uint256 _amount) public {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];

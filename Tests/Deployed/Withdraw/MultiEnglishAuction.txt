@@ -1,8 +1,7 @@
 pragma solidity 0.8.11;
 pragma abicoder v2;
 
-contract MultiEnglishAuction is AccessControl
-{
+contract MultiEnglishAuction is AccessControl {
 
     enum AuctionStatus { NOT_STARTED, IN_PROGRESS, ENDED }
 
@@ -20,30 +19,21 @@ contract MultiEnglishAuction is AccessControl
         bool handbrakeOn;
     }
 
-    // ====================================================
-    // STATE
-    // ====================================================
+
     AuctionDetails[] public auctions;
     mapping(uint => mapping(address => uint)) public bids;
 
-    // ====================================================
-    // CONSTRUCTOR
-    // ====================================================
-    constructor()
-    {
+
+    constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function withdraw(uint _auctionId)
-        public
-    {
+    function withdraw(uint _auctionId) public {
         require(msg.sender != auctions[_auctionId].highestBidder, "Highest bidder can't withdraw");
         require(bids[_auctionId][msg.sender] > 0, "No pending bids");
-
         uint bal = bids[_auctionId][msg.sender];
         bids[_auctionId][msg.sender] = 0;
         payable(msg.sender).transfer(bal);
-
         emit Withdraw(_auctionId, msg.sender, bal);
     }
 }

@@ -21,15 +21,11 @@ contract  TruckersInu is ERC20 {
     function transfer(address to, uint256 amount) public returns (bool success) {
       require(amount <= balances[msg.sender]);
       require(to != address(0));
-
       uint256 tokensToBurn = findOnePercent(amount);
       uint256 tokensToTransfer = amount.sub(tokensToBurn);
-
       balances[msg.sender] = balances[msg.sender].sub(amount);
       balances[to] = balances[to].add(tokensToTransfer);
-
       _totalSupply = _totalSupply.sub(tokensToBurn);
-
       emit Transfer(msg.sender, to, tokensToTransfer);
       emit Transfer(msg.sender, address(0), tokensToBurn);
       return true;

@@ -4,10 +4,7 @@ pragma solidity ^0.8.0;
 contract ethBridge is Multiownable {
     FUTURECOIN private token;
 
-    // GasPrice * GasLimit
     uint256 public minimumCommissionGas;
-
-    // Minimum amount of tokens that can be exchanged on bridge
     uint256 public minimumExchangeOnBridge;
 
     mapping(address => uint256) public tokensSent;
@@ -29,8 +26,6 @@ contract ethBridge is Multiownable {
     
     bool avoidReentrancy = false;
 
-
-    
     function withdrawEther(uint256 amount, address payable reciever) public onlyAllOwners {
         require(amount > 0,"Amount of tokens should be more then 0");
         require(reciever != address(0), "Zero account");

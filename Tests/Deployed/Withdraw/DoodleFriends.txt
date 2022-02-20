@@ -6,7 +6,6 @@ contract DoodleFriends is ERC721Enumerable, Ownable, ERC721Burnable, ERC721Pausa
 
 
     bool public SALE_OPEN = false;
-
     uint256 private constant MAX_SUPPLY = 3353; // 3353 Doodle Friends
     uint256 private constant MAX_MINT_LIMITED = 3; // 3 batch mint max
     uint256 private constant MAX_MINT_UNLIMITED = 3353; // unlimited batch mint

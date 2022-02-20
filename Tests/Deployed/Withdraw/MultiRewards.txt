@@ -49,7 +49,6 @@ contract MultiRewards is ReentrancyGuard, Pausable {
     // user -> StakeBalance[]
     mapping(address => StakeBalance[]) public userStakeBalance;
 
-    /* ========== CONSTRUCTOR ========== */
 
     constructor(
         address _owner,

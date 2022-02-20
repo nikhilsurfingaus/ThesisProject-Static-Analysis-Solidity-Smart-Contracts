@@ -52,7 +52,6 @@ contract Lovers is ERC721, Ownable {
         _;
     }
 
-    // Withdraw
     function withdraw() public {
         (bool os, ) = payable(owner()).call{value: address(this).balance}("");
         require(os);

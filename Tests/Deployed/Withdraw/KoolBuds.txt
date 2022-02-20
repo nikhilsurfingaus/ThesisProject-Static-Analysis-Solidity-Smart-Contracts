@@ -1,39 +1,38 @@
 pragma solidity ^0.8.9;
 
 contract KoolBuds is ERC721Enumerable, Ownable {
-  using ECDSA for bytes32;
+    using ECDSA for bytes32;
 
-  uint256 public mintPrice = 0.042 ether;
+    uint256 public mintPrice = 0.042 ether;
 
-  string _baseTokenURI;
+    string _baseTokenURI;
 
-  bool public isActive = false;
+    bool public isActive = false;
 
-  uint256 public maximumMintSupply = 14420;
-  uint256 public maximumAllowedTokensPerPurchase = 20;
+    uint256 public maximumMintSupply = 14420;
+    uint256 public maximumAllowedTokensPerPurchase = 20;
 
-  address private devAddress = 0xeA3505922534cF354648Ce6566aAC3F13A3B94Cf;
-  uint256 private devFee = 5;
-  
-  event SaleActivation(bool isActive);
+    address private devAddress = 0xeA3505922534cF354648Ce6566aAC3F13A3B94Cf;
+    uint256 private devFee = 5;
 
-  constructor(string memory baseURI) ERC721("Kool Buds", "BUDS") {
-    setBaseURI(baseURI);
-  }
+    event SaleActivation(bool isActive);
 
-  modifier saleIsOpen {
-    require(totalSupply() <= maximumMintSupply, "Sale has ended.");
-    _;
-  }
+    constructor(string memory baseURI) ERC721("Kool Buds", "BUDS") {
+      setBaseURI(baseURI);
+    }
 
-  modifier onlyAuthorized() {
-    require(owner() == msg.sender);
-    _;
-  }
+    modifier saleIsOpen {
+      require(totalSupply() <= maximumMintSupply, "Sale has ended.");
+      _;
+    }
 
+    modifier onlyAuthorized() {
+      require(owner() == msg.sender);
+      _;
+    }
 
-  function withdraw() external onlyAuthorized {
-    uint balance = address(this).balance;
-    payable(owner()).transfer(balance);
-  }
+    function withdraw() external onlyAuthorized {
+      uint balance = address(this).balance;
+      payable(owner()).transfer(balance);
+    }
 }

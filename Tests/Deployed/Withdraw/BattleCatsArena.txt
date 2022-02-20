@@ -29,7 +29,7 @@ contract BattleCatsArena is ERC721A, Ownable {
     setNotRevealedURI("ipfs://QmSReC6aRvBKHvMBZosnnfxFwFE4hV8QWECxXYkq2Xet2x");
   }
  
-  function withdraw() external payable onlyOwner {
+  function withdraw() external onlyOwner {
     (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
     require(success);
   }

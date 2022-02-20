@@ -10,7 +10,6 @@ contract YobotERC721LimitOrder is Coordinator {
     }
 
     uint256 public orderId = 1;
-
     mapping(uint256 => Order) public orderStore;
     mapping(address => mapping(uint256 => uint256)) public userOrders;
     mapping(address => uint256) public userOrderCount;

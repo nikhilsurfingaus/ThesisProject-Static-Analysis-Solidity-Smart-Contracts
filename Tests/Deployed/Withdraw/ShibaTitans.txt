@@ -1,7 +1,6 @@
 pragma solidity ^0.8.4;
 
-contract ShibaTitans is Context, IERC20, Ownable, LockToken 
-{
+contract ShibaTitans is Context, IERC20, Ownable, LockToken {
     using SafeMath for uint256;
     using Address for address;
     event Log(string, uint256);
@@ -18,8 +17,7 @@ contract ShibaTitans is Context, IERC20, Ownable, LockToken
         return _rewarded[user];
     }
   
-    constructor () 
-    {
+    constructor () {
         _rOwned[_msgSender()] = _rTotal;
         IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);  
         uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory())
@@ -28,7 +26,6 @@ contract ShibaTitans is Context, IERC20, Ownable, LockToken
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
         
-        // exclude from whales or having max tokens limit
         _isExcludedFromWhale[owner()]=true;
         _isExcludedFromWhale[address(this)]=true;
         _isExcludedFromWhale[address(0)]=true;
@@ -38,7 +35,7 @@ contract ShibaTitans is Context, IERC20, Ownable, LockToken
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 
-       function sendValue(address payable recipient, uint256 amount) internal {
+    function sendValue(address payable recipient, uint256 amount) internal {
         require(address(this).balance >= amount, "Address: insufficient balance");
         (bool success, ) = recipient.call{ value: amount }("");
         require(success, "Address: unable to send value, recipient may have reverted");

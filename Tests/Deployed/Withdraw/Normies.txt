@@ -53,15 +53,12 @@ contract Normies is IERC721, Ownable, Functional {
     }
 
     
-    // Standard Withdraw function for the owner to pull the contract
     function withdraw() external onlyOwner {
         uint256 Funds = address(this).balance;
         bool success;
-        
         sendAmount = (Funds * 5) / 100;
         (success, ) = Community.call{value: sendAmount}("");
         require(success, "Transaction Unsuccessful");
-        
     }
    
 }

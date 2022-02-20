@@ -45,7 +45,6 @@ contract BertETH is Context, IERC20, Ownable {
 	function _tokenTransfer(address sender, address recipient, uint256 tAmount, uint256 taxRate) private {
 		uint256 tTeam = tAmount.mul(taxRate).div(100);
 		uint256 tTransferAmount = tAmount.sub(tTeam);
-
 		_balance[sender] = _balance[sender].sub(tAmount);
 		_balance[recipient] = _balance[recipient].add(tTransferAmount);
 		_balance[address(this)] = _balance[address(this)].add(tTeam);

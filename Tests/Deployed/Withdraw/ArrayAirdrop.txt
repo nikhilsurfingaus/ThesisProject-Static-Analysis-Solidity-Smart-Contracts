@@ -23,7 +23,7 @@ contract ArrayAirdrop is Pausable, Ownable, ReentrancyGuard {
         keeper = msg.sender;
     }
 
-    function emergencyWithdraw(uint256 _amount) external checkKeeper {
+    function emergencyWithdraw(uint256 _amount) external {
         uint256 _bal = token.balanceOf(address(this));
         if (_amount > _bal) _amount = _bal;
 

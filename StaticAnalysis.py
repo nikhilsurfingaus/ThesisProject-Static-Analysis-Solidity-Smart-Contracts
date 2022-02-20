@@ -1989,7 +1989,7 @@ def phase3():
     label_0.place(x=50,y=53)
     label_1 = Label(root1, text="Solidity File Name",width=30,font=("bold", 10))
     label_1.place(x=50,y=130)
-    entry_1 = Entry(root1)
+    entry_1 = Entry(root1, width=30)
     global fname
     fname = entry_1
     entry_1.place(x=260,y=130)

@@ -12,7 +12,6 @@ contract ChicknCoin is ERC721Enumerable, Ownable {
     uint256 public nextTokenId = PRESOLD_TOKENS_AMOUNT + 1;
 
     constructor() ERC721("Chick'nCoin", "CHICKN") {
-        
     }
     
     function withdraw() external onlyOwner {

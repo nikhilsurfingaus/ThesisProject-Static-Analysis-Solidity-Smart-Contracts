@@ -8,7 +8,6 @@ contract CoolSheep is Ownable, ERC721 {
     uint public totalSupply = 0;
     uint8 public saleStatus = 0;
     address public referenceContract = 0xb5e366c938fe38De600A7fe2F3949A9F41157FD6;
-
     ERC721 AlienFrens = ERC721(0x123b30E25973FeCd8354dd5f41Cc45A3065eF88C);
     ERC721 CoolDogs = ERC721(0x56681458E00CafE1206313D2D033946f458FDEfD);
     ERC721 CoolCats = ERC721(0x1A92f7381B9F03921564a437210bB9396471050C);

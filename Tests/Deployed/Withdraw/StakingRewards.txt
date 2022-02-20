@@ -24,13 +24,7 @@ contract StakingRewards is ReentrancyGuard {
     mapping(address => uint256) private _balances;
 
 
-    constructor(address _governance,
-    address _rewardsToken,
-        address _stakingToken,
-        string memory _breedFrom,
-        string memory _centerId,
-        address _centerAddress
-    ) public {
+    constructor(address _governance, address _rewardsToken, address _stakingToken, string memory _breedFrom, string memory _centerId, address _centerAddress) public {
         rewardsToken = IERC20(_rewardsToken);
         stakingToken = IERC20(_stakingToken);
         governance = _governance;
@@ -39,7 +33,7 @@ contract StakingRewards is ReentrancyGuard {
         centerAddress = _centerAddress;
     }
 
-    function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
+    function withdraw(uint256 amount) public {
         require(amount > 0, "STAKINGREWARDS:CANNOT_WITHDRAW_ZERO");
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
@@ -47,8 +41,4 @@ contract StakingRewards is ReentrancyGuard {
         emit Withdrawn(msg.sender, amount);
     }
 
-    event RewardAdded(uint256 reward);
-    event Staked(address indexed user, uint256 amount);
-    event Withdrawn(address indexed user, uint256 amount);
-    event RewardPaid(address indexed user, uint256 reward);
 }

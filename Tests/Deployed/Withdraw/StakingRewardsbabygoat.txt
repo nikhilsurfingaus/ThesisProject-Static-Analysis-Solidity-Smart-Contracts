@@ -22,7 +22,7 @@ contract StakingRewards {
         owner=(msg.sender);
     }
 
-    function withdraw() external updateReward(msg.sender) {
+    function withdraw() external {
         uint _amount = _balances[msg.sender];
         _totalSupply -= _amount;
          _balances[msg.sender] =0;
@@ -31,6 +31,5 @@ contract StakingRewards {
         uint reward = rewards[msg.sender];
         rewards[msg.sender] = 0;
         rewardsToken.transfer(msg.sender, reward);
-       
     }
 }

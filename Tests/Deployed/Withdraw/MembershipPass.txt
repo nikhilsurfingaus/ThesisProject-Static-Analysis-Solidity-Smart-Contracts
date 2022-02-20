@@ -10,7 +10,6 @@ contract MembershipPass is ERC721Enumerable, Ownable {
     string private _baseTokenURI;
     mapping(address => uint256) private _walletMinted;
 
-
     constructor(string memory baseURI) {
         setBaseURI(baseURI);
         _uriPrefix = "ipfs://"; //default to ipfs 

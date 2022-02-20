@@ -17,14 +17,7 @@ contract PaymentSplitter {
     }
 
     function withdraw() external {
-        require(
-            msg.sender == _address1 ||
-            msg.sender == _address2 ||
-            msg.sender == _address3 ||
-            msg.sender == _address4 ||
-            msg.sender == _address5 
-        , "Invalid admin address");
-
+        require(msg.sender == _address1 || msg.sender == _address2 || msg.sender == _address3 || msg.sender == _address4 || msg.sender == _address5 , "Invalid admin address");
         uint256 split =  address(this).balance / 5;
         _address1.transfer(split);
         _address2.transfer(split);
