@@ -31,7 +31,7 @@ def compiler_issue(file):
             report.write("\nRisk: Medium")
             report.write("\nConfidence: High\n")
             
-            score += 6
+            score += 12
     return score
 
 #Checks for Underflow/Overflow bug
@@ -73,7 +73,7 @@ def check_safe_math(file):
                 report.write("\nRisk: High")
                 report.write("\nConfidence: High\n")
                 
-                score+=9
+                score+= 18
     return score
 
 #Underflow/Overflow Check 2
@@ -97,7 +97,7 @@ def check_integer_operations(file):
                 report.write("\nSolution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
                 report.write("\nRisk: High")
                 report.write("\nConfidence: High\n")
-                score+=9
+                score+=18
     return score
 
 
@@ -117,30 +117,30 @@ def check_loop_condition(file):
                 print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: When using uint for/while loop avoid >= or <= that could cause infinite loop")
                 print("Instead use >, <, == or != loop operators")
-                print("Risk: Medium")  
+                print("Risk: Low")  
                 print("Confidence: Medium\n")
                     
                 report.write("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 report.write("\nSolution: When using uint for/while loop avoid >= or <= that")
                 report.write("\ncould cause infinite loop. Instead use >, <, == or != loop operators")
-                report.write("\nRisk: Medium")  
+                report.write("\nRisk: Low")  
                 report.write("\nConfidence: Medium\n")
-                score+= 3
+                score+= 4
                 
             if ((var_type in line) and (use not in line)):
                 print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Careful when using uint within loop as could cause infinite loop check no")
                 print("constant true condition can evaluate")
                 print("Risk: High")  
-                print("Confidence: Low\n")
+                print("Confidence: Medium\n")
                     
                 report.write("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 report.write("\nSolution: Careful when using uint within loop as could cause infinite loop check no")
                 report.write("\nconstant true condition can evaluate")
                 report.write("\nRisk: High")  
-                report.write("\nConfidence: Low\n")
+                report.write("\nConfidence: Medium\n")
                 
-                score+= 6
+                score+= 12
     return score
 
 #Division before multiply
@@ -169,7 +169,7 @@ def check_div_multiply(file):
                     report.write("\nwith loss of precision to minimise vulnerbaility")
                     report.write("\nRisk: Medium")  
                     report.write("\nConfidence: Medium\n")
-                    score+= 6
+                    score+= 8
     return score            
                     
 #Dangerous Unary Expression Warning 
@@ -190,7 +190,7 @@ def check_unary(file):
             report.write("\nSolution: Check correct use could have meant += or -= or *=")
             report.write("\nRisk: Low")  
             report.write("\nConfidence: High\n")
-            score += 3
+            score += 6
     return score
 
 
@@ -208,14 +208,14 @@ def check_type_infer(file):
         
                 print("\nUnsafe Type Innference Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Explicitly declare uint data types to avoid unexpected behaviors")
-                print("Risk: Low")  
+                print("Risk: Medium")  
                 print("Confidence: High\n")
             
                 report.write("\nUnsafe Type Innference Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 report.write("\nSolution: Explicitly declare uint data types to avoid unexpected behaviors")
-                report.write("\nRisk: Low")  
+                report.write("\nRisk: Medium")  
                 report.write("\nConfidence: High\n")
-                score += 3
+                score += 12
     return score
 
 #Boolean Constance Bug
@@ -246,7 +246,7 @@ def check_bool_const(file):
             report.write("\nSolution: Simplify condition or verify code is not a mistake in boolen const")
             report.write("\nRisk: Low")   
             report.write("\nConfidence: High\n")
-            score+= 3
+            score+= 6
                    
         if ((bug_six in line) or (bug_seven in line) or (bug_eight in line) or (bug_nine in line) or (bug_ten in line)):
             print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
@@ -258,7 +258,7 @@ def check_bool_const(file):
             report.write("\nSolution: Simplify condition or verify code is not a mistake in boolen const")
             report.write("\nRisk: Low")   
             report.write("\nConfidence: High\n")
-            score+= 3
+            score+= 6
 
         if((key in line) and ((var_one in line) or (var_two in line))):
             print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
@@ -270,7 +270,7 @@ def check_bool_const(file):
             report.write("\nSolution: Verify whether mistake of tautology")
             report.write("\nRisk: Low")   
             report.write("\nConfidence: High\n")
-            score+= 3
+            score+= 6
     return score
 
 #Array Length Assignemnt 
@@ -308,7 +308,7 @@ def check_arr_length(file):
                 report.write("\nSolution: Don't set array length directly, add values as needed storage could be vulnerble")
                 report.write("\nRisk: Medium") 
                 report.write("\nConfidence: Medium\n")
-                score += 6
+                score += 8
     return score  
 
 #Missing Address Zero Validation Check
@@ -347,16 +347,16 @@ def check_address_zero(file):
                 print("\nZero Address Check Bug Detected at Function Line: " + str(function_line))
                 print("Solution: Check address is not zero using require, address variable and checking")
                 print("it is not equal to either 'address(0)', '0x0' or 'address(0x0)'")
-                print("Risk: Low") 
+                print("Risk: Medium") 
                 print("Confidence: High\n")
                 
                 report.write("\nZero Address Check Bug Detected at Function Line: " + str(function_line))
                 report.write("\nSolution: Check address is not zero using require, address variable and checking")
                 report.write("\nit is not equal to either 'address(0)', '0x0' or 'address(0x0)'")
-                report.write("\nRisk: Low") 
+                report.write("\nRisk: Medium") 
                 report.write("\nConfidence: High\n")
                 
-                score += 3
+                score += 12
                 
             #Reset Variables for next function
             address_name = ""
@@ -459,16 +459,16 @@ def check_map_struct_delete(file):
                         defined_mappings = np.append(defined_mappings, map_name)
                 if ((struct_name in line) and (dtype not in line)):
                     print("\nMapping Data Type Mismatch Bug detected Line: " + str(i+1))
-                    print("Solution: Use same data type kry as defined in struct for mapping")
+                    print("Solution: Use same data type key as defined in struct for mapping")
                     print("Risk: Low") 
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
                 
                     report.write("\nMapping Data Type Mismatch Bug detected Line: " + str(i+1))
                     report.write("\nSolution: Use same data type key as defined in struct for mapping")
                     report.write("\nRisk: Low") 
-                    report.write("\nConfidence: High\n")
+                    report.write("\nConfidence: Medium\n")
                     
-                    score += 3
+                    score += 4
                     
                     if (pub in line):
                         map_name = line[line.find(pub)+len(pub):line.rfind(supress)]
@@ -516,7 +516,7 @@ def check_map_struct_delete(file):
                     report.write("\nRisk: Medium") 
                     report.write("\nConfidence: High\n")
                     
-                    score += 6        
+                    score += 12        
     
     return score
 
@@ -556,38 +556,38 @@ def check_init_storage_var(file):
                     print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                     print("Solution: Immediatly initalise storage variables could be ovveridded")
                     print("Risk: High") 
-                    print("Confidence: Medium\n")
+                    print("Confidence: Low\n")
                 
                     report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                     report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
                     report.write("\nRisk: High") 
-                    report.write("\nConfidence: Medium\n")
+                    report.write("\nConfidence: Low\n")
                 
-                    score += 9
+                    score += 6
             if((var_one in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
                 print("Risk: High") 
-                print("Confidence: Medium\n")
+                print("Confidence: Low\n")
                 
                 report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
                 report.write("\nRisk: High") 
-                report.write("\nConfidence: Medium\n")
+                report.write("\nConfidence: Low\n")
                 
-                score += 9
+                score += 6
             if((var_two in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
                 print("Risk: High") 
-                print("Confidence: Medium\n")
+                print("Confidence: Low\n")
                 
                 report.write("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 report.write("\nSolution: Immediatly initalise storage variables could be ovveridded")
                 report.write("\nRisk: High") 
-                report.write("\nConfidence: Medium\n")
+                report.write("\nConfidence: Low\n")
                 
-                score += 9
+                score += 6
     return score
 #incorrect shift in assembely
 def check_assemble_shift(file):
@@ -613,15 +613,15 @@ def check_assemble_shift(file):
             if ((char_two.isnumeric() == True) and (char_one.isnumeric() is False )):
                 print("\nIncorrect Shit In Assembly Bug Detected at Line: " + str(i + 1))
                 print("Solution: Swap order of parametres in shift")
-                print("Risk: High") 
+                print("Risk: Medium") 
                 print("Confidence: Medium\n")
                 
                 report.write("\nIncorrect Shit In Assembly Bug Detected at Line: " + str(i + 1))
                 report.write("\nSolution: Swap order of parametres in shift")
-                report.write("\nRisk: High") 
+                report.write("\nRisk: Medium") 
                 report.write("\nConfidence: Medium\n")
                 
-                score += 9
+                score += 8
     return score
 #suicidel
 #     NEED TO CHECK THAT FUNCTION IS PROTECTED BEFORE WE CAN SELF DESTRUCT
@@ -649,7 +649,7 @@ def check_self_destruct(file):
             report.write("\nRisk: Medium")          
             report.write("\nConfidence: Low\n")
             
-            score += 6
+            score += 4
     #Case 2 public function with selfdestruct
     for i, line in code_second:
         if ((current == True) and (len(line) <= length) and (end in line)):
@@ -667,7 +667,7 @@ def check_self_destruct(file):
             report.write("\nRisk: High") 
             report.write("\nConfidence: High\n")
             
-            score += 9
+            score += 18
                 
     return score
 
@@ -693,19 +693,19 @@ def check_transfer(file):
             report.write("\nRisk: Medium") 
             report.write("\nConfidence: High\n")
             
-            score +=6     
+            score +=12     
         elif bug_2 in line:
             print("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
             print("Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility")
-            print("Risk: High")  
-            print("Confidence: Medium\n")
+            print("Risk: Medium")  
+            print("Confidence: High\n")
             
             report.write("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
             report.write("\nSolution: Use transfer function operation since call has no gas limit to minimise vulnerbaility")
-            report.write("\nRisk: High")  
-            report.write("\nConfidence: Medium\n")
+            report.write("\nRisk: Medium")  
+            report.write("\nConfidence: High\n")
             
-            score += 9
+            score += 12
     return score          
             
 #Storage Issue
@@ -728,7 +728,7 @@ def check_bytes(file):
             report.write("\nRisk: Low")  
             report.write("\nConfidence: High\n")
             
-            score += 3
+            score += 6
     return score  
 
 #Checks for Authentication bug
@@ -749,7 +749,7 @@ def check_tx_origin(file):
             report.write("\nRisk: High") 
             report.write("\nConfidence: High\n") 
             
-            score += 9
+            score += 18
     return score
             
 #Checks for Visibility bug
@@ -761,9 +761,10 @@ def check_function_visibility(file):
     keyword = "function"
     type_3 = "internal"
     type_4 = "onlyOwner"
+    type_5 = "external"
     score = 0
     for i, line in code:
-        if (keyword in line) and not((type_1 in line) or (type_2 in line) or (type_3 in line) or (type_4 in line)):
+        if (keyword in line) and not((type_1 in line) or (type_2 in line) or (type_3 in line) or (type_4 in line) or (type_5 in line)):
             print("\nVisibility Bug Detected at Line: " + str(i + 1))
             print("Solution: Use public/private specifier when defining function to minimise vulnerbaility")
             print("Risk: High") 
@@ -774,7 +775,7 @@ def check_function_visibility(file):
             report.write("\nRisk: High") 
             report.write("\nConfidence: High\n")
             
-            score += 9
+            score += 18
     return score
  
 #Checks for Equality bug
@@ -786,16 +787,16 @@ def check_balance_equality(file):
     for i, line in code:
         if bug in line:
             print("\nEquality Bug Detected at Line: " + str(i + 1))
-            print("Solution: Use public/private specifier when defining function to minimise vulnerbaility")
-            print("Risk: High") 
+            print("Solution: Use compartive statements instead of double equals to minimise vulnerbaility")
+            print("Risk: Medium") 
             print("Confidence: Low\n")
             
             report.write("\nEquality Bug Detected at Line: " + str(i + 1))
-            report.write("\nSolution: Use public/private specifier when defining function to minimise vulnerbaility")
-            report.write("\nRisk: High") 
+            report.write("\nSolution: Use compartive statements instead of double equals to minimise vulnerbaility")
+            report.write("\nRisk: Medium") 
             report.write("\nConfidence: Low\n")
             
-            score += 9
+            score += 4
     return score
 
 #Checks for Randomness bug
@@ -808,12 +809,12 @@ def check_block_timestamp(file):
         if bug in line:
             print("\nRandomness Bug Detected at Line: " + str(i + 1))
             print("Solution: Avoid block.randomness for randomness to minimise DoS vulnerbaility")
-            print("Risk: Medium")                
+            print("Risk: Low")                
             print("Confidence: High\n")
             
             report.write("\nRandomness Bug Detected at Line: " + str(i + 1))
             report.write("\nSolution: Avoid block.randomness for randomness to minimise DoS vulnerbaility")
-            report.write("\nRisk: Medium")                
+            report.write("\nRisk: Low")                
             report.write("\nConfidence: High\n")
             score += 6
     return score
@@ -837,7 +838,7 @@ def check_block_variable(file):
             report.write("\nRisk: Low") 
             report.write("\nConfidence: High\n")
             
-            score+= 3
+            score+= 6
     return score
 
 #Randomness Check 3
@@ -857,7 +858,7 @@ def check_block_number(file):
             report.write("\nRisk: Low") 
             report.write("\nConfidence: High\n")
             
-            score += 3
+            score += 6
     return score
             
 #Checks for Delegate Call  for parity sig wallet attack
@@ -870,15 +871,15 @@ def check_delegate_call(file):
         if ((bug in line) or (bug_var in line)):
             print("\nDelegate Call Bug Detected at Line: " + str(i + 1))
             print("Solution: Avoid Delegate Call this can lead to unexpected code execution vulnerbaility")
-            print("Risk: Low") 
+            print("Risk: Medium") 
             print("Confidence: High\n")
             
             report.write("\nDelegate Call Bug Detected at Line: " + str(i + 1))
             report.write("\nSolution: Avoid Delegate Call this can lead to unexpected code execution vulnerbaility")
-            report.write("\nRisk: Low") 
+            report.write("\nRisk: Medium") 
             report.write("\nConfidence: High\n")
             
-            score += 3
+            score += 12
     return score
 
 #Function Calls inside a loop
@@ -897,15 +898,15 @@ def check_loop_function(file):
         if (bug in line) and (function_current == True):
             print("\nFor/While Loop Function Call Bug Detected at Line: " + str(i + 1))
             print("Solution: Avoid Function Call In For/While Loop possible DoS vulnerbaility")
-            print("Risk: Low")   
+            print("Risk: Medium")   
             print("Confidence: High\n")
             
             report.write("\nFor/While Loop Function Call Bug Detected at Line: " + str(i + 1))
             report.write("\nSolution: Avoid Function Call In For/While Loop possible DoS vulnerbaility")
-            report.write("\nRisk: Low")   
+            report.write("\nRisk: Medium")   
             report.write("\nConfidence: High\n")
             
-            score += 3
+            score += 12
        
         if (((loop_for in line) or (loop_while in line)) and (use not in line) and (start_loop in line)):
             function_current = True
@@ -964,15 +965,15 @@ def check_owner_power(file):
                     print("\nOver Powered Owner Bug Detected at Line: " + str(i + 1))
                     print("Solution: Owner private key at risk of being comprimised don't base function control on owner")
                     print("Risk: High")   
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
             
                     report.write("\nOver Powered Owner Bug Detected at Line: " + str(i + 1))
                     report.write("\nSolution: Owner private key at risk of being comprimised") 
                     report.write("\ndon't base function control on owner")
                     report.write("\nRisk: High")   
-                    report.write("\nConfidence: High\n") 
+                    report.write("\nConfidence: Medium\n") 
                     
-                    score += 9
+                    score += 12
            
     #Case 2 using modifer
     mod = "modifier "
@@ -1020,15 +1021,15 @@ def check_owner_power(file):
                     print("Solution: Owner private key at risk of being comprimised don't use modifier function") 
                     print("control of owner for functions")
                     print("Risk: High")   
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
             
                     report.write("\nOver Powered Owner Bug Detected at Line: " + str(i + 1))
                     report.write("\nSolution: Owner private key at risk of being comprimised don't use modifier function") 
                     report.write("\ncontrol of owner for functions")
                     report.write("\nRisk: High")   
-                    report.write("\nConfidence: High\n") 
+                    report.write("\nConfidence: Medium\n") 
                     
-                    score += 9    
+                    score += 12   
     return score
 
 #Multiple Constructor Definitations and data initialisations 
@@ -1089,15 +1090,15 @@ def check_constructor_init(file):
         print("And function constructor at Line " + str(func_line))
         print("Solution: Use single constructor to initialise contract second constructor will be ignored") 
         print("Risk: Low")   
-        print("Confidence: High\n")
+        print("Confidence: Medium\n")
         
         report.write("\nMultiple Constructors Defined with constructor at Line: " + str(con_line))
         report.write("\nAnd function constructor at Line " + str(func_line))
         report.write("\nSolution: Use single constructor to initialise contract second constructor will be ignored")
         report.write("\nRisk: Low")  
-        report.write("\nConfidence: High\n")
+        report.write("\nConfidence: Medium\n")
         
-        score += 3
+        score += 4
 
     found_vars = np.array([])
     
@@ -1134,16 +1135,16 @@ def check_constructor_init(file):
                     print("\nVariable " + con_var + " defined across multiple constructors")
                     print("See constructor Line: " + str(con_line) + " And function constructor Line: " + str(func_line))
                     print("Solution: Use single constructor and intialise variables once in constructor") 
-                    print("Risk: Medium")   
-                    print("Confidence: High\n")
+                    print("Risk: Low")   
+                    print("Confidence: Medium\n")
         
                     report.write("\nVariable " + con_var + " defined across multiple constructors")
                     report.write("\nSee constructor Line: " + str(con_line) + " And function constructor Line: " + str(func_line))
                     report.write("\nSolution: Use single constructor and intialise variables once in constructor")
-                    report.write("\nRisk: Medium")  
-                    report.write("\nConfidence: High\n")
+                    report.write("\nRisk: Low")  
+                    report.write("\nConfidence: Medium\n")
         
-                    score += 6                    
+                    score += 4                   
     return score
 
 #Check Local Variable Shadowing Bug
@@ -1223,15 +1224,15 @@ def check_loc_var_shadow(file):
                     print("this is local variable shadowing")
                     print("Solution: Consider renaming local variable to mitigate unintended variable shadowing") 
                     print("Risk: Low")   
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
         
                     report.write("\nFunction Local Shadow Bug at Line: " + str(i+1) + " has variable " + var)
                     report.write("\nthis is local variable shadowing")
                     report.write("\nSolution: Consider renaming local variable to mitigate unintended local variable shadowing")
                     report.write("\nRisk: Low")  
-                    report.write("\nConfidence: High\n")
+                    report.write("\nConfidence: Medium\n")
                     
-                    score += 3
+                    score += 4
                     
     start_func = False
     end_func = "}"
@@ -1256,16 +1257,16 @@ def check_loc_var_shadow(file):
                     print("\nLocal Shadow Bug at Bug detected at Line: " + str(i+1) + " has data type: " + data_type + " and variable: " + var)
                     print("this is local variable shadowing, and can redefine contract prior variables")
                     print("Solution:  Consider not redefining contract local variable unless inteded to") 
-                    print("Risk: Medium")   
+                    print("Risk: Low")   
                     print("Confidence: Medium\n")
         
                     report.write("\nLocal Shadow Bug at Bug detected at Line: " + str(i+1) + " has data type: " + data_type)
                     report.write("\nand variable: " + var + "this is local variable shadowing, and can redefine contract prior variables")
                     report.write("\nSolution: Consider not redefining contract local variable unless inteded to")
-                    report.write("\nRisk: Medium")  
+                    report.write("\nRisk: Low")  
                     report.write("\nConfidence: Medium\n")
                     
-                    score += 6
+                    score += 4
                 #2B Duplicate Variable Medium bad
                 if ((var in line) and (data_type not in line) and (doub_eq not in line) and (o_brac not in line) and (c_brac not in line) and (end in line)):
                                         
@@ -1273,15 +1274,15 @@ def check_loc_var_shadow(file):
                     print("this is local variable shadowing, 2 variables defined with same name but different data types")
                     print("Solution: Consider renaming local variable to mitigate unintended local variable shadowing") 
                     print("Risk: Low")   
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
         
                     report.write("\nLocal Shadow Bug at Bug detected at Line: " + str(i+1) + " has variable: " + var)
                     report.write("\nthis is local variable shadowing, 2 variables defined with same name but different data types")
                     report.write("\nSolution: Consider renaming local variable to mitigate unintended variable shadowing")
                     report.write("\nRisk: Low")  
-                    report.write("\nConfidence: High\n")
+                    report.write("\nConfidence: Medium\n")
                     
-                    score += 3
+                    score += 4
     return score
 #Check State Variable Shadowing Bug
 def check_state_var_shadow(file):
@@ -1405,14 +1406,14 @@ def check_state_var_shadow(file):
                     print("\nState Variable Bug Detected at Line: " + str(i+1))
                     print("Solution: Assign Parent Contract prior to child contract")
                     print("Risk: Medium")      
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
                 
                     report.write("\nState Variable Bug Detected at Line: " + str(i+1))
                     report.write("\nSolution: Assign Parent Contract prior to child contract")
                     report.write("\nRisk: Medium")      
-                    report.write("\nConfidence: High\n")
+                    report.write("\nConfidence: Medium\n")
                     
-                    score += 3
+                    score += 8
                 
         if ((func in line) or (modify in line)):
             before_anything = False
@@ -1424,27 +1425,27 @@ def check_state_var_shadow(file):
                     print("\nState Variable Bug Detected at Line: " + str(i+1))
                     print("Solution: Define inherited parent contract variable: " + name + " in Constructor")
                     print("Risk: High")      
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
                 
                     report.write("\nState Variable Bug Detected at Line: " + str(i+1))
                     report.write("\nSolution: Define inherited parent contract variable: " + name + " in Constructor")
                     report.write("\nRisk: High")      
-                    report.write("\nConfidence: High\n")
+                    report.write("\nConfidence: Medium\n")
                     
-                    score += 6
+                    score += 12
                     
                 if ((name in line) and (eq not in line)):
                     print("\nState Variable Bug Detected at Line: " + str(i+1))
                     print("Solution: Same variable name from parent redefined use different variable name")
                     print("Risk: Medium")      
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
                 
                     report.write("\nState Variable Bug Detected at Line: " + str(i+1))
                     report.write("\nSolution: Same variable name from parent redefined use different variable name")
                     report.write("\nRisk: Medium")      
-                    report.write("\nConfidence: High\n")
+                    report.write("\nConfidence: Medium\n")
                     
-                    score += 3
+                    score += 8
                                     
             for name,assign in var_assigned.items():
                 if ((name in line) and (assign == False)):
@@ -1452,15 +1453,15 @@ def check_state_var_shadow(file):
                     print("Solution: Parent contract variable never assigned, assign in parent contract to prevent")
                     print("unintended effect")
                     print("Risk: High")      
-                    print("Confidence: High\n")
+                    print("Confidence: Medium\n")
                 
                     report.write("\nState Variable Bug Detected at Line: " + str(i+1))
                     report.write("\nSolution: Parent contract variable never assigned, assign in parent contract to prevent")
                     report.write("\nunintended effect")
                     report.write("\nRisk: High")      
-                    report.write("\nConfidence: High\n")
+                    report.write("\nConfidence: Medium\n")
                     
-                    score += 6
+                    score += 12
                                                    
         #Look through Vars before constructor, function or modifier check not from parent contract
         if ((current_con == True) and (before_anything == False) and (current_construct == False)):
@@ -1479,15 +1480,15 @@ def check_block_gas(file):
         if (((loop_for in line) and (bug in line)) or ((loop_while in line) and (bug in line))):
             print("\nBlock Gas Limit Bug Detected at Line: " + str(i + 1))
             print("Solution: Avoid loop of unknown size that could grow and cause DoS vulnerability")
-            print("Risk: High")  
-            print("Confidence: Medium\n")
+            print("Risk: Medium")  
+            print("Confidence: High\n")
             
             report.write("\nBlock Gas Limit Bug Detected at Line: " + str(i + 1))
             report.write("\nSolution: Avoid loop of unknown size that could grow and cause DoS vulnerability")
-            report.write("\nRisk: High")  
-            report.write("\nConfidence: Medium\n")
+            report.write("\nRisk: Medium")  
+            report.write("\nConfidence: High\n")
             
-            score += 9
+            score += 12
     return score
             
 #Pyable Fallback
@@ -1512,7 +1513,7 @@ def check_fallback(file):
                 report.write("\nRisk: Medium")  
                 report.write("\nConfidence: Medium\n")
                 
-                score += 6
+                score += 8
     return score
 
 #COMPLEX CHECKS
@@ -1555,7 +1556,7 @@ def check_contract_lock(file):
                 report.write("\nRisk: Medium") 
                 report.write("\nConfidence: Medium\n") 
         
-                score += 6
+                score += 8
                 
             pass_one = False;
             pass_two = False;
@@ -1609,7 +1610,7 @@ def check_withdraw_a(file, func_name, state_var, with_amount_var):
             report.write("\nRisk: Medium")  
             report.write("\nConfidence: Medium\n")
             
-            score += 10
+            score += 8
             
         if ((end_char in line) and  (start_char not in line) and (found == True)):
             start = False
@@ -1637,14 +1638,14 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
             print("\nWithdraw Function Call Bug Detected at Line: " + str(i +1))
             print("Solution: Update state variable balance before call")
             print("Risk: High")  
-            print("Confidence: High\n")
+            print("Confidence: Medium\n")
             
             report.write("\nWithdraw Function Call Bug Detected at Line: " + str(i +1))
             report.write("\nSolution: Update state variable balance before call")
             report.write("\nRisk: High")  
-            report.write("\nConfidence: High\n")
+            report.write("\nConfidence: Medium\n")
             
-            score += 10
+            score += 12
           
         if ((call_made == False) and (state_var in line) and (with_amount_var in line) and (subtract in line)):
             found = True
@@ -1665,14 +1666,14 @@ def check_external_call(file):
             print("\nUntrusted Function Bug Detected at Line: " + str(i +1))
             print("Solution: Be aware that subsequent calls also inherit untrust state")
             print("Risk: low") 
-            print("Confidence: Medium\n")
+            print("Confidence: High\n")
             
             report.write("\nUntrusted Function Bug Detected at Line: " + str(i +1))
             report.write("\nSolution: Be aware that subsequent calls also inherit untrust state")
             report.write("\nRisk: low") 
-            report.write("\nConfidence: Medium\n")
+            report.write("\nConfidence: High\n")
             
-            score += 2
+            score += 6
         #Bad Case external call is untrusted
         if ((end in line) and (len(line) <= 2)):
             start = False
@@ -1681,14 +1682,14 @@ def check_external_call(file):
             print("\nUntrusted Function External Call Bug Detected at Line: " + str(i +1))
             print("Solution: Be aware that subsequent calls also inherit untrust state")
             print("Risk: High") 
-            print("Confidence: Medium\n")
+            print("Confidence: High\n")
             
             report.write("\nUntrusted Function External Call Bug Detected at Line: " + str(i +1))
             report.write("\nSolution: Be aware that subsequent calls also inherit untrust state")
             report.write("\nRisk: High") 
-            report.write("\nConfidence: Medium\n")
+            report.write("\nConfidence: High\n")
             
-            score +=5
+            score +=18
         if ((keyword_func in line) and (keyword in line)):
             start = True
         
@@ -1697,14 +1698,14 @@ def check_external_call(file):
             print("\nUntrusted Function Bug Detected at Line: " + str(i +1))
             print("Solution: Unknown trust, label function either trusted/untrusted")
             print("Risk: Medium") 
-            print("Confidence: Medium\n")
+            print("Confidence: High\n")
             
             report.write("\nUntrusted Function Bug Detected at Line: " + str(i +1))
             report.write("\nSolution: Unknown trust, label function either trusted/untrusted")
             report.write("\nRisk: Medium") 
-            report.write("\nConfidence: Medium\n")
+            report.write("\nConfidence: High\n")
             
-            score += 2
+            score += 12
     return score
 
 #Checks-effects-interactions pattern
@@ -1744,15 +1745,15 @@ def check_effects_interactions_pattern(file, func_name):
             if ((check_found == False) and (single_check == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Check is missing")
-                print("Risk: Medium") 
+                print("Risk: High") 
                 print("Confidence: Medium\n")
                 
                 report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 report.write("\nSolution: Check is missing")
-                report.write("\nRisk: Medium") 
+                report.write("\nRisk: High") 
                 report.write("\nConfidence: Medium\n")
                 
-                score += 2  
+                score += 12  
             #Check Order
             if (single_check == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1765,20 +1766,20 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: Medium")
                 report.write("\nConfidence: Medium\n")
                 
-                score += 2  
+                score += 8  
             #Effect Missing
             if ((effect_found == False) and (single_effect == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Effect is missing")
-                print("Risk: Medium")  
+                print("Risk: High")  
                 print("Confidence: Medium\n")
                 
                 report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 report.write("\nSolution: Effect is missing")
-                report.write("\nRisk: Medium")  
+                report.write("\nRisk: High")  
                 report.write("\nConfidence: Medium\n")
                 
-                score += 2   
+                score += 12   
             #Effect Order     
             if (single_effect == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1791,20 +1792,20 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: Medium")  
                 report.write("\nConfidence: Medium\n")
                 
-                score += 2  
+                score += 8  
             #Interact Missing
             if ((interact_found == False) and (single_interact == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 print("Solution: Interact is missing")
-                print("Risk: Medium")   
+                print("Risk: High")   
                 print("Confidence: Medium\n")  
                 
                 report.write("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
                 report.write("\nSolution: Interact is missing")
-                report.write("\nRisk: Medium")   
+                report.write("\nRisk: High")   
                 report.write("\nConfidence: Medium\n")
                 
-                score += 2           
+                score += 12           
             #Interact Order
             if (single_interact == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1817,7 +1818,7 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: Medium")      
                 report.write("\nConfidence: Medium\n")
                 
-                score += 2  
+                score += 8  
             #Reset Variables
             start = False
             first = False
@@ -1861,42 +1862,42 @@ def check_effects_interactions_pattern(file, func_name):
 
 #Catergorise Score
 def calc_complex_score(score):
-    if (score < 20):
+    if (score < 10):
         return 90
-    if (score < 30):
+    if (score < 25):
         return 80
     if (score < 50):
         return 70
-    if (score < 80):
+    if (score < 100):
         return 60
-    if (score > 80):
+    if (score > 100):
         return 49
     
     
 def calc_score(score):
-    if (score < 40):
+    if (score < 50):
         return 100
-    if (score < 80):
-        return 95
     if (score < 100):
-        return 90
-    if (score < 120):
-        return 85
-    if (score < 140):
-        return 80
-    if (score < 160):
-        return 75
-    if (score < 180):
-        return 70
+        return 95
     if (score < 200):
+        return 90
+    if (score < 300):
+        return 85
+    if (score < 400):
+        return 80
+    if (score < 500):
+        return 75
+    if (score < 600):
+        return 70
+    if (score < 700):
         return 65
-    if (score < 220):
+    if (score < 800):
         return 60
-    if (score < 240):
+    if (score < 900):
         return 55
-    if (score < 260):
+    if (score < 1000):
         return 50
-    if (score > 260):
+    if (score > 1000):
         return 49
 
 #This will be used later
