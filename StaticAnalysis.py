@@ -10,6 +10,11 @@ fname = IntVar()
 withname = IntVar()
 balname = IntVar()
 amountname = IntVar()
+ 
+#Catogorise Bug Detection Count
+over_under = 0
+syntax = 0
+dao = 0
 
 #Output File Report
 report = open('bugreport.txt', 'w')
@@ -32,6 +37,9 @@ def compiler_issue(file):
             report.write("\nConfidence: High\n")
             
             score += 12
+            global syntax
+            syntax += 1
+
     return score
 
 #Checks for Underflow/Overflow bug
@@ -74,6 +82,8 @@ def check_safe_math(file):
                 report.write("\nConfidence: High\n")
                 
                 score+= 18
+                global over_under
+                over_under += 1
     return score
 
 #Underflow/Overflow Check 2
@@ -98,6 +108,8 @@ def check_integer_operations(file):
                 report.write("\nRisk: High")
                 report.write("\nConfidence: High\n")
                 score+=18
+                global over_under
+                over_under += 1
     return score
 
 
@@ -111,6 +123,8 @@ def check_loop_condition(file):
     bug_1 = ">="
     bug_2 = "<="
     score = 0
+    global over_under
+    
     for i, line in code:
         if((type_1 in line) or (type_2 in line)):
             if((bug_1 in line) or (bug_2 in line)):    
@@ -126,6 +140,7 @@ def check_loop_condition(file):
                 report.write("\nRisk: Low")  
                 report.write("\nConfidence: Medium\n")
                 score+= 4
+                over_under += 1
                 
             if ((var_type in line) and (use not in line)):
                 print("\nLoop Integer Overflow/Underflow Bug Detected at Line: " + str(i + 1))
@@ -141,6 +156,7 @@ def check_loop_condition(file):
                 report.write("\nConfidence: Medium\n")
                 
                 score+= 12
+                over_under += 1
     return score
 
 #Division before multiply
@@ -170,6 +186,8 @@ def check_div_multiply(file):
                     report.write("\nRisk: Medium")  
                     report.write("\nConfidence: Medium\n")
                     score+= 8
+                    global over_under
+                    over_under += 1
     return score            
                     
 #Dangerous Unary Expression Warning 
@@ -191,6 +209,8 @@ def check_unary(file):
             report.write("\nRisk: Low")  
             report.write("\nConfidence: High\n")
             score += 6
+            global over_under
+            over_under += 1
     return score
 
 
@@ -216,6 +236,8 @@ def check_type_infer(file):
                 report.write("\nRisk: Medium")  
                 report.write("\nConfidence: High\n")
                 score += 12
+                global over_under
+                over_under += 1
     return score
 
 #Boolean Constance Bug
@@ -235,6 +257,9 @@ def check_bool_const(file):
     var_one = " = true"
     var_two = " = false"
     score = 0
+    
+    global syntax
+
     for i, line in code:
         if ((bug_one in line) or (bug_two in line) or (bug_three in line) or (bug_four in line) or (bug_five in line)):
             print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
@@ -247,6 +272,7 @@ def check_bool_const(file):
             report.write("\nRisk: Low")   
             report.write("\nConfidence: High\n")
             score+= 6
+            syntax += 1
                    
         if ((bug_six in line) or (bug_seven in line) or (bug_eight in line) or (bug_nine in line) or (bug_ten in line)):
             print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
@@ -259,6 +285,7 @@ def check_bool_const(file):
             report.write("\nRisk: Low")   
             report.write("\nConfidence: High\n")
             score+= 6
+            syntax += 1
 
         if((key in line) and ((var_one in line) or (var_two in line))):
             print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
@@ -271,6 +298,7 @@ def check_bool_const(file):
             report.write("\nRisk: Low")   
             report.write("\nConfidence: High\n")
             score+= 6
+            syntax += 1
     return score
 
 #Array Length Assignemnt 
@@ -309,6 +337,8 @@ def check_arr_length(file):
                 report.write("\nRisk: Medium") 
                 report.write("\nConfidence: Medium\n")
                 score += 8
+                global syntax
+                syntax += 1
     return score  
 
 #Missing Address Zero Validation Check
@@ -357,6 +387,8 @@ def check_address_zero(file):
                 report.write("\nConfidence: High\n")
                 
                 score += 12
+                global syntax
+                syntax += 1
                 
             #Reset Variables for next function
             address_name = ""
@@ -422,6 +454,9 @@ def check_map_struct_delete(file):
     
     struct_dtype = {}
     
+    global syntax
+
+    
     #Find Struct Names if this struct contains a map then store it in np array
     for i, line in code:
         
@@ -469,6 +504,7 @@ def check_map_struct_delete(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 4
+                    syntax += 1
                     
                     if (pub in line):
                         map_name = line[line.find(pub)+len(pub):line.rfind(supress)]
@@ -517,7 +553,7 @@ def check_map_struct_delete(file):
                     report.write("\nConfidence: High\n")
                     
                     score += 12        
-    
+                    syntax += 1
     return score
 
 
@@ -535,6 +571,9 @@ def check_init_storage_var(file):
     var_two = "address"
     score = 0
     struct_exists = False
+    
+    global syntax
+
     #Get all struct names
     for i, line in code_first:
         if ((inner in line) and (con not in line)):
@@ -564,6 +603,7 @@ def check_init_storage_var(file):
                     report.write("\nConfidence: Low\n")
                 
                     score += 6
+                    syntax += 1
             if((var_one in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
@@ -576,6 +616,8 @@ def check_init_storage_var(file):
                 report.write("\nConfidence: Low\n")
                 
                 score += 6
+                syntax += 1
+                
             if((var_two in line) and (req_end in line) and (req not in line)):
                 print("\nUninitialised Storage Variable Bug Detected at Line: " + str(i + 1))
                 print("Solution: Immediatly initalise storage variables could be ovveridded")
@@ -588,6 +630,8 @@ def check_init_storage_var(file):
                 report.write("\nConfidence: Low\n")
                 
                 score += 6
+                syntax += 1
+                
     return score
 #incorrect shift in assembely
 def check_assemble_shift(file):
@@ -622,6 +666,9 @@ def check_assemble_shift(file):
                 report.write("\nConfidence: Medium\n")
                 
                 score += 8
+                global syntax
+                syntax += 1
+                    
     return score
 #suicidel
 #     NEED TO CHECK THAT FUNCTION IS PROTECTED BEFORE WE CAN SELF DESTRUCT
@@ -636,6 +683,9 @@ def check_self_destruct(file):
     length = 2
     current = False
     score = 0
+    
+    global syntax
+    
     #Case 1 Address to another contract
     for i, line in code:
         if ((bug in line)):
@@ -650,6 +700,7 @@ def check_self_destruct(file):
             report.write("\nConfidence: Low\n")
             
             score += 4
+            syntax += 1
     #Case 2 public function with selfdestruct
     for i, line in code_second:
         if ((current == True) and (len(line) <= length) and (end in line)):
@@ -668,6 +719,7 @@ def check_self_destruct(file):
             report.write("\nConfidence: High\n")
             
             score += 18
+            syntax += 1
                 
     return score
 
@@ -679,6 +731,9 @@ def check_transfer(file):
     bug_1 = ".send("
     bug_2 = "call.value"
     score = 0
+    
+    global syntax
+    
     for i, line in code:
         if bug_1 in line:
             print("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
@@ -693,7 +748,9 @@ def check_transfer(file):
             report.write("\nRisk: Medium") 
             report.write("\nConfidence: High\n")
             
-            score +=12     
+            score +=12  
+            syntax += 1
+                       
         elif bug_2 in line:
             print("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
             print("Solution: Use transfer function operation since call has no gas limit to minimise vulnerbaility")
@@ -706,6 +763,7 @@ def check_transfer(file):
             report.write("\nConfidence: High\n")
             
             score += 12
+            syntax += 1
     return score          
             
 #Storage Issue
@@ -729,6 +787,8 @@ def check_bytes(file):
             report.write("\nConfidence: High\n")
             
             score += 6
+            global syntax
+            syntax += 1
     return score  
 
 #Checks for Authentication bug
@@ -750,6 +810,8 @@ def check_tx_origin(file):
             report.write("\nConfidence: High\n") 
             
             score += 18
+            global syntax
+            syntax += 1
     return score
             
 #Checks for Visibility bug
@@ -776,6 +838,8 @@ def check_function_visibility(file):
             report.write("\nConfidence: High\n")
             
             score += 18
+            global syntax
+            syntax += 1
     return score
  
 #Checks for Equality bug
@@ -797,6 +861,9 @@ def check_balance_equality(file):
             report.write("\nConfidence: Low\n")
             
             score += 4
+            global syntax
+            syntax += 1
+                    
     return score
 
 #Checks for Randomness bug
@@ -817,6 +884,8 @@ def check_block_timestamp(file):
             report.write("\nRisk: Low")                
             report.write("\nConfidence: High\n")
             score += 6
+            global syntax
+            syntax += 1
     return score
 
 #Randomness Check 2
@@ -839,6 +908,8 @@ def check_block_variable(file):
             report.write("\nConfidence: High\n")
             
             score+= 6
+            global syntax
+            syntax += 1
     return score
 
 #Randomness Check 3
@@ -859,6 +930,8 @@ def check_block_number(file):
             report.write("\nConfidence: High\n")
             
             score += 6
+            global syntax
+            syntax += 1
     return score
             
 #Checks for Delegate Call  for parity sig wallet attack
@@ -880,6 +953,8 @@ def check_delegate_call(file):
             report.write("\nConfidence: High\n")
             
             score += 12
+            global syntax
+            syntax += 1
     return score
 
 #Function Calls inside a loop
@@ -907,6 +982,8 @@ def check_loop_function(file):
             report.write("\nConfidence: High\n")
             
             score += 12
+            global syntax
+            syntax += 1
        
         if (((loop_for in line) or (loop_while in line)) and (use not in line) and (start_loop in line)):
             function_current = True
@@ -926,6 +1003,7 @@ def check_owner_power(file):
     code_3 = enumerate(open(file))
     
     score = 0
+    global syntax
     
     #General Req
     add = "address"
@@ -974,6 +1052,7 @@ def check_owner_power(file):
                     report.write("\nConfidence: Medium\n") 
                     
                     score += 12
+                    syntax += 1
            
     #Case 2 using modifer
     mod = "modifier "
@@ -1029,7 +1108,8 @@ def check_owner_power(file):
                     report.write("\nRisk: High")   
                     report.write("\nConfidence: Medium\n") 
                     
-                    score += 12   
+                    score += 12
+                    syntax += 1   
     return score
 
 #Multiple Constructor Definitations and data initialisations 
@@ -1038,6 +1118,7 @@ def check_constructor_init(file):
     code_1 = enumerate(open(file))
     code_2 = enumerate(open(file))
     score = 0
+    global syntax
 
     start = " "
     end = ";"
@@ -1099,6 +1180,7 @@ def check_constructor_init(file):
         report.write("\nConfidence: Medium\n")
         
         score += 4
+        syntax += 1
 
     found_vars = np.array([])
     
@@ -1144,7 +1226,8 @@ def check_constructor_init(file):
                     report.write("\nRisk: Low")  
                     report.write("\nConfidence: Medium\n")
         
-                    score += 4                   
+                    score += 4
+                    syntax += 1                   
     return score
 
 #Check Local Variable Shadowing Bug
@@ -1154,7 +1237,8 @@ def check_loc_var_shadow(file):
     code_2 = enumerate(open(file))
     
     score = 0;
-   
+    global syntax
+    
     varname_type = {}
     mod = "modifier"
     func = "function"
@@ -1233,6 +1317,7 @@ def check_loc_var_shadow(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 4
+                    syntax += 1
                     
     start_func = False
     end_func = "}"
@@ -1267,6 +1352,7 @@ def check_loc_var_shadow(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 4
+                    syntax += 1
                 #2B Duplicate Variable Medium bad
                 if ((var in line) and (data_type not in line) and (doub_eq not in line) and (o_brac not in line) and (c_brac not in line) and (end in line)):
                                         
@@ -1283,6 +1369,7 @@ def check_loc_var_shadow(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 4
+                    syntax += 1
     return score
 #Check State Variable Shadowing Bug
 def check_state_var_shadow(file):
@@ -1290,7 +1377,8 @@ def check_state_var_shadow(file):
     code_1 = enumerate(open(file))
 
     score = 0;
-   
+    global syntax
+    
     #Before the constructor code is executed, state variables are initialised to their 
     #specified value if you initialise them inline, or zero if you do not.
     
@@ -1414,6 +1502,7 @@ def check_state_var_shadow(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 8
+                    syntax += 1
                 
         if ((func in line) or (modify in line)):
             before_anything = False
@@ -1433,6 +1522,7 @@ def check_state_var_shadow(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 12
+                    syntax += 1
                     
                 if ((name in line) and (eq not in line)):
                     print("\nState Variable Bug Detected at Line: " + str(i+1))
@@ -1446,6 +1536,7 @@ def check_state_var_shadow(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 8
+                    syntax += 1
                                     
             for name,assign in var_assigned.items():
                 if ((name in line) and (assign == False)):
@@ -1462,6 +1553,7 @@ def check_state_var_shadow(file):
                     report.write("\nConfidence: Medium\n")
                     
                     score += 12
+                    syntax += 1
                                                    
         #Look through Vars before constructor, function or modifier check not from parent contract
         if ((current_con == True) and (before_anything == False) and (current_construct == False)):
@@ -1489,6 +1581,8 @@ def check_block_gas(file):
             report.write("\nConfidence: High\n")
             
             score += 12
+            global syntax
+            syntax += 1
     return score
             
 #Pyable Fallback
@@ -1514,6 +1608,8 @@ def check_fallback(file):
                 report.write("\nConfidence: Medium\n")
                 
                 score += 8
+                global syntax
+                syntax += 1
     return score
 
 #COMPLEX CHECKS
@@ -1557,6 +1653,8 @@ def check_contract_lock(file):
                 report.write("\nConfidence: Medium\n") 
         
                 score += 8
+                global dao
+                dao += 1
                 
             pass_one = False;
             pass_two = False;
@@ -1611,6 +1709,8 @@ def check_withdraw_a(file, func_name, state_var, with_amount_var):
             report.write("\nConfidence: Medium\n")
             
             score += 8
+            global dao
+            dao += 1
             
         if ((end_char in line) and  (start_char not in line) and (found == True)):
             start = False
@@ -1646,6 +1746,8 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
             report.write("\nConfidence: Medium\n")
             
             score += 12
+            global dao
+            dao += 1
           
         if ((call_made == False) and (state_var in line) and (with_amount_var in line) and (subtract in line)):
             found = True
@@ -1661,6 +1763,7 @@ def check_external_call(file):
     start = False
     end = "}"
     score = 0
+    global dao
     for i, line in code:
         if ((keyword_func in line) and (keyword_un_trust in line)):
             print("\nUntrusted Function Bug Detected at Line: " + str(i +1))
@@ -1674,6 +1777,8 @@ def check_external_call(file):
             report.write("\nConfidence: High\n")
             
             score += 6
+            dao += 1
+
         #Bad Case external call is untrusted
         if ((end in line) and (len(line) <= 2)):
             start = False
@@ -1690,6 +1795,8 @@ def check_external_call(file):
             report.write("\nConfidence: High\n")
             
             score +=18
+            dao += 1
+
         if ((keyword_func in line) and (keyword in line)):
             start = True
         
@@ -1706,6 +1813,8 @@ def check_external_call(file):
             report.write("\nConfidence: High\n")
             
             score += 12
+            dao += 1
+
     return score
 
 #Checks-effects-interactions pattern
@@ -1737,6 +1846,8 @@ def check_effects_interactions_pattern(file, func_name):
     
     function_line = 0;
     score = 0
+    global dao
+    
     for i, line in code:
         #Move onto next function
         if ((end in line) and (len(line) <= 2) and (start == True)):
@@ -1754,6 +1865,8 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nConfidence: Medium\n")
                 
                 score += 12  
+                dao += 1
+
             #Check Order
             if (single_check == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1766,7 +1879,9 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: Medium")
                 report.write("\nConfidence: Medium\n")
                 
-                score += 8  
+                score += 8
+                dao += 1
+  
             #Effect Missing
             if ((effect_found == False) and (single_effect == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1779,7 +1894,9 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: High")  
                 report.write("\nConfidence: Medium\n")
                 
-                score += 12   
+                score += 12
+                dao += 1
+   
             #Effect Order     
             if (single_effect == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1792,7 +1909,9 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: Medium")  
                 report.write("\nConfidence: Medium\n")
                 
-                score += 8  
+                score += 8
+                dao += 1
+  
             #Interact Missing
             if ((interact_found == False) and (single_interact == False)):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1805,7 +1924,9 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: High")   
                 report.write("\nConfidence: Medium\n")
                 
-                score += 12           
+                score += 12
+                dao += 1
+           
             #Interact Order
             if (single_interact == True):
                 print("\nCheck-Effect-Interaction Bug Detected at Line: " + str(function_line))
@@ -1818,7 +1939,9 @@ def check_effects_interactions_pattern(file, func_name):
                 report.write("\nRisk: Medium")      
                 report.write("\nConfidence: Medium\n")
                 
-                score += 8  
+                score += 8
+                dao += 1
+  
             #Reset Variables
             start = False
             first = False
@@ -1952,14 +2075,20 @@ def handlephase3():
     score = 0
     filename = "Tests/" + fname.get()
     score = check_complex_checks(filename, score, withname.get(), balname.get(), amountname.get())
-    print(score)
+    print("Total Bug Points: " + str(score))
     report.write("\nTotal Bug Points: " + str(score))
     score = calc_complex_score(score)
     if (score < 50):
+        print("DAO Bugs Detected: " + str(dao))
+        report.write("\nDAO Bugs Detected: " + str(dao) + "\n" )
+        
         print("Smart Contract Score: <50%")
         report.write("\nSmart Contract Score: <50% \n")
 
     else:
+        print("DAO Bugs Detected: " + str(dao))
+        report.write("\nDAO Bugs Detected: " + str(dao) + "\n" )
+        
         print("Smart Contract Score: " + str(score) +"%" )
         report.write("\nSmart Contract Score: " + str(score) +"%\n" )
 
@@ -1970,17 +2099,34 @@ def handlephase2():
     sc = 0
     filename = "Tests/" + var.get()
     sc = call_simple_checks(filename, sc)
-    print(sc)
+    print("Total Bug Points: " + str(sc))
     report.write("\nTotal Bug Points: " + str(sc))
     sc = calc_score(sc)
     if (sc < 50):
+        print("Overflow/Underflow Bugs Detected: " + str(over_under))
+        report.write("\nOverflow/Underflow Bugs Detected: " + str(over_under) + "\n" )
+        
+        print("Syntax Bugs Detected: " + str(syntax))
+        report.write("\nSyntax Bugs Detected: " + str(syntax) + "\n" )
+        
+        print("DAO Bugs Detected: " + str(dao))
+        report.write("\nDAO Bugs Detected: " + str(dao) + "\n" )
+        
         print("Smart Contract Score: <50%")
         report.write("\nSmart Contract Score: <50% \n")
 
     else:
+        print("Overflow/Underflow Bugs Detected: " + str(over_under))
+        report.write("\nOverflow/Underflow Bugs Detected: " + str(over_under) + "\n" )
+        
+        print("Syntax Bugs Detected: " + str(syntax))
+        report.write("\nSyntax Bugs Detected: " + str(syntax) + "\n" )
+        
+        print("DAO Bugs Detected: " + str(dao))
+        report.write("\nDAO Bugs Detected: " + str(dao) + "\n" )
+        
         print("Smart Contract Score: " + str(sc) +"%" )
         report.write("\nSmart Contract Score: " + str(sc) +"%\n" )
-
         
 def phase3():
     root1 = Tk()
