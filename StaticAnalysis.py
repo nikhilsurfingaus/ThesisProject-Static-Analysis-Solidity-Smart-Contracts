@@ -2131,8 +2131,8 @@ def handlephase2():
 def phase3():
     root1 = Tk()
     root1.geometry('500x400')
-    root1.title("Reetrancy DAO and Withdraw Function Analysis")
-    label_0 = Label(root1, text="Reetrancy DAO and Withdraw Function Analysis",width=40,font=("bold", 14))
+    root1.title("PySolSweep Static Analayis Tool")
+    label_0 = Label(root1, text="Withdraw DAO Function Analysis",width=40,font=("bold", 14))
     label_0.place(x=50,y=53)
     label_1 = Label(root1, text="Solidity File Name",width=30,font=("bold", 10))
     label_1.place(x=50,y=130)
@@ -2142,23 +2142,23 @@ def phase3():
     entry_1.place(x=260,y=130)
     label_2 = Label(root1, text="Withdraw Function Name",width=30,font=("bold", 10))
     label_2.place(x=40,y=180)
-    entry_2 = Entry(root1)
+    entry_2 = Entry(root1, width=30)
     global withname
     withname = entry_2
     entry_2.place(x=260,y=180)
     label_4 = Label(root1, text="Balance State Variable Name",width=30,font=("bold", 10))
     label_4.place(x=40,y=230)
-    entry_3 = Entry(root1)
+    entry_3 = Entry(root1, width=30)
     global balname
     balname = entry_3
     entry_3.place(x=260,y=230)
     label_5 = Label(root1, text="Variable Amount Variable Name",width=30,font=("bold", 10))
     label_5.place(x=40,y=280)
-    entry_4 = Entry(root1)
+    entry_4 = Entry(root1, width=30)
     global amountname
     amountname = entry_4
     entry_4.place(x=260,y=280)
-    Button(root1, text='Start Reetrancy DAO and Withdraw Function Analysis',width=50,bg='brown',fg='white', command=handlephase3).place(x=100,y=330)
+    Button(root1, text='Start Withdraw DAO Function Analysis',width=50,bg='brown',fg='white', command=handlephase3).place(x=100,y=330)
     # it is use for display the registration form on the window
     root1.mainloop()
 
@@ -2166,7 +2166,7 @@ def phase3():
 def phase2():
     root2 = Tk()
     root2.geometry('500x400')
-    root2.title("Static Analysis")
+    root2.title("PySolSweep Static Analayis Tool")
     label_0 = Label(root2, text="Static Analysis",width=20,font=("bold", 20))
     label_0.place(x=80,y=53)
     label_1 = Label(root2, text="Solidity File Name",width=30,font=("bold", 10))
@@ -2195,41 +2195,20 @@ def inter():
 
 def main():
 
-    file = "Tests/compilerissue.txt"
-    file2 = "Tests/overflowunderflowissue.txt"
-    file3 = "Tests/overflowunderflowissue2.txt"
-    file4 = "Tests/exceptionissue1.txt"
-    file5 = "Tests/authenticationissue1.txt"
-    file6 = "Tests/visibilityissue.txt"
-    file7 = "Tests/equalityissue1.txt"
-    file8 = "Tests/timestampissue.txt"
-    file9 = "Tests/delegatecallissue.txt"
-    file10 = "Tests/loopfunctiondos.txt"
-    file11 = "Tests/bytesissue.txt"
-    file12 = "Tests/blockvar.txt"
-    file13 = "Tests/blocknum.txt"
-    file14 = "Tests/blockgas.txt"
-    file15 = "Tests/fallbackpay.txt"
-    file16 = "Tests/unarytest.txt"
-    file17 = "Tests/dividemultiply.txt"
-    file18 = "Tests/boolconst.txt"
-    file19 = "Tests/arraylength.txt"
-    file20 = "Tests/storageissue.txt"
-    file21 = "Tests/shiftassemble.txt"
-    file22 = "Tests/selfdestruct.txt"
-    file23 = "Tests/lockcontract.txt"
-    file24 = "Tests/lockcontractgood.txt"
     #Simple Checks
     #MAKE A FUNCTION WHICH TAKES A SINGLE FILE AND RUNS ALL THESE FUNCTIONS
     score = 0;
     bigfile = "Tests/mixbugs.txt"
     #score = call_simple_checks(bigfile, score)
     root.geometry('500x400')
-    root.title("Static Analayis")
-    label_0 = Label(root, text="Static Analayis",width=20,font=("bold", 20))
-    label_0.place(x=90,y=53)
+    root.title("PySolSweep Static Analayis Tool")
+    label_0 = Label(root, text="PySolSweep Static Analayis Tool",width=28,font=("bold", 20))
+    label_0.place(x=20,y=53)
     Button(root, text='Standard Analysis',width=20,bg='brown',fg='white', command=inter).place(x=180,y=150)
-    Button(root, text='Reetrancy DAO and Withdraw Function Analysis',width=40,bg='brown',fg='white', command=inter2).place(x=100,y=250)
+    Button(root, text='Withdraw DAO Function Analysis',width=30,bg='brown',fg='white', command=inter2).place(x=140,y=250)
+    
+    #Set Icon Image
+    root.iconbitmap("Resources/img.ico")
     # it is use for display the registration form on the window
 
     root.mainloop()
@@ -2237,77 +2216,6 @@ def main():
     
     #Close Report
     report.close()
-    
-    
-    #if (test2 == True):
-    #    score = call_simple_checks(bigfile, score)
-    #print("WINDOW CLOSED")
-    """     score += compiler_issue(file)
-    score += check_safe_math(file2) 
-    score +=check_integer_operations(file3)   
-    score +=check_transfer(file4)
-    score +=check_tx_origin(file5)
-    score +=check_function_visibility(file6)
-    score +=check_balance_equality(file7)
-    score +=check_block_timestamp(file8)
-    score +=check_delegate_call(file9)
-    score +=check_loop_function(file10)
-    score +=check_bytes(file11)
-    score +=check_block_variable(file12)
-    score +=check_block_number(file13)
-    score +=check_block_gas(file14)
-    score +=check_fallback(file15)
-    score +=check_unary(file16)
-    score +=check_div_multiply(file17)
-    score +=check_bool_const(file18)
-    score +=check_arr_length(file19)
-    score +=check_init_storage_var(file20)
-    score +=check_assemble_shift(file21)
-    score +=check_self_destruct(file22)
-    score +=check_contract_lock(file23)
-    score +=check_contract_lock(file24) """
-    #Complex Checks
-  
-    """# #Ask for User Input On These
-    withdraw_function = "withdraw"
-    balance_state_variable = "balances"
-    withdraw_amount = "_amount"
-    comp_file = "Tests/reentracyissue.txt"
-
-
-    #CHANGE THIS TO ADD INSTRUCTIONOS FOR FUNCTION AND VARIABLE NAMES
-    #Reentracy Check 2
-    score+=check_withdraw_a(comp_file, withdraw_function, balance_state_variable, withdraw_amount)
-    
-    #Reentracy Check 1
-    score+=check_withdraw_b("Tests/testret.txt", withdraw_function, balance_state_variable, withdraw_amount)
-    score+=check_withdraw_b("Tests/testret1.txt", withdraw_function, balance_state_variable, withdraw_amount)
-
-    #Reentracy Check 3
-    externalfile = "Tests/externalissue.txt"
-    score+=check_external_call(externalfile)
-    
-    # #Reentracy Check 3
-    CEIfile = "Tests/checkeffectinteractissue.txt"
-    score+=check_effects_interactions_pattern(CEIfile)"""
-    
-    #bigcomplex = "Tests/testret.txt"
-    #withdraw_function = "withdraw"
-    #balance_state_variable = "balances"
-    #withdraw_amount = "_amount"
-    #score+= check_complex_checks(bigcomplex, score, withdraw_function, balance_state_variable, withdraw_amount)
-    
-    #Simple Score Overall
-    #print(score)
-    #score = calc_score(score)
-    #if (score < 50):
-    #    print("Smart Contract Score: <50%")
-    #else:
-    #    print("Smart Contract Score: " + str(score) +"%" )
-        
-    #Reentracy Score Overall
-    #while(True):
-    #    x = 1
         
     
 if __name__ == "__main__":
