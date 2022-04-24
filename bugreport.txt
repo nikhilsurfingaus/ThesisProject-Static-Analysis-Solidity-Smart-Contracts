@@ -1,0 +1,50 @@
+
+Withdraw Function Call Bug Detected at Line: 48
+Solution: We need this to check require balance and amount first
+Risk: Medium
+Confidence: Medium
+
+Withdraw Function Call Bug Detected at Line: 51
+Solution: Update state variable balance before call
+Risk: High
+Confidence: Medium
+
+Withdraw Function Call Bug Detected at Line: 54
+Solution: Update state variable balance before call
+Risk: High
+Confidence: Medium
+
+Withdraw Function Call Bug Detected at Line: 57
+Solution: Update state variable balance before call
+Risk: High
+Confidence: Medium
+
+Withdraw Function Call Bug Detected at Line: 60
+Solution: Update state variable balance before call
+Risk: High
+Confidence: Medium
+
+Withdraw Function Call Bug Detected at Line: 63
+Solution: Update state variable balance before call
+Risk: High
+Confidence: Medium
+
+Check-Effect-Interaction Bug Detected at Line: 48
+Solution: Check is out of order
+Risk: Medium
+Confidence: Medium
+
+Check-Effect-Interaction Bug Detected at Line: 48
+Solution: Effect is out of order
+Risk: Medium
+Confidence: Medium
+
+Check-Effect-Interaction Bug Detected at Line: 48
+Solution: Interact is missing
+Risk: High
+Confidence: Medium
+
+Total Bug Points: 96
+DAO Bugs Detected: 9
+
+Smart Contract Score: 60%

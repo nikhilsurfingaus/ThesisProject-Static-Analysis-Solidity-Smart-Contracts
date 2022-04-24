@@ -19,7 +19,20 @@ dao = 0
 #Output File Report
 report = open('bugreport.txt', 'w')
 
-#Checks for compiler version bug
+#Check Commpiler Issue - Syntax Bug
+''' 
+This check catches if a smart contract is defined using the
+^ operator for compiler version.
+
+Best practice to use static rather than dynamic compiler version
+as future versions could have unintended effects
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def compiler_issue(file):
     code = enumerate(open(file))
     bug = "^"
@@ -42,8 +55,20 @@ def compiler_issue(file):
 
     return score
 
-#Checks for Underflow/Overflow bug
-#Underflow/Overflow Check 1
+#Check Safe Math Issue - Overflow/Underflow Bug
+''' 
+This check catches if a smart contract is defined without
+the Safe Math Library present when using uint variable type
+
+Best practice to use Safe Math Library which can minimise attack
+exploiting overflow/underflow vulnerabilities with arthimetic operations
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_safe_math(file):
     code = enumerate(open(file))
     library = "using SafeMath for uint"
@@ -86,7 +111,20 @@ def check_safe_math(file):
                 over_under += 1
     return score
 
-#Underflow/Overflow Check 2
+#Check Integer Operations - Overflow/Underflow Bug
+''' 
+This check catches if a smart contract uses arithemtic operations such as 
+'+, -, *, /, %' when Safe Math functions could be used. 
+
+Best practice to use Safe Math Library functions of add, sub, div, mod or mul 
+which can minimise attack exploiting overflow/underflow vulnerabilities
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_integer_operations(file):
     code = enumerate(open(file))
     pos_inc = "++"
@@ -113,7 +151,20 @@ def check_integer_operations(file):
     return score
 
 
-#Overflow/Underflow For/While loop using >= or <= or unint in loop could be infinite 
+#Check Loop Condition - Overflow/Underflow Bug
+''' 
+This check catches if a smart contract using operators such as >=, <= or uint
+in a for or while loop condition statement
+
+Best practice to use >, <, == or != loop for operations. Uint can cause
+possible infinite loop
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_loop_condition(file):
     code = enumerate(open(file))
     type_1 = "for"
@@ -159,7 +210,20 @@ def check_loop_condition(file):
                 over_under += 1
     return score
 
-#Division before multiply
+#Check Division Before Multiply - Overflow/Underflow Bug
+''' 
+This check catches if a smart contract has mathematical operations with
+multiplication or division, that division occurs first 
+
+Best practice to use have multiplication first, as division first can
+cause loss of pecision in operations 
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_div_multiply(file):
     code = enumerate(open(file))
     div_op = "/"
@@ -190,7 +254,17 @@ def check_div_multiply(file):
                     over_under += 1
     return score            
                     
-#Dangerous Unary Expression Warning 
+#Check Unary Operations Warning - Overflow/Underflow Bug
+''' 
+This check catches if a smart contract contains =+, =- or =* 
+which could be intended as =+, -= or *=
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_unary(file):
     code = enumerate(open(file))
     bug_plus = "=+"
@@ -214,7 +288,20 @@ def check_unary(file):
     return score
 
 
-#Unsafe Type Inference Overflow/Underflow
+#Check Type Reference - Overflow/Underflow Bug
+''' 
+This check catches if a smart contract defined variable using var
+instead of using numerical data type of uint
+
+Should explicitly declare uint data types to 
+avoid unexpected behaviors
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_type_infer(file):
     code = enumerate(open(file))
     score = 0
@@ -240,7 +327,20 @@ def check_type_infer(file):
                 over_under += 1
     return score
 
-#Boolean Constance Bug
+#Check Boolan Constance - Syntax Bug
+''' 
+This check catches if a smart contract incorporates Boolean
+Constance or Tautology conditions
+
+Should verify that Tautology is not intended as well as Constance
+is not indended
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_bool_const(file):
     code = enumerate(open(file))
     bug_one = "(false)"
@@ -301,7 +401,19 @@ def check_bool_const(file):
             syntax += 1
     return score
 
-#Array Length Assignemnt 
+#Check Array Length Assignement - Syntax Bug
+''' 
+This check catches if a smart contract defined an array 
+with a static length
+
+Should increase array length as array grows and storage needed
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_arr_length(file):
     code_first = enumerate(open(file))
     code_second = enumerate(open(file))
@@ -341,7 +453,23 @@ def check_arr_length(file):
                 syntax += 1
     return score  
 
-#Missing Address Zero Validation Check
+#Check Missing Zero Address - Syntax Bug
+''' 
+This check catches if a smart contract function does not
+check that the address is zero using: 
+        - address(0)
+        - 0x0
+        - address(0x0)
+
+Check address is not zero using require and address variable
+reduce liklihood of interaction with a null address
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_address_zero(file):
     code = enumerate(open(file))
     score = 0;
@@ -426,7 +554,23 @@ def check_address_zero(file):
                 
     return score
 
-#Mapping Struct Deletion Bug
+#Check Map Struct Deletion - Syntax Bug
+''' 
+This check catches if a smart contract either defines a map
+struct as a different data type or uses delete keyword for 
+mapping delete which doesnt not delete the entire mapping
+only deletes entry
+
+Should Use same data type key as defined in struct for mapping. 
+Use lock technqiue mechanism to disable mapping structure 
+if needed to remove
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_map_struct_delete(file):
     code = enumerate(open(file))
     code_1 = enumerate(open(file))
@@ -557,7 +701,19 @@ def check_map_struct_delete(file):
     return score
 
 
-#uninitialised storage var check not already coded this bro
+#Check Uninitialised Storage Variable - Syntax Bug
+''' 
+This check catches if a smart contract includes struct variables
+which are not set when using struct
+
+Should Immediatly initalise storage variables could be ovveridded
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_init_storage_var(file):
     code_first = enumerate(open(file))
     code_second = enumerate(open(file))
@@ -633,7 +789,21 @@ def check_init_storage_var(file):
                 syntax += 1
                 
     return score
-#incorrect shift in assembely
+
+#Check Incorrect Shift Assembely - Syntax Bug
+''' 
+This check catches if a smart contract includes an assembly
+shift that has parameters mismatched in their order
+
+When using shr assembly shift if first position is a variable 
+and second is constant, this bit shift is usually unintended
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_assemble_shift(file):
     code = enumerate(open(file))
     key = "assembly"
@@ -670,8 +840,22 @@ def check_assemble_shift(file):
                 syntax += 1
                     
     return score
-#suicidel
-#     NEED TO CHECK THAT FUNCTION IS PROTECTED BEFORE WE CAN SELF DESTRUCT
+
+#Check Self Destruct - Syntax Bug
+''' 
+This check catches if a smart contract contains a self destruct with address
+or a function that is public and uses self destruct
+
+When address in self destruct address is not used as could 
+send ether to an attacker contract. If using self detruct 
+restrict access to function as not public
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_self_destruct(file):
     code = enumerate(open(file))
     code_second = enumerate(open(file))
@@ -724,8 +908,20 @@ def check_self_destruct(file):
     return score
 
 
-#Checks for Unhadled Exceptions bug
-#Unhadled Exceptions Check 1
+#Check Transfer Gas/Funds - Syntax Bug
+''' 
+This check catches if a smart contract contains call.value
+or send value methods
+
+Use transfer function instead of send/call operation as they don't capture 
+transaction fails to minimise vulnerbaility
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_transfer(file):
     code = enumerate(open(file))
     bug_1 = ".send("
@@ -766,8 +962,20 @@ def check_transfer(file):
             syntax += 1
     return score          
             
-#Storage Issue
-#Check 1 Byte Storage
+#Check Bytes - Syntax Bug
+''' 
+This check catches if a smart contract contains bytes array
+instead of using bytes
+
+Use bytes instead of byte array as this could grow and access
+un intended storage
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_bytes(file):
     code = enumerate(open(file))
     pattern = "bytes"
@@ -791,8 +999,20 @@ def check_bytes(file):
             syntax += 1
     return score  
 
-#Checks for Authentication bug
-#Authentication Check 1
+#Check txOrigin - Syntax Bug
+''' 
+This check catches if a smart contract contains txorigin function 
+
+Use msg.sender instead of tx.origin to minimise vulnerbaility. tx.Orgin is
+vulnerable for authentication as it can be manipulated to be equal to an
+owner address hence pass the require tests
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_tx_origin(file):
     code = enumerate(open(file))
     bug = "tx.origin"
@@ -814,8 +1034,21 @@ def check_tx_origin(file):
             syntax += 1
     return score
             
-#Checks for Visibility bug
-#Visibility Check 1
+#Check Function Visibility - Syntax Bug
+''' 
+This check catches if a smart contract contains functions
+with unknown visibility
+
+
+Use at least minimum public/private specifier when 
+defining function to minimise vulnerbaility
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_function_visibility(file):
     code = enumerate(open(file))
     type_1 = "public"
@@ -842,8 +1075,20 @@ def check_function_visibility(file):
             syntax += 1
     return score
  
-#Checks for Equality bug
-#Visibility Check 1
+#Check Balance Equality - Syntax Bug
+''' 
+This check catches if a smart contract double equals for
+evaluation of a balance variable
+
+Use compartive statements instead of double equals to 
+minimise vulnerbaility
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_balance_equality(file):
     code = enumerate(open(file))
     bug = ".balance =="
@@ -866,8 +1111,19 @@ def check_balance_equality(file):
                     
     return score
 
-#Checks for Randomness bug
-#Randomness Check 1
+#Check Block Timestamp - Syntax Bug
+''' 
+This check catches if a smart contract contains
+block.timestamp for randomness
+
+Avoid block.randomness for randomness to minimise DoS vulnerbaility
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_block_timestamp(file):
     code = enumerate(open(file))
     bug = "block.timestamp"
@@ -888,7 +1144,20 @@ def check_block_timestamp(file):
             syntax += 1
     return score
 
-#Randomness Check 2
+#Check Block Variable - Syntax Bug
+''' 
+This check catches if a smart contract contains
+block.timestamp/gaslimit or difficulty
+
+Potenital leaky PRNGS rely heavily on past block hashes 
+future vulnerbility
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_block_variable(file):
     code = enumerate(open(file))
     bug_coin = "block.coinbase"
@@ -912,7 +1181,20 @@ def check_block_variable(file):
             syntax += 1
     return score
 
-#Randomness Check 3
+#Check Block Number - Syntax Bug
+''' 
+This check catches if a smart contract contains
+block.number
+
+Check function when getting current block number
+could be invoked by an attacker for malicious intent
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_block_number(file):
     code = enumerate(open(file))
     bug = "block.number"
@@ -920,12 +1202,12 @@ def check_block_number(file):
     for i, line in code:
         if (bug in line):
             print("\nBlock Number Dependency Bug Detected at Line: " + str(i + 1))
-            print("Solution: Check function not send/transfer, can be manipulated by attackers")
+            print("Solution: Could be invoked by an attacker for malicious intent")
             print("Risk: Low") 
             print("Confidence: High\n")
             
             report.write("\nBlock Number Dependency Bug Detected at Line: " + str(i + 1))
-            report.write("\nSolution: Check function not send/transfer, can be manipulated by attackers")
+            report.write("\nSolution: Could be invoked by an attacker for malicious intent")
             report.write("\nRisk: Low") 
             report.write("\nConfidence: High\n")
             
@@ -934,7 +1216,20 @@ def check_block_number(file):
             syntax += 1
     return score
             
-#Checks for Delegate Call  for parity sig wallet attack
+#Check Delegate Call - Syntax Bug
+''' 
+This check catches if a delegate call is made, 
+potential for parity sig wallet attack
+
+Avoid Delegate Call this can lead to unexpected code 
+execution vulnerbaility
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_delegate_call(file):
     code = enumerate(open(file))
     bug = "delegatecall"
@@ -957,7 +1252,19 @@ def check_delegate_call(file):
             syntax += 1
     return score
 
-#Function Calls inside a loop
+#Check Loop Function Call - Syntax Bug
+''' 
+This check catches if a function call is made 
+within a for or while loop
+
+Avoid Function Call In For/While Loop possible DoS vulnerbaility
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_loop_function(file):
     code = enumerate(open(file))
     loop_for = "for"
@@ -995,7 +1302,21 @@ def check_loop_function(file):
             loop_start = False
     return score
 
-#Overpowered Owner Address bug
+#Check Over Powered Owner - Syntax Bug
+''' 
+This check catches if a contract bases function control and 
+execution on the owner. Or a modifier function is used to
+define an owner.
+
+Owner private key at risk of being comprimised don't base 
+function control on owner or use an owner modifier function
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_owner_power(file):
     code = enumerate(open(file))
     code_1 = enumerate(open(file))
@@ -1112,7 +1433,23 @@ def check_owner_power(file):
                     syntax += 1   
     return score
 
-#Multiple Constructor Definitations and data initialisations 
+#Check Multiple Constructors - Syntax Bug
+''' 
+This check catches if a contract defines multiple constructors
+either through constructor or a function constructor. Checks wether
+same variables are defined over multiple constructors could be
+overwritten. 
+
+Use single constructor to initialise contract second constructor 
+will be ignoreded. Use single constructor and intialise variables 
+once in constructor
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_constructor_init(file):
     code = enumerate(open(file))
     code_1 = enumerate(open(file))
@@ -1230,7 +1567,23 @@ def check_constructor_init(file):
                     syntax += 1                   
     return score
 
-#Check Local Variable Shadowing Bug
+#Check Local Variable Shadowing - Syntax Bug
+''' 
+This check catches if a contract contains the phenomanum of
+local variable shadowing. This includes the local variable shadows
+an instance variable in the outerscope based in the modifier, struct, 
+function, constructor and mapping. 
+
+Consider renaming local function variable to mitigate unintended local
+variable shadowing or Consider not redefining contract local variables 
+variable unless inteded to.
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_loc_var_shadow(file):
     code = enumerate(open(file))
     code_1 = enumerate(open(file))
@@ -1371,7 +1724,24 @@ def check_loc_var_shadow(file):
                     score += 4
                     syntax += 1
     return score
-#Check State Variable Shadowing Bug
+
+#Check State Variable Shadowing - Syntax Bug
+''' 
+This check catches if a contract contains the phenomanum of
+state variable shadowing. This includes using and refdefing inherited
+variables from the parent contract in the child contract
+
+Solutions include assign Parent Contract prior to child contract. 
+Define inherited parent contract variable in Constructor. Same variable 
+name from parent redefined use different variable name. Parent contract 
+variable never assigned, assign in parent contract to prevent
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_state_var_shadow(file):
     code = enumerate(open(file))
     code_1 = enumerate(open(file))
@@ -1561,7 +1931,20 @@ def check_state_var_shadow(file):
             
     return score
 
-#Block Gas Limit
+#Check Block Gas Limit - Syntax Bug
+''' 
+This check catches if a contract contains for/while loops 
+which conditionuses the length of an array or object to iterate over
+
+Avoid loop of unknown size that could grow and cause 
+DoS vulnerability
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_block_gas(file):
     code = enumerate(open(file))
     bug = "length"
@@ -1585,7 +1968,21 @@ def check_block_gas(file):
             syntax += 1
     return score
             
-#Pyable Fallback
+#Check Payable Fallback - Syntax Bug
+''' 
+This check catches if a contract contains an external Fallback
+function for transfer of ether. Without being marked as payable
+contract could through error and be inactive without this component
+
+Mark Fallback function with payable otherwise contract 
+cannot recieve ether
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_fallback(file):
     code = enumerate(open(file))
     key = "function "
@@ -1612,11 +2009,22 @@ def check_fallback(file):
                 syntax += 1
     return score
 
-#COMPLEX CHECKS
-#DAO Attack Vulnerability
-#Reentracy Check 1
-# Using a modifier blockRentrancy: the idea is to lock the contract while any 
-# function of the contract is being executed, so only a single function in the contract can be executed at a time.
+#Check Contract Lock - DAO Bug
+''' 
+This check checks wether a contract contains a lock modifier for 
+reentracy attack. As well as wether conditions of require, true
+condition guard for reentracy conditions by checking external calls
+that are unprotected. 
+
+Use a blockreentracy contract lock mechanism so only a single 
+contract function is executed
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_contract_lock(file):
     code = enumerate(open(file))
     key = "modifier"
@@ -1678,8 +2086,24 @@ def check_contract_lock(file):
     return score
 
         
-#Reentracy Check 2a
-#Check require condtion is met
+#Check Require - DAO Bug (Withdraw)
+''' 
+This check checks wether a contract with the withdraw function
+conducts a require verfication of amount and balance state variable
+to ensure funds are not in correctly extracted by an attacker 
+
+Condition need this to check require balance and amount first
+before any operations in withdraw function
+
+Parameters:
+    file: File to analyse statically
+    func_name: Withdraw function name
+    state_var: Balance of funds avaliable state variable name
+    with_amount_var: Amount to be deducted/transfered variable name
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_withdraw_a(file, func_name, state_var, with_amount_var):
     code = enumerate(open(file))
     bigger_equals = ">="
@@ -1721,8 +2145,24 @@ def check_withdraw_a(file, func_name, state_var, with_amount_var):
                 found = True
     return score
 
-#Reentracy Check 2b
-#Update state variable before call to prevent reetrancy multiple calls from attacker   
+#Check State Variable Update - DAO Bug (Withdraw)
+''' 
+This check checks wether a contract with the withdraw function
+conducts an update to the Balance state variable prior to any 
+operations such as call, send or transfer. 
+
+Condition to Update state variable before call to 
+prevent reetrancy multiple calls from attacker  
+
+Parameters:
+    file: File to analyse statically
+    func_name: Withdraw function name
+    state_var: Balance of funds avaliable state variable name
+    with_amount_var: Amount to be deducted/transfered variable name
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_withdraw_b(file, func_name, state_var, with_amount_var):
     code = enumerate(open(file))
     found = False
@@ -1752,8 +2192,23 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
         if ((call_made == False) and (state_var in line) and (with_amount_var in line) and (subtract in line)):
             found = True
     return score
-#Reentracy Check 3
-#Check External Call
+
+#Check State Variable Update - DAO Bug
+''' 
+This check checks wether a contract that calls an external function
+from another contract is marked as either trusted or untrusted. If 
+untrusted this could be vulnerable to an attack invoked by the 
+adversary.
+
+Be aware that subsequent calls also inherit untrust state. 
+Unknown trust, label function either trusted/untrusted
+
+Parameters:
+    file: File to analyse statically
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_external_call(file):
     code = enumerate(open(file))
     keyword = "external"
@@ -1817,7 +2272,28 @@ def check_external_call(file):
 
     return score
 
-#Checks-effects-interactions pattern
+#Check Checks-Effects-Interactions Pattern - DAO Bug (Withdraw)
+''' 
+This check checks wether a contract with the withdraw function
+conducts the Checks-effects-interactions pattern when withdrawing
+funds from the balance. This pattern can ensure that all prerequiestes 
+before executing a the entire withdrawal. This pattern will prevent 
+reclusive calls by managing the reentracy state. 
+
+Incoporate the Check-Effect-Interacts pattern, ensure that order is
+correct. Inlcuding all three components will act as a reentracy gaurd.
+However if out of order, contract withdraw function could still be
+vulnerable to DAO reentracy attack.  
+
+Parameters:
+    file: File to analyse statically
+    func_name: Withdraw function name
+    state_var: Balance of funds avaliable state variable name
+    with_amount_var: Amount to be deducted/transfered variable name
+
+Returns: 
+    score: Score calculated to determine contract security rating
+'''
 def check_effects_interactions_pattern(file, func_name):
     code = enumerate(open(file))
     check_one = "require"
@@ -1983,7 +2459,18 @@ def check_effects_interactions_pattern(file, func_name):
 
     return score
 
-#Catergorise Score
+#Calculate DAO Score
+''' 
+This calculats score for a DAO withdraw contract static
+analysis. 90 is the highest and most secure and <49 would
+be a very unsafe smart contract security wise  
+
+Parameters:
+    score: Points accumulated from check functions
+
+Returns: 
+    score: Score calculated as a '%' of score security rating
+'''
 def calc_complex_score(score):
     if (score < 10):
         return 90
@@ -1996,7 +2483,18 @@ def calc_complex_score(score):
     if (score > 100):
         return 49
     
-    
+#Calculate General Contract Score
+''' 
+This calculats score for a general contract static
+analysis. 100 is the highest and most secure and <49 would
+be a very unsafe smart contract security wise  
+
+Parameters:
+    score: Points accumulated from check functions
+
+Returns: 
+    score: Score calculated as a '%' of score security rating
+'''
 def calc_score(score):
     if (score < 50):
         return 100
@@ -2023,7 +2521,18 @@ def calc_score(score):
     if (score > 1000):
         return 49
 
-#This will be used later
+#Call Checks General Contract
+''' 
+This calls and accumulates the score of a static analysis on 
+a general contract  
+
+Parameters:
+    file: File to analyse statically
+    score: Points accumulated from check functions
+
+Returns: 
+    score: Score calculated as a number from function checks accumulated
+'''
 def call_simple_checks(file, score):
     score += compiler_issue(file)
     score += check_safe_math(file) 
@@ -2033,7 +2542,7 @@ def call_simple_checks(file, score):
     score += check_transfer(file)
     score += check_tx_origin(file)
     score += check_function_visibility(file)
-    score+=check_external_call(file)
+    score += check_external_call(file)
     score += check_balance_equality(file)
     score += check_block_timestamp(file)
     score += check_delegate_call(file)
@@ -2059,19 +2568,36 @@ def call_simple_checks(file, score):
     score += check_contract_lock(file)
     return score
 
+#Call Checks DAO Withdraw Contract
+''' 
+This calls and accumulates the score of a static analysis on 
+a DAO withdraw contract  
+
+Parameters:
+    file: File to analyse statically
+    score: Points accumulated from check functions
+
+Returns: 
+    score: Score calculated as a number from function checks accumulated
+'''
 def check_complex_checks(file, score, func_name, state_var, with_amount_var):
     score+=check_withdraw_a(file, func_name, state_var, with_amount_var)
     score+=check_withdraw_b(file, func_name, state_var, with_amount_var)
     score+=check_effects_interactions_pattern(file, func_name)
-    #print("Total Score: " + str(score))
     return score
 
+#Analyse DAO Withdraw
+''' 
+This calculates the score and generates 
+output of the static analysis
 
+Parameters:
+    N/A
+
+Returns: 
+    N/A
+'''
 def handlephase3():
-    #print("filename " + fname.get())
-    #print("Withdraw Function " + withname.get())
-    #print("Balance Name " + balname.get())
-    #print("Amount Name " + amountname.get())
     score = 0
     filename = "Tests/" + fname.get()
     score = check_complex_checks(filename, score, withname.get(), balname.get(), amountname.get())
@@ -2092,7 +2618,17 @@ def handlephase3():
         print("Smart Contract Score: " + str(score) +"%" )
         report.write("\nSmart Contract Score: " + str(score) +"%\n" )
 
-    
+#Analyse Standard Contract
+''' 
+This calculates the score and generates 
+output of the static analysis
+
+Parameters:
+    N/A
+
+Returns: 
+    N/A
+'''
 def handlephase2():
     global test2
     test2 = True
@@ -2127,7 +2663,18 @@ def handlephase2():
         
         print("Smart Contract Score: " + str(sc) +"%" )
         report.write("\nSmart Contract Score: " + str(sc) +"%\n" )
-        
+
+#Withdraw DAO UI Display
+''' 
+This displays the UI to interact for the
+withdraw DAO static analysis
+
+Parameters:
+    N/A
+
+Returns: 
+    N/A
+'''
 def phase3():
     root1 = Tk()
     root1.geometry('500x400')
@@ -2162,7 +2709,17 @@ def phase3():
     # it is use for display the registration form on the window
     root1.mainloop()
 
+#Standard Contract UI Display
+''' 
+This displays the UI to interact for the
+standard contract static analysis
 
+Parameters:
+    N/A
+
+Returns: 
+    N/A
+'''
 def phase2():
     root2 = Tk()
     root2.geometry('500x400')
@@ -2178,25 +2735,52 @@ def phase2():
     Button(root2, text='Start Static Analysis',width=30,bg='brown',fg='white', command=handlephase2).place(x=140,y=280)
     # it is use for display the registration form on the window
     root2.mainloop()
-    #print("UMMMMM")
 
+#Load Screen
+''' 
+Loading from main to second screen
+
+Parameters:
+    N/A
+
+Returns: 
+    N/A
+'''
 def inter2():
     time.sleep(1)
     root.destroy()
     phase3()
 
+#Load Screen
+''' 
+Loading from main to second screen
 
+Parameters:
+    N/A
+
+Returns: 
+    N/A
+'''
 def inter():
-    #global test
-    #test = True
     time.sleep(1)
     root.destroy()
     phase2()
 
+#Load Screen
+''' 
+Main Function which allows user to either
+engage in a standard or withdraw function
+static analysis tool. 
+
+Parameters:
+    N/A
+
+Returns: 
+    N/A
+'''
 def main():
 
     #Simple Checks
-    #MAKE A FUNCTION WHICH TAKES A SINGLE FILE AND RUNS ALL THESE FUNCTIONS
     score = 0;
     bigfile = "Tests/mixbugs.txt"
     #score = call_simple_checks(bigfile, score)
