@@ -2,6 +2,8 @@ from os import write
 import numpy as np
 from tkinter import*
 import time
+
+#Creat Tkinter UI Interface
 test = False
 root = Tk()
 test2 = False
@@ -135,6 +137,7 @@ def check_integer_operations(file):
     score = 0
     for i, line in code:
         for op in ma_lib:
+            #Line uses arithmetic operations without safe math function
             if ( ((pos_inc not in line) or (neg_inc not in line)) and (op in line) and (com not in line)):    
                 print("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
@@ -175,7 +178,7 @@ def check_loop_condition(file):
     bug_2 = "<="
     score = 0
     global over_under
-    
+    #Check for/while loop contains uint conditional statement
     for i, line in code:
         if((type_1 in line) or (type_2 in line)):
             if((bug_1 in line) or (bug_2 in line)):    
@@ -236,8 +239,10 @@ def check_div_multiply(file):
     for i, line in code:
         if (((div_op in line) or (div_op_safe in line)) and ((mul_op in line) or (mul_op_safe in line))):
             if ((outer in line) and (inner in line)):
+                #Extract content from within bracket operations
                 content = line[line.find(inner)+len(inner):line.rfind(outer)]
                 if ((div_op in content) or (div_op_safe in content)):
+                    #Check division is first expression in brackets
                     print("\nDivsion before multiply Bug Detected at Line: " + str(i + 1))
                     print("Solution: Re-Order expression with multiplication first as integer truncation \
                         \nwith loss of precision to minimise vulnerbaility")
@@ -272,6 +277,7 @@ def check_unary(file):
     bug_times = "=*"
     score = 0
     for i, line in code:
+        #Check if plus/minus/product unary error exists
         if ((bug_plus in line) or (bug_minus in line) or (bug_times in line)):
             print("\nDangerous Unary Expression Bug Detected at Line: " + str(i + 1))
             print("Solution: Check correct use could have meant += or -= or *=")
@@ -310,9 +316,10 @@ def check_type_infer(file):
     end = ";"
     for i, line in code:
         if (key in line):
+            #Extract value of var definition
             value = line[line.find(start)+len(start):line.rfind(end)]
             if (value.isnumeric()):
-        
+                #Check if value from var data type is numeric violation
                 print("\nUnsafe Type Innference Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 print("Solution: Explicitly declare uint data types to avoid unexpected behaviors")
                 print("Risk: Medium")  
@@ -361,6 +368,7 @@ def check_bool_const(file):
     global syntax
 
     for i, line in code:
+        #Check all conditions of true or false bugs exist
         if ((bug_one in line) or (bug_two in line) or (bug_three in line) or (bug_four in line) or (bug_five in line)):
             print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
             print("Solution: Simplify condition or verify code is not a mistake in boolen const")
@@ -388,6 +396,7 @@ def check_bool_const(file):
             syntax += 1
 
         if((key in line) and ((var_one in line) or (var_two in line))):
+            #If statement tautology check
             print("\nBoolean Constant Bug Detected at Line: " + str(i + 1))
             print("Solution: Verify whether mistake of tautology")
             print("Risk: Low")   
@@ -424,6 +433,8 @@ def check_arr_length(file):
     names = np.array([])
     concat_names = np.array([])
     score = 0
+    
+    #Extract all array names from contract
     for i, line in code_first:
         if ((inner in line)):
             arrayname = line[line.find(inner)+len(inner):line.rfind(outer)]
@@ -481,7 +492,7 @@ def check_address_zero(file):
     big = ">"
     zero = "0"
     
-    #Checks
+    #Checks required
     type_1 = "address(0)"
     type_2 = "0x0"
     type_3 = "address(0x0)"
@@ -627,7 +638,6 @@ def check_map_struct_delete(file):
         if (mapp in line):
             for struct_name, dtype in struct_dtype.items():
                 if ((struct_name in line) and (dtype in line)):
-                    #print(line)
                     if (pub in line):
                         map_name = line[line.find(pub)+len(pub):line.rfind(supress)]
                         map_name.replace(" ", "")  
@@ -820,7 +830,7 @@ def check_assemble_shift(file):
             start = False
         if (key in line):
             start = True
-        #If inside assemble call  
+        #If inside assemble call extract 2 variables or bit shit value 
         if ((shift in line) and (start == True)): 
             char_one = line[line.find(inner_one)+len(inner_one):line.rfind(outer_one)]
             char_two = line[line.find(inner_two)+len(inner_two):line.rfind(outer_two)]
@@ -931,6 +941,7 @@ def check_transfer(file):
     global syntax
     
     for i, line in code:
+        #check if send or call.value used in contract
         if bug_1 in line:
             print("\nUnhadled Exceptions Bug Detected at Line: " + str(i + 1))
             print("Solution: Use transfer function instead of send operation as send doesn't capture \
@@ -982,6 +993,8 @@ def check_bytes(file):
     pattern_variant = "byte"
     key_array = "[]"
     score = 0
+    
+    #Search for bytes[] or byte[] exist
     for i, line in code:
         if (((pattern in line) and (key_array in line)) or ((pattern_variant in line) and (key_array in line))):
             print("\nStorage Bug Detected at Line: " + str(i + 1))
@@ -1017,6 +1030,8 @@ def check_tx_origin(file):
     code = enumerate(open(file))
     bug = "tx.origin"
     score = 0
+    
+    #Search for all invocations of tx.origin
     for i, line in code:
         if bug in line:
             print("\nAuthentication Bug Detected at Line: " + str(i + 1))
@@ -1058,6 +1073,8 @@ def check_function_visibility(file):
     type_4 = "onlyOwner"
     type_5 = "external"
     score = 0
+    
+    #Find all functions check if visibility is set
     for i, line in code:
         if (keyword in line) and not((type_1 in line) or (type_2 in line) or (type_3 in line) or (type_4 in line) or (type_5 in line)):
             print("\nVisibility Bug Detected at Line: " + str(i + 1))
@@ -1093,6 +1110,8 @@ def check_balance_equality(file):
     code = enumerate(open(file))
     bug = ".balance =="
     score = 0
+    
+    #Search for balance equality statements
     for i, line in code:
         if bug in line:
             print("\nEquality Bug Detected at Line: " + str(i + 1))
@@ -1128,6 +1147,8 @@ def check_block_timestamp(file):
     code = enumerate(open(file))
     bug = "block.timestamp"
     score = 0
+    
+    #Search for call of block violation bug
     for i, line in code:
         if bug in line:
             print("\nRandomness Bug Detected at Line: " + str(i + 1))
@@ -1164,6 +1185,8 @@ def check_block_variable(file):
     bug_gas = "block.gaslimit"
     bug_diff = "block.difficulty"
     score = 0
+    
+    #Search for call of block violation bug
     for i, line in code:
         if ((bug_coin in line) or (bug_gas in line) or (bug_diff in line)):
             print("\nBlock Variable Dependency Bug Detected at Line: " + str(i + 1))
@@ -1199,6 +1222,8 @@ def check_block_number(file):
     code = enumerate(open(file))
     bug = "block.number"
     score = 0
+    
+    #Search for call of block violation bug
     for i, line in code:
         if (bug in line):
             print("\nBlock Number Dependency Bug Detected at Line: " + str(i + 1))
@@ -1235,6 +1260,8 @@ def check_delegate_call(file):
     bug = "delegatecall"
     bug_var = "DelegateCall"
     score = 0
+    
+    #Search for call of Delegate Call violation bug
     for i, line in code:
         if ((bug in line) or (bug_var in line)):
             print("\nDelegate Call Bug Detected at Line: " + str(i + 1))
@@ -1276,6 +1303,8 @@ def check_loop_function(file):
     loop_start = False
     end_val = "}"
     score = 0
+    
+    #Search for any function calls when for/while loop starts
     for i, line in code:
         if (bug in line) and (function_current == True):
             print("\nFor/While Loop Function Call Bug Detected at Line: " + str(i + 1))
@@ -1336,6 +1365,7 @@ def check_owner_power(file):
     for i, line in code:
         if ((add in line) and (own in line)):
             cont = True
+    
     #Case 1 using constructor
     start_con = False
     con_defined = False
@@ -1493,7 +1523,7 @@ def check_constructor_init(file):
     con_line = 0;
     func_line = 0;
     
-    #CASE 1 Multiple Constructors
+    #Case 1 Multiple Constructors
     for i, line in code_1:
         #Case 1 we have 2 Constructors Defined causes unintended effect
         if (con in line):
@@ -1529,7 +1559,7 @@ def check_constructor_init(file):
     start_func = False
     func_con_end =  "}"
     
-    #CASE 2 Defined Variables Across Multiple Constructors 
+    #Case 2 Defined Variables Across Multiple Constructors 
     for i, line in code_2:
         if ((func_con_end in line) and (start_con == True) and (len(line) == length)):
             start_con = False
@@ -1652,7 +1682,7 @@ def check_loc_var_shadow(file):
             varname_type.update(entry)
 
     #Now use value and data type to search for two cases
-    #CASE 1 Function passes same variable name from dictionary could be same or different datatype
+    #Case 1 Function passes same variable name from dictionary could be same or different datatype
     for i, line in code_1:
         if (func in line):
             for var, data_type in varname_type.items():
@@ -1678,7 +1708,7 @@ def check_loc_var_shadow(file):
     doub_eq = "=="
     o_brac = "("
     c_brac = ")"
-    #CASE 2 Define variable in function with different or same data type but same varible name
+    #Case 2 Define variable in function with different or same data type but same varible name
     for i, line in code_2:
         if ((start_func == True) and (end_func in line) and (len(line) == end_len)):
             start_func = False
@@ -1774,7 +1804,6 @@ def check_state_var_shadow(file):
     
     #Store all state variabled from first contract and get parent contract name
     for i, line in code:
-        #print(line + " start: " + str(start_search))
         if ((modify in line) or (func in line) or ((end_con in line) and (len(line) == end_len))):
             start = False
             break
@@ -1951,6 +1980,8 @@ def check_block_gas(file):
     loop_for = "for"
     loop_while = "while"
     score = 0
+    
+    #Check if for or while loop uses length for iteration process
     for i, line in code:
         if (((loop_for in line) and (bug in line)) or ((loop_while in line) and (bug in line))):
             print("\nBlock Gas Limit Bug Detected at Line: " + str(i + 1))
@@ -1990,6 +2021,8 @@ def check_fallback(file):
     left = 'function '
     right = '('
     score = 0
+    
+    #Check if fall back function is marked as payable 
     for i, line in code:
         if (key in line):
             name = line[line.index(left)+len(left):line.index(right)]
@@ -2043,6 +2076,8 @@ def check_contract_lock(file):
     score = 0
     mod_in_line = False;
     line_num = 0
+    
+    #Search for modifiers that apply the block reentracy or reentracy gaurd logic
     for i, line in code:
         if((start == True) and (end in line) and (len(line) <= length)):
             start = False
@@ -2115,6 +2150,8 @@ def check_withdraw_a(file, func_name, state_var, with_amount_var):
     line_var = 0;
     found = False
     score = 0
+    
+    #Search if balance and amount is checked using require as first port of call
     for i, line in code:
         if ((func_name in line) and (start_char in line)):
             start = True
@@ -2172,6 +2209,8 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
     send = "send"
     transfer = "transfer"
     score = 0
+    
+    #Check if state variable balance is updated after call/send/transfer this is a security violation
     for i, line in code:
         if(((call in line) or (send in line) or (transfer in line)) and (with_amount_var in line) and (found == False)):
             call_made = True
@@ -2219,6 +2258,8 @@ def check_external_call(file):
     end = "}"
     score = 0
     global dao
+    
+    #Check if function external is either marked trusted/untrusted or called as untrusted
     for i, line in code:
         if ((keyword_func in line) and (keyword_un_trust in line)):
             print("\nUntrusted Function Bug Detected at Line: " + str(i +1))
@@ -2324,6 +2365,7 @@ def check_effects_interactions_pattern(file, func_name):
     score = 0
     global dao
     
+    #Search if Check Effect Interactions is violated either in order or missing
     for i, line in code:
         #Move onto next function
         if ((end in line) and (len(line) <= 2) and (start == True)):
@@ -2472,6 +2514,7 @@ Returns:
     score: Score calculated as a '%' of score security rating
 '''
 def calc_complex_score(score):
+    #Score correspond to percentage
     if (score < 10):
         return 90
     if (score < 25):
@@ -2496,6 +2539,7 @@ Returns:
     score: Score calculated as a '%' of score security rating
 '''
 def calc_score(score):
+    #Score correspond to percentage
     if (score < 50):
         return 100
     if (score < 100):
@@ -2534,6 +2578,7 @@ Returns:
     score: Score calculated as a number from function checks accumulated
 '''
 def call_simple_checks(file, score):
+    #Call all functions for standard check
     score += compiler_issue(file)
     score += check_safe_math(file) 
     score += check_type_infer(file)
@@ -2581,6 +2626,7 @@ Returns:
     score: Score calculated as a number from function checks accumulated
 '''
 def check_complex_checks(file, score, func_name, state_var, with_amount_var):
+    #Call all functions for withdraw DAO check
     score+=check_withdraw_a(file, func_name, state_var, with_amount_var)
     score+=check_withdraw_b(file, func_name, state_var, with_amount_var)
     score+=check_effects_interactions_pattern(file, func_name)
@@ -2604,6 +2650,8 @@ def handlephase3():
     print("Total Bug Points: " + str(score))
     report.write("\nTotal Bug Points: " + str(score))
     score = calc_complex_score(score)
+    
+    #Print or write score to file or console
     if (score < 50):
         print("DAO Bugs Detected: " + str(dao))
         report.write("\nDAO Bugs Detected: " + str(dao) + "\n" )
@@ -2638,6 +2686,8 @@ def handlephase2():
     print("Total Bug Points: " + str(sc))
     report.write("\nTotal Bug Points: " + str(sc))
     sc = calc_score(sc)
+
+    #Print or write score to file or console
     if (sc < 50):
         print("Overflow/Underflow Bugs Detected: " + str(over_under))
         report.write("\nOverflow/Underflow Bugs Detected: " + str(over_under) + "\n" )
@@ -2676,6 +2726,7 @@ Returns:
     N/A
 '''
 def phase3():
+    #Create UI for user input and interactions
     root1 = Tk()
     root1.geometry('500x400')
     root1.title("PySolSweep Static Analayis Tool")
@@ -2721,6 +2772,7 @@ Returns:
     N/A
 '''
 def phase2():
+    #Create UI for user input and interactions
     root2 = Tk()
     root2.geometry('500x400')
     root2.title("PySolSweep Static Analayis Tool")
@@ -2747,6 +2799,7 @@ Returns:
     N/A
 '''
 def inter2():
+    #Create UI delay for better UX
     time.sleep(1)
     root.destroy()
     phase3()
@@ -2762,6 +2815,7 @@ Returns:
     N/A
 '''
 def inter():
+    #Create UI delay for better UX
     time.sleep(1)
     root.destroy()
     phase2()
@@ -2779,7 +2833,6 @@ Returns:
     N/A
 '''
 def main():
-
     #Simple Checks
     score = 0;
     bigfile = "Tests/mixbugs.txt"
