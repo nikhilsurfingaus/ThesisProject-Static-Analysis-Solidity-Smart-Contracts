@@ -1,4 +1,4 @@
-# Thesis Project PySolSweep <img src="https://cdn-icons-png.flaticon.com/512/3023/3023095.png" width="70" height="70">
+# Thesis Project PySolSweep <img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/img.ico" width="70" height="70">
 ## Static Analysis Tool For Solidity Smart Contracts
 ## Intro
 TODO
