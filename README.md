@@ -4,6 +4,9 @@ TODO
 ## Dependicies
 TODO
 ## Usage
+### Standard Contract
+TODO
+### Withdraw Function
 TODO
 ## Bugs Detected
 ### Overflow/Underflow Vulnerabiltiies
@@ -43,6 +46,15 @@ Num | Detector | Detection Details | Solutuion | Risk | Impact
 21 | `Check Local Variable Shadowing` | TODO | TODO | High | High
 22 | `Check State Variable Shadowing` | TODO | TODO | High | High
 23 | `Check Fallback` | TODO | TODO | High | High
+
+### DAO Vulnerabiltiies
+Num | Detector | Detection Details | Solutuion | Risk | Impact
+--- | --- | --- | --- | --- | --- |
+1 | `Check Contract Lock` | TODO | TODO | High | High
+2 | `Check Withdraw ` | TODO | TODO | High | High
+3 | `Check Withdraw ` | TODO | TODO | High | High
+4 | `Check External Call` | TODO | TODO | High | High
+5 | `Check Effect Interacts Pattern` | TODO | TODO | High | High
 
 ## Contributions
 TODO
