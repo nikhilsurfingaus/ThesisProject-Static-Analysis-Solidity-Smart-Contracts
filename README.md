@@ -21,7 +21,7 @@ Num | Detector | Detection Details | Solutuion | Risk | Confidence
 6 | `Check Type Inference` | This check catches if a smart contract defined variable using var instead of using numerical data type of uint | Should explicitly declare uint data types to avoid unexpected behaviors | Medium | High
 
 ### Syntax Vulnerabiltiies
-Num | Detector | Detection Details | Solutuion | Risk | Impact
+Num | Detector | Detection Details | Solutuion | Risk | Confidence
 --- | --- | --- | --- | --- | --- |
 1 | `Compiler Issue` | This check catches if a smart contract is defined using the ^ operator for compiler version. | Best practice to use static rather than dynamic compiler version as future versions could have unintended effects | Medium | High
 2 | `Check Boolean Constant` | This check catches if a smart contract incorporates Boolean Constance or Tautology conditions | Should verify that Tautology is not intended as well as Constance is not indended | Low | High
@@ -49,13 +49,13 @@ Num | Detector | Detection Details | Solutuion | Risk | Impact
 24 | `Check Fallback` | This check catches if a contract contains an external Fallback function for transfer of ether. Without being marked as payable contract could through error and be inactive without this component | Mark Fallback function with payable otherwise contract cannot recieve ether | Medium | Medium
 
 ### DAO Vulnerabiltiies
-Num | Detector | Detection Details | Solutuion | Risk | Impact
+Num | Detector | Detection Details | Solutuion | Risk | Confidence
 --- | --- | --- | --- | --- | --- |
-1 | `Check Contract Lock` | TODO | TODO | High | High
-2 | `Check Require` | TODO | TODO | High | High
-3 | `Check State Variable Update` | TODO | TODO | High | High
-4 | `Check External Call` | TODO | TODO | High | High
-5 | `Check Effect Interacts Pattern` | TODO | TODO | High | High
+1 | `Check Contract Lock` | This check checks wether a contract contains a lock modifier for reentracy attack. As well as wether conditions of require, true condition guard for reentracy conditions by checking external calls that are unprotected.  | Use a blockreentracy contract lock mechanism so only a single contract function is executed | Medium | Medium
+2 | `Check Require` | This check checks wether a contract with the withdraw function conducts a require verfication of amount and balance state variable to ensure funds are not in correctly extracted by an attacker  | Condition need this to check require balance and amount first before any operations in withdraw function | Medium | Medium
+3 | `Check State Variable Update` | This check checks wether a contract with the withdraw function conducts an update to the Balance state variable prior to any operations such as call, send or transfer.  | Condition to Update state variable before call to prevent reetrancy multiple calls from attacker   | High | Medium
+4 | `Check External Call` | This check checks wether a contract that calls an external function from another contract is marked as either trusted or untrusted. If untrusted this could be vulnerable to an attack invoked by the adversary. | Be aware that subsequent calls also inherit untrust state. Unknown trust, label function either trusted/untrusted | High | High
+5 | `Check Effect Interacts Pattern` | This check checks wether a contract with the withdraw function conducts the Checks-effects-interactions pattern when withdrawing funds from the balance. This pattern can ensure that all prerequiestes  before executing a the entire withdrawal. This pattern will prevent reclusive calls by managing the reentracy state. | Incoporate the Check-Effect-Interacts pattern, ensure that order is correct. Inlcuding all three components will act as a reentracy gaurd. However if out of order, contract withdraw function could still be vulnerable to DAO reentracy attack.  | High | Medium
 
 ## Contributions
 TODO
