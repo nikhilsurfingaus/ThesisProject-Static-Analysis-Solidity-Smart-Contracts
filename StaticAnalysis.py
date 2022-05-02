@@ -146,7 +146,7 @@ def check_integer_operations(file):
                 
                 report.write("\nInteger Overflow/Underflow Bug Detected at Line: " + str(i + 1))
                 report.write("\nSolution: Use SafeMath library operation " + ma_lib_name[op] + " to minimise vulnerbaility")
-                report.write("\nRisk: High")
+                report.write("\nRisk: Medium")
                 report.write("\nConfidence: High\n")
                 score+=18
                 global over_under

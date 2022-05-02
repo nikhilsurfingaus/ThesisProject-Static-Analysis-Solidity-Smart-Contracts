@@ -10,14 +10,25 @@ TODO
 TODO
 ## Bugs Detected
 ### Overflow/Underflow Vulnerabiltiies
-Num | Detector | Detection Details | Solutuion | Risk | Impact
+Num | Detector | Detection Details | Solutuion | Risk | Confidence
 --- | --- | --- | --- | --- | --- |
-1 | `Check Safe Math` | TODO | TODO | High | High
-2 | `Check Integer Operations` | TODO | TODO | High | High
-3 | `Check Loop Condition` | TODO | TODO | High | High
-4 | `Check Div Multiply` | TODO | TODO | High | High
-5 | `Check Unary` | TODO | TODO | High | High
-6 | `Check Type Inference` | TODO | TODO | High | High
+1 | `Check Safe Math` | This check catches if a smart contract is defined using the
+^ operator for compiler version. | Best practice to use static rather than dynamic compiler version
+as future versions could have unintended effects | Medium | High
+2 | `Check Integer Operations` | This check catches if a smart contract is defined without
+the Safe Math Library present when using uint variable type | Best practice to use Safe Math Library which can minimise attack
+exploiting overflow/underflow vulnerabilities with arthimetic operations | High | High
+3 | `Check Loop Condition` | This check catches if a smart contract uses arithemtic operations such as 
+'+, -, *, /, %' when Safe Math functions could be used.  | Best practice to use Safe Math Library functions of add, sub, div, mod or mul 
+which can minimise attack exploiting overflow/underflow vulnerabilities | Medium | High
+4 | `Check Div Multiply` | This check catches if a smart contract has mathematical operations with
+multiplication or division, that division occurs first  | Best practice to use have multiplication first, as division first can
+cause loss of pecision in operations  | Medium | Medium
+5 | `Check Unary` | This check catches if a smart contract contains =+, =- or =* 
+which could be intended as =+, -= or *= | To minimise misconception be sure to use += or -= or *= | Low | High
+6 | `Check Type Inference` | This check catches if a smart contract defined variable using var
+instead of using numerical data type of uint | Should explicitly declare uint data types to 
+avoid unexpected behaviors | Medium | High
 
 ### Syntax Vulnerabiltiies
 Num | Detector | Detection Details | Solutuion | Risk | Impact
@@ -51,8 +62,8 @@ Num | Detector | Detection Details | Solutuion | Risk | Impact
 Num | Detector | Detection Details | Solutuion | Risk | Impact
 --- | --- | --- | --- | --- | --- |
 1 | `Check Contract Lock` | TODO | TODO | High | High
-2 | `Check Withdraw ` | TODO | TODO | High | High
-3 | `Check Withdraw ` | TODO | TODO | High | High
+2 | `Check Require` | TODO | TODO | High | High
+3 | `Check State Variable Update` | TODO | TODO | High | High
 4 | `Check External Call` | TODO | TODO | High | High
 5 | `Check Effect Interacts Pattern` | TODO | TODO | High | High
 
