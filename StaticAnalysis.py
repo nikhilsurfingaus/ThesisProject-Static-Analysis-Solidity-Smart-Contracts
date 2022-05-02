@@ -2232,7 +2232,7 @@ def check_withdraw_b(file, func_name, state_var, with_amount_var):
             found = True
     return score
 
-#Check State Variable Update - DAO Bug
+#Check External Call Update - DAO Bug
 ''' 
 This check checks wether a contract that calls an external function
 from another contract is marked as either trusted or untrusted. If 
