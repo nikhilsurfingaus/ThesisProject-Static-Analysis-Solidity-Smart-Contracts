@@ -1,6 +1,6 @@
 pragma solidity ^0.8.9;
 
-contract KoolBuds is ERC721Enumerable, Ownable {
+contract KoolBuds {
     using ECDSA for bytes32;
 
     uint256 public mintPrice = 0.042 ether;
@@ -20,19 +20,15 @@ contract KoolBuds is ERC721Enumerable, Ownable {
     constructor(string memory baseURI) ERC721("Kool Buds", "BUDS") {
       setBaseURI(baseURI);
     }
+    mapping(address => uint) balances;
 
-    modifier saleIsOpen {
-      require(totalSupply() <= maximumMintSupply, "Sale has ended.");
-      _;
+    function deposit() public payable {
+        balances[msg.sender] = msg.value;
     }
 
-    modifier onlyAuthorized() {
-      require(owner() == msg.sender);
-      _;
-    }
-
-    function withdraw() external onlyAuthorized {
-      uint balance = address(this).balance;
-      payable(owner()).transfer(balance);
+    function withdraw(uint amount) public {
+        require(balances[msg.sender] >= amount);
+        msg.sender.transfer(amount);
+        balances[msg.sender] -= amount;
     }
 }

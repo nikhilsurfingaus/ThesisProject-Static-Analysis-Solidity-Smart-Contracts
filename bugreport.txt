@@ -1,202 +1,25 @@
 
-Compiler Bug Detected at Line: 1
-Solution: Remove ^ operator as future compilers may have unintended effects
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 7
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 8
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 10
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 11
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 12
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 14
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 18
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 50
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 51
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 57
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 59
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 63
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 90
-Solution: Use SafeMath for uint library to minimise vulnerbaility
-Risk: High
-Confidence: High
-
-Loop Integer Overflow/Underflow Bug Detected at Line: 51
-Solution: Careful when using uint within loop as could cause infinite loop check no
-constant true condition can evaluate
+Withdraw Function Call Bug Detected at Line: 30
+Solution: Update state variable balance before call
 Risk: High
 Confidence: Medium
 
-Loop Integer Overflow/Underflow Bug Detected at Line: 57
-Solution: Careful when using uint within loop as could cause infinite loop check no
-constant true condition can evaluate
+Withdraw Function Call Bug Detected at Line: 31
+Solution: Update state variable balance before call
 Risk: High
 Confidence: Medium
 
-Integer Overflow/Underflow Bug Detected at Line: 32
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
+Withdraw Function Call Bug Detected at Line: 32
+Solution: Update state variable balance before call
+Risk: High
+Confidence: Medium
+
+Check-Effect-Interaction Bug Detected at Line: 29
+Solution: Interact is out of order
 Risk: Medium
-Confidence: High
+Confidence: Medium
 
-Integer Overflow/Underflow Bug Detected at Line: 42
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 43
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 51
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 52
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 55
-Solution: Use SafeMath library operation .mul to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 57
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 65
-Solution: Use SafeMath library operation .sub to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 68
-Solution: Use SafeMath library operation .add to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Integer Overflow/Underflow Bug Detected at Line: 90
-Solution: Use SafeMath library operation .mul to minimise vulnerbaility
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 25
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 36
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 47
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 73
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 81
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 89
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 94
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-Untrusted Function Bug Detected at Line: 98
-Solution: Unknown trust, label function either trusted/untrusted
-Risk: Medium
-Confidence: High
-
-For/While Loop Function Call Bug Detected at Line: 60
-Solution: Avoid Function Call In For/While Loop possible DoS vulnerbaility
-Risk: Medium
-Confidence: High
-
-Block Gas Limit Bug Detected at Line: 51
-Solution: Avoid loop of unknown size that could grow and cause DoS vulnerability
-Risk: Medium
-Confidence: High
-
-Block Gas Limit Bug Detected at Line: 57
-Solution: Avoid loop of unknown size that could grow and cause DoS vulnerability
-Risk: Medium
-Confidence: High
-
-Zero Address Check Bug Detected at Function Line: 98
-Solution: Check address is not zero using require, address variable and checking
-it is not equal to either 'address(0)', '0x0' or 'address(0x0)'
-Risk: Medium
-Confidence: High
-
-Total Bug Points: 594
-Overflow/Underflow Bugs Detected: 25
-
-Syntax Bugs Detected: 5
-
-DAO Bugs Detected: 8
+Total Bug Points: 44
+DAO Bugs Detected: 4
 
 Smart Contract Score: 70%

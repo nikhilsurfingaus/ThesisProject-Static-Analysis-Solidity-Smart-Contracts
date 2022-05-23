@@ -1,7 +1,6 @@
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
-contract ChicknCoin is ERC721Enumerable, Ownable {
-    using Strings for uint256;
+contract ChicknCoin {
 
     uint256 public tokenPrice = 0.0 ether;
 
