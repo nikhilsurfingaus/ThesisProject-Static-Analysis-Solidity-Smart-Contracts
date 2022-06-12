@@ -2756,6 +2756,7 @@ def phase3():
     global amountname
     amountname = entry_4
     entry_4.place(x=260,y=280)
+    root1.iconbitmap("Resources/img.ico")
     Button(root1, text='Start Withdraw DAO Function Analysis',width=50,bg='brown',fg='white', command=handlephase3).place(x=100,y=330)
     # it is use for display the registration form on the window
     root1.mainloop()
@@ -2784,6 +2785,7 @@ def phase2():
     global var
     var = entry_1
     entry_1.place(x=260,y=130)
+    root2.iconbitmap("Resources/img.ico")
     Button(root2, text='Start Static Analysis',width=30,bg='brown',fg='white', command=handlephase2).place(x=140,y=280)
     # it is use for display the registration form on the window
     root2.mainloop()
