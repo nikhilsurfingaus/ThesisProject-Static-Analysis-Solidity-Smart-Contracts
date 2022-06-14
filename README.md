@@ -60,10 +60,15 @@ $ conda install python-time
 ```
 
 ## Usage
-### General Contract
+### General Contract Instructions
+The first static analysis mode is general scan, which covers all three Bug Attack Theme (BAT) classes of Overflow/Underflow, Syntax and DAO. The use-case involves a smart contract being placed within the ‘Verify’ subfolder. The file location would then be input as ‘Verify/filename.txt’, with the solidity code transformed into a Python readable text format. The ‘Start Scan Analysis' UI button would be selected and static analysis of the smart contract would be executed. Once completed, the results were displayed both in the terminal as well as an output text file namly ‘bugreport.txt’. 
+
 <img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/General.jpg" alt="General" width="600" height="400"/> 
 
-### Withdraw Function Contract
+### Withdraw Function Contract Instructions
+The second static analysis mode produced was that of a DAO withdraw/transfer function scan, which covered DAO bugs and vulnerabilities specific to a smart contracts withdraw/transfer function. The use-case follows similar to the general scan with the smart contract again placed within the ‘Verify’ subfolder in a .txt
+file. Then fill out details of the withdraw/transfer function including the function name, amount variable name and balance variable name. Once completed, the results were displayed both in the terminal as well as an output text file namly ‘bugreport.txt’. 
+
 <img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/Withdraw.jpg" alt="Withdraw" width="600" height="400"/> 
 
 ## Bugs Detected
