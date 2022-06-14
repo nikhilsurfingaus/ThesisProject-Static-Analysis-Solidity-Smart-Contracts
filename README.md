@@ -122,4 +122,103 @@ Num | Detector | Detection Details | Solutuion | Risk | Confidence
 ## Contributions
 TODO
 ## References
-TODO
+"Program Analysis - Wikipedia", En.wikipedia.org, 2021. [Online]. Available: 
+https://en.wikipedia.org/wiki/Program_Analysis. [Accessed: 19- Aug- 2021].
+
+R. Bellairs, "What Is Static Analysis? Static Code Analysis Overview | Perforce Software", 
+Perforce Software, 2021. [Online]. Available: https://www.perforce.com/blog/sca/what-Static￾Analysis. [Accessed: 19- Aug- 2021].
+
+"Security Tools - Ethereum Smart Contract Best Practices", Consensys.github.io, 2021. 
+[Online]. Available: https://consensys.github.io/Smart-Contract-best-practices/security_tools/. 
+[Accessed: 19- Aug- 2021].
+
+"Security testing - Wikipedia", En.wikipedia.org, 2021. [Online]. Available: 
+https://en.wikipedia.org/wiki/Security_testing. [Accessed: 19- Aug- 2021].
+
+"What Is Ethereum?", Investopedia, 2021. [Online]. Available: 
+https://www.investopedia.com/terms/e/ethereum.asp. [Accessed: 19- Aug- 2021].
+
+G. McCubbin, "The Ultimate Ethereum Dapp Tutorial (How to Build a Full Stack 
+Decentralized Application Step-By-Step) | Dapp University", Dapp University, 2021. [Online]. 
+Available: https://www.dappuniversity.com/articles/the-ultimate-ethereum-dapp-tutorial. 
+[Accessed: 19- Aug- 2021].
+
+L. Mearian, "What's a Smart Contract (and how does it work)?", Computerworld, 2021. 
+[Online]. Available: https://www.computerworld.com/article/3412140/whats-a-Smart-Contract￾and-how-does-it-work.html. [Accessed: 19- Aug- 2021].
+
+"Ethereum price today, ETH live marketcap, chart, and info | CoinMarketCap", 
+CoinMarketCap, 2021. [Online]. Available: https://coinmarketcap.com/currencies/ethereum/. 
+[Accessed: 19- Aug- 2021].
+
+"Smart Contract Security: What Are the Weak Spots of Ethereum, EOS, and NEO 
+Networks?", TechNative, 2021. [Online]. Available: https://technative.io/Smart-Contract￾security-what-are-the-weak-spots-of-ethereum-eos-and-neo-networks/. [Accessed: 19- Aug-2021].
+
+"The Landscape of Solidity Smart Contract Security Tools in 2020", Kleros, 2021. [Online]. 
+Available: https://blog.kleros.io/the-landscape-of-Solidity-Smart-Contract-security-tools-in-
+2020/. [Accessed: 19- Aug- 2021].
+
+
+E. Attacks.md, "Ethereum Attacks.md", Gist, 2021. [Online]. Available: 
+https://gist.github.com/ethanbennett/7396bf3f61dd985d3426f2ee184d8822. [Accessed: 19- Aug-
+2021].
+
+A. John and T. Westbrook, "Crypto platform Poly Network rewards hacker with $500,000 
+'bug bounty'", Reuters, 2021. [Online]. Available: https://www.reuters.com/technology/crypto￾platform-poly-network-rewards-hacker-with-500000-bug-bounty-2021-08-13/. [Accessed: 19-Aug- 2021].
+
+"Static Analysis of Integer Overflow of Smart Contracts in Ethereum | Proceedings of the 
+2020 4th International Conference on Cryptography, Security and Privacy", Dl.acm.org, 2021. 
+[Online]. Available: https://dl.acm.org/doi/abs/10.1145/3377644.3377650. [Accessed: 19- Aug-2021].
+
+"SmartCheck: Static Analysis of Ethereum Smart Contracts", Ieeexplore.ieee.org, 2021. 
+[Online]. Available: https://ieeexplore.ieee.org/document/8445052. [Accessed: 19- Aug- 2021].
+
+P. Praitheeshan, L. Pan, J. Yu, J. Liu and R. Doss, "Security Analysis Methods on Ethereum 
+Smart Contract Vulnerabilities: A Survey", arXiv.org, 2021. [Online]. Available: 
+https://arxiv.org/abs/1908.08605. [Accessed: 19- Aug- 2021].
+
+"ÆGIS: Shielding Vulnerable Smart Contracts Against Attacks | Proceedings of the 15th 
+ACM Asia Conference on Computer and Communications Security", Dl.acm.org, 2021. 
+[Online]. Available: https://dl.acm.org/doi/abs/10.1145/3320269.3384756. [Accessed: 19- Aug-2021].
+
+"How effective are Smart Contract Analysis tools? evaluating Smart Contract Static Analysis
+tools using bug injection | Proceedings of the 29th ACM SIGSOFT International Symposium on 
+Software Testing and Analysis", Dl.acm.org, 2021. [Online]. Available: 
+https://dl.acm.org/doi/10.1145/3395363.3397385. [Accessed: 19- Aug- 2021].
+
+"Smart Contract: Attacks and Protections", Ieeexplore.ieee.org, 2021. [Online]. Available: 
+https://ieeexplore.ieee.org/document/8976179. [Accessed: 19- Aug- 2021].
+
+H. Preston, "Integer overflow and underflow vulnerabilities - Infosec Resources", Infosec 
+Resources, 2020. [Online]. Available: https://resources.infosecinstitute.com/topic/integer￾overflow-and-underflow-vulnerabilities/. [Accessed: 01- Jun- 2022].
+
+D. Siegel, "Ethereum Understanding The DAO Attack", CoinDesk, 2022. [Online]. 
+Available: https://www.coindesk.com/learn/2016/06/25/understanding-the-dao-attack/. 
+[Accessed: 01- Jun- 2022].
+
+J. Wu, "Ethereum’s History: From Zero to 2.0", WisdomTree, 2021. [Online]. Available: 
+https://www.wisdomtree.com/blog/2021-07-15/ethereums-history-from-zero-to-20. [Accessed: 
+01- Jun- 2022].
+
+M. Staderini, A. Pataricza and A. Bondavalli, "Security Evaluation and Improvement of 
+Solidity Smart Contracts", SSRN, 2022. [Online]. Available: 
+https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4038087. [Accessed: 01- Jun- 2022].
+
+"Solidity Scan", Docs.Solidityscan.com, 2022. [Online]. Available: 
+https://docs.Solidityscan.com/. [Accessed: 01- Jun- 2022].
+
+"GitHub - Smartdec/Smartcheck: SmartCheck – a Static Analysis tool that detects 
+vulnerabilities and bugs in Solidity programs (Ethereum-based Smart Contracts).", GitHub, 
+2019. [Online]. Available: https://github.com/Smartdec/Smartcheck. [Accessed: 01- Jun- 2022].
+2020. 
+"ContractGuard - Testing Platform for Smart Contracts", Contract.guardstrike.com, 2019. 
+[Online]. Available: https://Contract.guardstrike.com/. [Accessed: 11- Jun- 2022].
+
+"Security Considerations — Solidity 0.6.11 documentation", Docs.Soliditylang.org, 2020. 
+[Online]. Available: https://docs.Soliditylang.org/en/v0.6.11/security-considerations.html. 
+[Accessed: 05- Jun- 2022].
+
+"GitHub - SilentCicero/solint: A linting utility for Ethereum Solidity Smart￾Contracts", GitHub, 2019. [Online]. Available: https://github.com/SilentCicero/solint. 
+[Accessed: 06- Jun- 2022].
+
+"remix-project/libs/remix-analyzer at master · ethereum/remix-project", GitHub, 2020. 
+[Online]. Available: https://github.com/ethereum/remix-project/tree/master/libs/remix￾analyzer#readme. [Accessed: 08- Jun- 2022].
