@@ -8,7 +8,57 @@ systematic approach of Bug Attack Theme coverage of bugs rather than a randmom a
 countermeasure. As well as new bugs, vulnerbilities and countermeasures discovered from credited Academic Papers reviewed 2020-2022. The tool will
 not only provide a log report of the Static Analysis results but also give a contract rating score.
 ## Dependicies
-TODO
+### Install Python
+Python 3 can be installed using pip:
+
+    python3 -m pip install -U mypy
+- Debian/Ubuntu
+    1. Install using [apt-get](https://linux.die.net/man/8/apt-get).
+        ```sh
+        $ sudo apt-get update
+        $ sudo apt-get install python3
+        ```
+    1. Recommended - install development extensions (C headers necessary for some packages), `pip` (for installing packages globally), and `venv` (for creating a virtual environment).
+        ```sh
+        $ sudo apt-get install python3-dev python3-pip python3-venv
+        ```
+- macOS
+    1. Install [Brew](https://brew.sh). 
+    1. Install Python using Brew:
+        ```sh
+        $ brew install python3
+        ```
+    1. Make your the Brew executables `bin` directory is in your `PATH` variable.
+- Windows
+    1. Download Python from the [Windows Download](https://www.python.org/downloads/windows/) page.
+    2. Run the installer.
+        - Be sure to _check_ the box on to have Python added to your `PATH` if the installer offers such an option (it's normally off by default).
+### Python Libraries if not already installed with your current Python Version (Python Inc All These Libraries)
+#### Installing Numpy
+```sh
+$ pip install numpy
+```
+or
+```sh
+$ conda install numpy
+```
+#### Installing Tkinter
+```sh
+$ pip install tk
+```
+or
+```sh
+$ conda install tk
+```
+#### Installing Time
+```sh
+$ pip install python-time
+```
+or
+```sh
+$ conda install python-time
+```
+
 ## Usage
 ### General Contract
 <img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/General.jpg" alt="General" width="600" height="400"/> 
