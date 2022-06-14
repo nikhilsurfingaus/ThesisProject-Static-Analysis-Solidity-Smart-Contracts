@@ -10,10 +10,12 @@ not only provide a log report of the Static Analysis results but also give a con
 ## Dependicies
 TODO
 ## Usage
-### Standard Contract
-TODO
-### Withdraw Function
-TODO
+### General Contract
+<img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/General.jpg" alt="General" width="600" height="400"/> 
+
+### Withdraw Function Contract
+<img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/Withdraw.jpg" alt="Withdraw" width="600" height="400"/> 
+
 ## Bugs Detected
 ### Overflow/Underflow Vulnerabiltiies
 Num | Detector | Detection Details | Solutuion | Risk | Confidence
