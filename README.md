@@ -7,6 +7,7 @@ Static Analysis tool. This benefits of PySolSweep is its ability to overcome exi
 systematic approach of Bug Attack Theme coverage of bugs rather than a randmom assortment, suggested solution to overcome bug, vulnrability or
 countermeasure. As well as new bugs, vulnerbilities and countermeasures discovered from credited Academic Papers reviewed 2020-2022. The tool will
 not only provide a log report of the Static Analysis results but also give a contract rating score.
+
 ## Dependencies
 ### Install Python
 Python 3 can be installed using pip:
