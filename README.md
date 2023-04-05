@@ -1,4 +1,4 @@
-# Thesis Project PySolSweep (2022) <img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/img.ico" width="70" height="70">
+# Thesis Project PySolSweep (2021-2022) <img src="https://github.com/nikhilsurfingaus/ThesisProject/blob/master/Resources/img.ico" width="70" height="70">
 ## Static Analysis Tool For Solidity Smart Contracts
 
 ## Intro:
